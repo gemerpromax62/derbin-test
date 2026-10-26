@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 380" fill="none">
+  <rect width="640" height="380" rx="22" fill="#0b1116"/>
+  <rect x="12" y="12" width="616" height="356" rx="18" fill="#111822" stroke="rgba(255,255,255,0.16)" stroke-width="1.5"/>
+  <text x="34" y="46" fill="#ffffff" font-family="Inter, sans-serif" font-weight="700" font-size="16">Маршрутизация и Сеть · Derbin v1.8</text>
+  <line x1="28" y1="62" x2="612" y2="62" stroke="rgba(255,255,255,0.08)" />
+  <rect x="34" y="84" width="22" height="22" rx="6" fill="#10b981"/>
+  <path d="M40 95L44 99L51 91" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="68" y="100" fill="#e4e6ee" font-family="Inter, sans-serif" font-size="14">Обход traceroute</text>
+  <rect x="330" y="84" width="22" height="22" rx="6" fill="#10b981"/>
+  <path d="M336 95L340 99L347 91" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="364" y="100" fill="#e4e6ee" font-family="Inter, sans-serif" font-size="14">Отключить mDNS и LLMNR</text>
+  <rect x="34" y="126" width="22" height="22" rx="6" fill="#10b981"/>
+  <path d="M40 137L44 141L51 133" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="68" y="142" fill="#e4e6ee" font-family="Inter, sans-serif" font-size="14">Режим роутера</text>
+  <rect x="330" y="126" width="22" height="22" rx="6" fill="#10b981"/>
+  <path d="M336 137L340 141L347 133" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="364" y="142" fill="#e4e6ee" font-family="Inter, sans-serif" font-size="14">Блокировка трафика между сетями</text>
+  <text x="34" y="192" fill="#9196a8" font-family="Inter, sans-serif" font-size="13">Сетевой интерфейс для второго устройства</text>
+  <rect x="34" y="204" width="572" height="44" rx="11" fill="#090d13" stroke="#34d399" stroke-width="1.5"/>
+  <text x="50" y="231" fill="#34d399" font-family="monospace" font-size="13">Realtek PCIe GbE Family Controller-WFP Native MAC Layer LightWeight Filter</text>
+  <rect x="34" y="272" width="572" height="72" rx="14" fill="rgba(16,185,129,0.08)" stroke="rgba(52,211,153,0.3)"/>
+  <text x="54" y="302" fill="#34d399" font-family="Inter, sans-serif" font-weight="700" font-size="13">WFP Kernel Ring-0 Status: 100% Undetected (1 Hop Masquerade)</text>
+  <text x="54" y="324" fill="#9196a8" font-family="monospace" font-size="12">TTL=128 • ICMP Filtered • Dual-PC Bridge Active</text>
+</svg>

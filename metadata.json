@@ -1,0 +1,6 @@
+{
+  "name": "derbin — iOS 26 Liquid Glass Client & Security",
+  "description": "Адаптивный веб-клиент и панель управления derbin v1.8 в стиле Apple iOS 26 Liquid Glass (SwiftUI) с защитой от проверок 4.3, симулятором прокси и управлением учетными записями на базе Firebase.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

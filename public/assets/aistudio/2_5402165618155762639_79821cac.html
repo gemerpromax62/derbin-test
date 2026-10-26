@@ -1,0 +1,3748 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-full scroll-smooth">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>derbin — Next-Gen Client & Security Protection</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"Space Grotesk"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              primary: '#10b981',
+              accent: '#34d399',
+              hover: '#6ee7b7',
+              glow: 'rgba(16, 185, 129, 0.25)',
+            },
+            dark: {
+              950: '#080d0a',
+              900: '#0c120e',
+              850: '#0f1712',
+              800: '#131d17',
+              700: '#1b2a21',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --brand-primary: #10b981;
+      --brand-accent: #34d399;
+      --color-background: #080c0a;
+      --color-card: #0f1612;
+    }
+
+    body {
+      background-color: var(--color-background);
+      color: #f1f1ef;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+      overflow-x: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* Ambient glow & liquid blobs */
+    .hero-glow {
+      position: absolute;
+      top: -140px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(100vw, 1250px);
+      height: 820px;
+      background: radial-gradient(circle at 50% 30%, rgba(16, 185, 129, 0.28) 0%, rgba(52, 211, 153, 0.1) 45%, rgba(8, 12, 10, 0) 75%);
+      pointer-events: none;
+      z-index: 0;
+      animation: floatLiquidGlow 14s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatLiquidGlow {
+      0% { transform: translateX(-50%) translateY(0) scale(1); }
+      100% { transform: translateX(-50%) translateY(30px) scale(1.06); }
+    }
+
+    /* Organic floating liquid light orbs behind glass */
+    .liquid-blob-1 {
+      position: absolute;
+      top: 25%;
+      left: -120px;
+      width: 480px;
+      height: 480px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, rgba(52, 211, 153, 0.06) 50%, transparent 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      animation: floatBlob1 22s ease-in-out infinite alternate;
+    }
+
+    .liquid-blob-2 {
+      position: absolute;
+      top: 60%;
+      right: -140px;
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(52, 211, 153, 0.2) 0%, rgba(16, 185, 129, 0.05) 50%, transparent 70%);
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+      animation: floatBlob2 26s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatBlob1 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(70px, -50px) scale(1.18); }
+    }
+    @keyframes floatBlob2 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-80px, 60px) scale(1.15); }
+    }
+
+    /* ================= LIQUID GLASS SYSTEM ================= */
+    .liquid-glass-nav {
+      background: rgba(14, 20, 16, 0.6) !important;
+      -webkit-backdrop-filter: blur(32px) saturate(190%) brightness(108%) !important;
+      backdrop-filter: blur(32px) saturate(190%) brightness(108%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.14) !important;
+      box-shadow: 
+        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.45),
+        inset 0 -1.5px 1px 0 rgba(0, 0, 0, 0.4),
+        0 20px 45px -10px rgba(0, 0, 0, 0.6),
+        0 0 25px -5px rgba(16, 185, 129, 0.15) !important;
+    }
+
+    /* Liquid Glass Cards */
+    .sadnes-card {
+      position: relative;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(17, 25, 20, 0.55) 45%, rgba(10, 15, 12, 0.78) 100%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%) brightness(106%);
+      backdrop-filter: blur(28px) saturate(190%) brightness(106%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 28px;
+      box-shadow: 
+        inset 0 1.5px 0.8px 0 rgba(255, 255, 255, 0.4),
+        inset 0 0 20px 0 rgba(52, 211, 153, 0.03),
+        inset 0 -2px 3px 0 rgba(0, 0, 0, 0.45),
+        0 20px 42px -15px rgba(0, 0, 0, 0.55),
+        0 0 25px -8px rgba(16, 185, 129, 0.1);
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+                  border-color 0.45s ease, 
+                  box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                  background 0.45s ease;
+      overflow: hidden;
+    }
+
+    /* Specular liquid gloss line across top */
+    .sadnes-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 10%;
+      right: 10%;
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), rgba(52, 211, 153, 0.6), transparent);
+      pointer-events: none;
+      border-radius: 999px;
+      z-index: 2;
+    }
+
+    /* Subtle diagonal glass refraction sheen */
+    .sadnes-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(125deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 32%, transparent 60%);
+      pointer-events: none;
+      border-radius: inherit;
+      z-index: 1;
+    }
+
+    .sadnes-card:hover {
+      transform: translateY(-6px) scale(1.008);
+      border-color: rgba(52, 211, 153, 0.5);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(20, 30, 24, 0.65) 45%, rgba(10, 16, 13, 0.82) 100%);
+      box-shadow: 
+        inset 0 2px 1.5px 0 rgba(255, 255, 255, 0.75),
+        inset 0 0 25px 0 rgba(52, 211, 153, 0.15),
+        inset 0 -2px 4px 0 rgba(0, 0, 0, 0.5),
+        0 28px 60px -12px rgba(0, 0, 0, 0.7),
+        0 0 35px 0 rgba(16, 185, 129, 0.32);
+    }
+
+    /* Liquid Tag Pills */
+    .liquid-tag {
+      background: rgba(255, 255, 255, 0.04) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+      backdrop-filter: blur(22px) saturate(180%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      box-shadow: 
+        inset 0 1px 0.5px rgba(255, 255, 255, 0.35),
+        0 10px 24px -6px rgba(0, 0, 0, 0.45) !important;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .liquid-tag:hover {
+      transform: translateY(-3px) scale(1.02) !important;
+      border-color: rgba(52, 211, 153, 0.5) !important;
+      box-shadow: 
+        inset 0 1.5px 1px rgba(255, 255, 255, 0.6),
+        0 16px 32px -6px rgba(16, 185, 129, 0.28) !important;
+    }
+
+    /* Liquid Buttons */
+    .liquid-btn-primary {
+      position: relative;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+      box-shadow: 
+        inset 0 1.5px 1px rgba(255, 255, 255, 0.5),
+        inset 0 -2px 2px rgba(0, 0, 0, 0.25),
+        0 14px 30px -6px rgba(16, 185, 129, 0.5) !important;
+      overflow: hidden;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .liquid-btn-primary::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 15%;
+      right: 15%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+      pointer-events: none;
+    }
+    .liquid-btn-primary:hover {
+      transform: translateY(-3px) scale(1.03) !important;
+      box-shadow: 
+        inset 0 2px 1.5px rgba(255, 255, 255, 0.7),
+        0 20px 40px -6px rgba(16, 185, 129, 0.65) !important;
+    }
+
+    .liquid-btn-glass {
+      position: relative;
+      background: rgba(255, 255, 255, 0.05) !important;
+      -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+      backdrop-filter: blur(24px) saturate(190%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.16) !important;
+      box-shadow: 
+        inset 0 1px 0.5px rgba(255, 255, 255, 0.4),
+        inset 0 -1.5px 2px rgba(0, 0, 0, 0.3),
+        0 12px 26px -8px rgba(0, 0, 0, 0.45) !important;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .liquid-btn-glass:hover {
+      transform: translateY(-3px) scale(1.03) !important;
+      border-color: rgba(52, 211, 153, 0.5) !important;
+      box-shadow: 
+        inset 0 1.5px 1px rgba(255, 255, 255, 0.6),
+        0 18px 36px -8px rgba(16, 185, 129, 0.3) !important;
+    }
+
+    /* Tag hover star spin */
+    .star-icon {
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .group:hover .star-icon {
+      transform: rotate(90deg);
+    }
+
+    /* Preview tab buttons */
+    .preview-tab-btn {
+      position: relative;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #adadad;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .preview-tab-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+    .preview-tab-btn.active {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.1) 100%) !important;
+      border-color: rgba(52, 211, 153, 0.55) !important;
+      color: #fff !important;
+      box-shadow: inset 0 1px 0.5px rgba(255, 255, 255, 0.4), 0 8px 22px -4px rgba(16, 185, 129, 0.3) !important;
+    }
+
+    /* Interactive toggle switch */
+    .glass-switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+    .glass-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .glass-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 999px;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+    }
+    .glass-slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
+      background: #ededeb;
+      transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+    input:checked + .glass-slider {
+      background-color: #10b981;
+      border-color: #34d399;
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.55);
+    }
+    input:checked + .glass-slider:before {
+      transform: translateX(18px);
+      background: #ffffff;
+    }
+
+    /* ================= DERBIN SWING GUI REPLICA ================= */
+    .derbin-app-window {
+      font-family: 'Fredoka', 'Inter', -apple-system, sans-serif;
+      background: linear-gradient(145deg, rgba(16, 21, 28, 0.88) 0%, rgba(11, 14, 20, 0.94) 100%) !important;
+      -webkit-backdrop-filter: blur(34px) saturate(190%) brightness(105%) !important;
+      backdrop-filter: blur(34px) saturate(190%) brightness(105%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.14) !important;
+      box-shadow: 
+        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.35),
+        inset 0 -2px 3px 0 rgba(0, 0, 0, 0.6),
+        0 28px 70px -15px rgba(0, 0, 0, 0.8),
+        0 0 35px -8px rgba(16, 185, 129, 0.18) !important;
+      border-radius: 24px;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .derbin-card {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      box-shadow: inset 0 1px 0.5px rgba(255, 255, 255, 0.2), 0 8px 24px -6px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .derbin-card:hover {
+      border-color: rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Derbin Segmented Tab Item */
+    .derbin-tab-item {
+      position: relative;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #9196a8;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+    .derbin-tab-item:hover {
+      color: #e4e6ee;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .derbin-tab-item.active {
+      color: #ffffff !important;
+      background: rgba(255, 255, 255, 0.12) !important;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: inset 0 1px 0.5px rgba(255, 255, 255, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Derbin Input Field */
+    .derbin-input {
+      background: rgba(10, 14, 20, 0.75) !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      border-radius: 11px !important;
+      color: #f1f1ef !important;
+      font-size: 13px !important;
+      padding: 8px 12px !important;
+      outline: none !important;
+      transition: border-color 0.25s, box-shadow 0.25s !important;
+    }
+    .derbin-input:focus {
+      border-color: var(--brand-accent) !important;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25) !important;
+    }
+
+    /* Derbin Swing Custom Checkbox */
+    .derbin-check-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 13px;
+      color: #e4e6ee;
+      padding: 6px 10px;
+      border-radius: 10px;
+      transition: background 0.2s;
+    }
+    .derbin-check-label:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .derbin-check-box {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      background: rgba(12, 16, 22, 0.8);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    input:checked + .derbin-check-box {
+      background: var(--brand-primary);
+      border-color: var(--brand-accent);
+      box-shadow: 0 0 10px var(--brand-glow);
+    }
+    .derbin-check-box svg {
+      opacity: 0;
+      transform: scale(0.6);
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    input:checked + .derbin-check-box svg {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Derbin Tooltip Box */
+    .derbin-tooltip-container {
+      position: relative;
+      display: inline-block;
+    }
+    .derbin-tooltip-box {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      background: rgba(18, 22, 32, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #f1f1ef;
+      font-size: 12px;
+      line-height: 1.45;
+      padding: 10px 14px;
+      border-radius: 12px;
+      width: max-content;
+      max-width: 340px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0.5px rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(20px);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      z-index: 50;
+    }
+    .derbin-tooltip-container:hover .derbin-tooltip-box {
+      visibility: visible;
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Derbin Hex Dissector Table */
+    .derbin-hex-cell {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+    }
+    .derbin-hex-active {
+      background: rgba(16, 185, 129, 0.15) !important;
+      border-color: rgba(16, 185, 129, 0.4) !important;
+    }
+    .derbin-table-row {
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .derbin-table-row:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .derbin-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .derbin-scrollbar::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+    }
+    .derbin-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+    .derbin-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(16, 185, 129, 0.4);
+    }
+
+    /* Letter animation for preloader */
+    .char-anim {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .char-anim.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Bouncy chevron animation */
+    @keyframes floatChevron {
+      0%, 100% { transform: translateY(0px); opacity: 0.85; }
+      50% { transform: translateY(7px); opacity: 0.3; }
+    }
+    .scrollhint-chevron {
+      animation: floatChevron 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #080c0a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #17241e;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #23382e;
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col justify-between">
+
+  <!-- ================= PRELOADER ================= -->
+  <div id="preloader" class="fixed inset-0 z-[100] grid place-items-center bg-[#101012] transition-opacity duration-700 opacity-100 pointer-events-auto">
+    <div class="relative flex items-center justify-center">
+      <div id="preloader-letters" class="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#ededeb] flex gap-1">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Background Glow & Particle Canvas -->
+  <div class="hero-glow"></div>
+  <div class="liquid-blob-1"></div>
+  <div class="liquid-blob-2"></div>
+  <canvas id="ambient-canvas" class="pointer-events-none fixed inset-0 w-full h-full opacity-40 z-0"></canvas>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-0 z-40 px-4 pt-3 sm:pt-4" id="navbar">
+    <nav class="liquid-glass-nav mx-auto flex h-16 max-w-5xl items-center justify-between rounded-full px-6 shadow-2xl backdrop-blur-2xl lg:px-8">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="inline-flex items-center gap-2.5 group">
+        <img src="logo.png" alt="derbin logo" class="h-7 w-7 object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_0_10px_rgba(16,185,129,0.35)]">
+        <span class="text-[20px] font-bold leading-none tracking-tight text-white lg:text-[24px]" id="nav-brand">derbin</span>
+        <span class="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">alpha</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <div class="hidden md:flex items-center gap-1.5 font-medium text-sm text-[#d4d4d6]">
+        <a href="#hero" class="rounded-full px-4 py-1.5 transition-colors hover:bg-white/10 hover:text-white" data-i18n="nav.home">Главная</a>
+        <a href="#advantages" class="rounded-full px-4 py-1.5 transition-colors hover:bg-white/10 hover:text-white" data-i18n="nav.advantages">Преимущества</a>
+        <a href="#preview" class="rounded-full px-4 py-1.5 transition-colors hover:bg-white/10 hover:text-white" data-i18n="nav.preview">Обход</a>
+        <a href="#owners" class="rounded-full px-4 py-1.5 transition-colors hover:bg-white/10 hover:text-white" data-i18n="nav.owners">Создатели</a>
+        <a href="#pricing" class="rounded-full px-4 py-1.5 transition-colors hover:bg-white/10 hover:text-white" data-i18n="nav.pricing">Тарифы</a>
+        <a href="#stats" class="rounded-full px-4 py-1.5 transition-colors hover:bg-white/10 hover:text-white" data-i18n="nav.stats">Статистика</a>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <!-- Discord Community Link -->
+        <a href="https://discord.gg/ehWheFqAu" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center gap-1.5 rounded-full liquid-btn-glass px-3.5 py-1.5 text-xs font-semibold text-[#ededeb] transition hover:border-emerald-500/50 hover:text-emerald-400">
+          <i class="ph-bold ph-discord-logo text-emerald-400 text-sm"></i>
+          <span>Discord</span>
+        </a>
+
+        <!-- Language Switch -->
+        <button id="lang-btn" onclick="toggleLanguage()" class="flex items-center gap-2 rounded-full liquid-btn-glass px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#ededeb] transition hover:border-white/30">
+          <span class="h-2 w-2 rounded-full bg-[var(--brand-accent)] animate-pulse"></span>
+          <span id="lang-label">RU</span>
+        </button>
+
+        <!-- CTA Buy Button in header -->
+        <a href="#pricing" class="hidden sm:inline-flex items-center justify-center rounded-full liquid-btn-primary px-5 py-2 text-xs font-semibold text-white shadow-lg transition-all" data-i18n="nav.get">
+          Купить
+        </a>
+
+        <!-- Mobile Drawer Trigger -->
+        <button onclick="toggleMobileMenu()" class="inline-flex md:hidden rounded-full p-2 text-white/80 hover:bg-white/10 transition">
+          <i class="ph-bold ph-list text-xl"></i>
+        </button>
+      </div>
+
+    </nav>
+
+    <!-- Mobile Drawer Menu -->
+    <div id="mobile-menu" class="hidden md:hidden mx-auto mt-2 max-w-5xl rounded-3xl sadnes-card p-6 backdrop-blur-2xl shadow-2xl transition-all">
+      <div class="flex flex-col gap-4 text-base font-medium text-white">
+        <a href="#hero" onclick="toggleMobileMenu()" class="hover:text-[var(--brand-accent)] transition" data-i18n="nav.home">Главная</a>
+        <a href="#advantages" onclick="toggleMobileMenu()" class="hover:text-[var(--brand-accent)] transition" data-i18n="nav.advantages">Преимущества</a>
+        <a href="#preview" onclick="toggleMobileMenu()" class="hover:text-[var(--brand-accent)] transition" data-i18n="nav.preview">Обход</a>
+        <a href="#owners" onclick="toggleMobileMenu()" class="hover:text-[var(--brand-accent)] transition" data-i18n="nav.owners">Создатели</a>
+        <a href="#pricing" onclick="toggleMobileMenu()" class="hover:text-[var(--brand-accent)] transition" data-i18n="nav.pricing">Тарифы</a>
+        <a href="#stats" onclick="toggleMobileMenu()" class="hover:text-[var(--brand-accent)] transition" data-i18n="nav.stats">Статистика</a>
+        <a href="https://discord.gg/ehWheFqAu" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition flex items-center gap-2">
+          <i class="ph-bold ph-discord-logo text-emerald-400"></i> Discord сервер
+        </a>
+        <a href="#pricing" onclick="toggleMobileMenu()" class="mt-2 text-center rounded-2xl liquid-btn-primary py-3 text-sm font-semibold text-white" data-i18n="nav.get">Купить</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= HERO ================= -->
+  <main id="hero" class="relative min-h-[85vh] flex flex-col justify-center items-center px-4 text-center z-10 pt-10 sm:pt-16 pb-20">
+    <div class="max-w-4xl mx-auto">
+      
+      <!-- Top Badges -->
+      <div class="flex flex-wrap items-center justify-center gap-3 mb-8">
+        <div class="inline-flex items-center gap-2 rounded-full liquid-btn-glass px-4 py-1.5 text-xs text-[#adadad] backdrop-blur-xl">
+          <svg viewBox="0 0 18 18" class="h-3.5 w-3.5 text-[var(--brand-accent)]" fill="currentColor">
+            <path d="M8.75348 17.6952C7.72056 14.0706 3.94416 10.3084 0.305928 9.27938C-0.101976 9.14829 -0.101976 8.8599 0.305928 8.72226C3.95074 7.68666 7.72056 3.931 8.76005 0.299863C8.8719 -0.0999545 9.14164 -0.0999545 9.25349 0.299863C10.2864 3.931 14.0628 7.68666 17.6945 8.72226C18.1024 8.85335 18.1024 9.14829 17.6945 9.27938C14.0562 10.3084 10.2798 14.0706 9.24691 17.6952C9.13506 18.1016 8.86532 18.1016 8.75348 17.6952Z"/>
+          </svg>
+          <span data-i18n="hero.badge">Актуальная защита и обход проверок активны</span>
+        </div>
+        <div class="inline-flex items-center gap-1.5 rounded-full liquid-btn-glass border-amber-500/30 bg-amber-500/10 px-3.5 py-1.5 text-xs font-semibold text-amber-400 backdrop-blur-xl">
+          <i class="ph-bold ph-warning-circle text-sm text-amber-400"></i>
+          <span data-i18n="hero.alpha">Alpha Build — возможны баги</span>
+        </div>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="text-balance text-[clamp(34px,5.5vw,82px)] font-bold leading-[1.08] tracking-[-0.04em] text-white">
+        <span data-i18n="hero.title1">Снова получил блокировку?</span><br/>
+        <span class="text-[var(--brand-primary)]" data-i18n="hero.title2">Надоели баны по 4.3?</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="mx-auto mt-6 max-w-2xl text-lg sm:text-xl text-[#adadad] font-normal leading-relaxed">
+        <span data-i18n="hero.sub1">Тогда тебе к нам — </span><strong class="text-white font-semibold" id="hero-brand">derbin</strong><span data-i18n="hero.sub2"> поможет обойти любую проверку.</span>
+      </p>
+
+      <!-- Buttons -->
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <a href="#pricing" class="liquid-btn-primary inline-flex items-center gap-2 rounded-full px-8 py-4 text-sm font-semibold text-white shadow-xl transition-all" data-i18n="hero.ctaPrimary">
+          <span>Оформить доступ</span>
+          <i class="ph-bold ph-arrow-right"></i>
+        </a>
+        <a href="#advantages" class="liquid-btn-glass inline-flex items-center gap-2 rounded-full px-8 py-4 text-sm font-semibold text-[#f1f1ef] transition-all" data-i18n="hero.ctaSecondary">
+          <i class="ph-bold ph-shield-check text-[var(--brand-accent)]"></i>
+          <span>Как это работает</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Scroll down hint -->
+    <div class="mt-16 sm:mt-24">
+      <a href="#advantages" class="group flex flex-col items-center gap-2 text-xs font-mono text-[#79787b] hover:text-white transition">
+        <span data-i18n="hero.scroll">СКРОЛЛ ВНИЗ</span>
+        <div class="h-6 w-5 overflow-hidden relative">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-[var(--brand-accent)] scrollhint-chevron">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </div>
+      </a>
+    </div>
+  </main>
+
+  <!-- ================= ADVANTAGES ================= -->
+  <section id="advantages" class="relative bg-transparent px-5 pt-[80px] pb-[120px] z-10 border-t border-white/[0.04]">
+    <div class="mx-auto w-full max-w-[1200px]">
+      
+      <div class="mx-auto mb-20 max-w-[850px] text-center">
+        <div class="mb-4 flex items-center justify-center gap-2">
+          <svg viewBox="0 0 18 18" class="h-[18px] w-[18px] text-[var(--brand-accent)]" fill="currentColor">
+            <path d="M8.75348 17.6952C7.72056 14.0706 3.94416 10.3084 0.305928 9.27938C-0.101976 9.14829 -0.101976 8.8599 0.305928 8.72226C3.95074 7.68666 7.72056 3.931 8.76005 0.299863C8.8719 -0.0999545 9.14164 -0.0999545 9.25349 0.299863C10.2864 3.931 14.0628 7.68666 17.6945 8.72226C18.1024 8.85335 18.1024 9.14829 17.6945 9.27938C14.0562 10.3084 10.2798 14.0706 9.24691 17.6952C9.13506 18.1016 8.86532 18.1016 8.75348 17.6952Z"/>
+          </svg>
+          <h4 class="text-base font-medium text-[var(--brand-accent)]" data-i18n="adv.eyebrow">Наши преимущества</h4>
+        </div>
+        <h2 class="text-[clamp(2.2rem,4.5vw,3.6rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-[#f1f1ef]" data-i18n="adv.heading">
+          Полная безопасность, чистые логи и 0 банов по 4.3
+        </h2>
+      </div>
+
+      <!-- 3 Big Cards Grid -->
+      <div class="mb-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <div class="sadnes-card rounded-[22px] p-8 sm:p-10 text-center flex flex-col items-center">
+          <div class="mb-6 h-24 w-24 rounded-2xl bg-gradient-to-b from-[var(--brand-primary)]/20 to-transparent border border-white/5 flex items-center justify-center text-4xl text-[var(--brand-accent)]">
+            <i class="ph-bold ph-shield-check"></i>
+          </div>
+          <h3 class="mb-4 text-2xl font-semibold text-[#f1f1ef]" data-i18n="adv.c1.title">Иммунитет к 4.3</h3>
+          <p class="max-w-[320px] text-sm text-[#adadad] leading-relaxed" data-i18n="adv.c1.desc">
+            Работа через схему двух ПК и MITM Proxy для скрытой передачи управления. Полная защита DHCP — чистейший undetect без системных следов.
+          </p>
+        </div>
+
+        <div class="sadnes-card rounded-[22px] p-8 sm:p-10 text-center flex flex-col items-center">
+          <div class="mb-6 h-24 w-24 rounded-2xl bg-gradient-to-b from-[var(--brand-primary)]/20 to-transparent border border-white/5 flex items-center justify-center text-4xl text-[var(--brand-accent)]">
+            <i class="ph-bold ph-lightning"></i>
+          </div>
+          <h3 class="mb-4 text-2xl font-semibold text-[#f1f1ef]" data-i18n="adv.c2.title">Стабильный FPS</h3>
+          <p class="max-w-[320px] text-sm text-[#adadad] leading-relaxed" data-i18n="adv.c2.desc">
+            Максимальная оптимизация под любые устройства без лагов и просадок кадров — софт не может лагать в принципе. Частые регулярные обновления.
+          </p>
+        </div>
+
+        <div class="sadnes-card rounded-[22px] p-8 sm:p-10 text-center flex flex-col items-center">
+          <div class="mb-6 h-24 w-24 rounded-2xl bg-gradient-to-b from-[var(--brand-primary)]/20 to-transparent border border-white/5 flex items-center justify-center text-4xl text-[var(--brand-accent)]">
+            <i class="ph-bold ph-shield-star"></i>
+          </div>
+          <h3 class="mb-4 text-2xl font-semibold text-[#f1f1ef]" data-i18n="adv.c3.title">0 банов и любые проверки</h3>
+          <p class="max-w-[320px] text-sm text-[#adadad] leading-relaxed" data-i18n="adv.c3.desc">
+            Недорогой клиент для любых проверок на FT, HV, SP. За первый год ни одного бана по 4.3 или нахождению! При рисках моментально всё закрываем, выпускаем хуки и патчи.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Tag Badges -->
+      <div class="mx-auto max-w-[950px] text-center flex flex-wrap justify-center gap-3">
+        
+        <div class="liquid-tag group inline-flex items-center gap-3 rounded-2xl px-5 py-3 cursor-default">
+          <svg viewBox="0 0 18 18" class="star-icon h-[18px] w-[18px] text-[var(--brand-accent)]" fill="currentColor">
+            <path d="M8.75348 17.6952C7.72056 14.0706 3.94416 10.3084 0.305928 9.27938C-0.101976 9.14829 -0.101976 8.8599 0.305928 8.72226C3.95074 7.68666 7.72056 3.931 8.76005 0.299863C8.8719 -0.0999545 9.14164 -0.0999545 9.25349 0.299863C10.2864 3.931 14.0628 7.68666 17.6945 8.72226C18.1024 8.85335 18.1024 9.14829 17.6945 9.27938C14.0562 10.3084 10.2798 14.0706 9.24691 17.6952C9.13506 18.1016 8.86532 18.1016 8.75348 17.6952Z"/>
+          </svg>
+          <span class="text-[14px] font-medium text-[#f1f1ef]" data-i18n="tag.1">Полный undetect (DHCP)</span>
+        </div>
+
+        <div class="liquid-tag group inline-flex items-center gap-3 rounded-2xl px-5 py-3 cursor-default">
+          <svg viewBox="0 0 18 18" class="star-icon h-[18px] w-[18px] text-[var(--brand-accent)]" fill="currentColor">
+            <path d="M8.75348 17.6952C7.72056 14.0706 3.94416 10.3084 0.305928 9.27938C-0.101976 9.14829 -0.101976 8.8599 0.305928 8.72226C3.95074 7.68666 7.72056 3.931 8.76005 0.299863C8.8719 -0.0999545 9.14164 -0.0999545 9.25349 0.299863C10.2864 3.931 14.0628 7.68666 17.6945 8.72226C18.1024 8.85335 18.1024 9.14829 17.6945 9.27938C14.0562 10.3084 10.2798 14.0706 9.24691 17.6952C9.13506 18.1016 8.86532 18.1016 8.75348 17.6952Z"/>
+          </svg>
+          <span class="text-[14px] font-medium text-[#f1f1ef]" data-i18n="tag.2">Любые проверки: FT, HV, SP</span>
+        </div>
+
+        <div class="liquid-tag group inline-flex items-center gap-3 rounded-2xl px-5 py-3 cursor-default">
+          <svg viewBox="0 0 18 18" class="star-icon h-[18px] w-[18px] text-[var(--brand-accent)]" fill="currentColor">
+            <path d="M8.75348 17.6952C7.72056 14.0706 3.94416 10.3084 0.305928 9.27938C-0.101976 9.14829 -0.101976 8.8599 0.305928 8.72226C3.95074 7.68666 7.72056 3.931 8.76005 0.299863C8.8719 -0.0999545 9.14164 -0.0999545 9.25349 0.299863C10.2864 3.931 14.0628 7.68666 17.6945 8.72226C18.1024 8.85335 18.1024 9.14829 17.6945 9.27938C14.0562 10.3084 10.2798 14.0706 9.24691 17.6952C9.13506 18.1016 8.86532 18.1016 8.75348 17.6952Z"/>
+          </svg>
+          <span class="text-[14px] font-medium text-[#f1f1ef]" data-i18n="tag.3">MITM Proxy & схема 2 ПК</span>
+        </div>
+
+        <div class="liquid-tag group inline-flex items-center gap-3 rounded-2xl px-5 py-3 cursor-default">
+          <svg viewBox="0 0 18 18" class="star-icon h-[18px] w-[18px] text-[var(--brand-accent)]" fill="currentColor">
+            <path d="M8.75348 17.6952C7.72056 14.0706 3.94416 10.3084 0.305928 9.27938C-0.101976 9.14829 -0.101976 8.8599 0.305928 8.72226C3.95074 7.68666 7.72056 3.931 8.76005 0.299863C8.8719 -0.0999545 9.14164 -0.0999545 9.25349 0.299863C10.2864 3.931 14.0628 7.68666 17.6945 8.72226C18.1024 8.85335 18.1024 9.14829 17.6945 9.27938C14.0562 10.3084 10.2798 14.0706 9.24691 17.6952C9.13506 18.1016 8.86532 18.1016 8.75348 17.6952Z"/>
+          </svg>
+          <span class="text-[14px] font-medium text-[#f1f1ef]" data-i18n="tag.4">0 банов за 1-й год продукта</span>
+        </div>
+
+        <div class="liquid-tag group inline-flex items-center gap-3 rounded-2xl px-5 py-3 cursor-default">
+          <svg viewBox="0 0 18 18" class="star-icon h-[18px] w-[18px] text-[var(--brand-accent)]" fill="currentColor">
+            <path d="M8.75348 17.6952C7.72056 14.0706 3.94416 10.3084 0.305928 9.27938C-0.101976 9.14829 -0.101976 8.8599 0.305928 8.72226C3.95074 7.68666 7.72056 3.931 8.76005 0.299863C8.8719 -0.0999545 9.14164 -0.0999545 9.25349 0.299863C10.2864 3.931 14.0628 7.68666 17.6945 8.72226C18.1024 8.85335 18.1024 9.14829 17.6945 9.27938C14.0562 10.3084 10.2798 14.0706 9.24691 17.6952C9.13506 18.1016 8.86532 18.1016 8.75348 17.6952Z"/>
+          </svg>
+          <span class="text-[14px] font-medium text-[#f1f1ef]" data-i18n="tag.5">Быстрые обновления, хуки и патчи</span>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= PREVIEW / CLIENT SHOWCASE ================= -->
+  <section id="preview" class="relative bg-transparent px-5 py-[100px] z-10 border-t border-white/[0.04]">
+    <div class="mx-auto w-full max-w-[1240px]">
+      
+      <!-- Section Header -->
+      <div class="mx-auto mb-12 max-w-[850px] text-center">
+        <div class="mb-4 flex items-center justify-center gap-2">
+          <svg viewBox="0 0 18 18" class="h-[18px] w-[18px] text-[var(--brand-accent)]" fill="currentColor">
+            <path d="M8.75348 17.6952C7.72056 14.0706 3.94416 10.3084 0.305928 9.27938C-0.101976 9.14829 -0.101976 8.8599 0.305928 8.72226C3.95074 7.68666 7.72056 3.931 8.76005 0.299863C8.8719 -0.0999545 9.14164 -0.0999545 9.25349 0.299863C10.2864 3.931 14.0628 7.68666 17.6945 8.72226C18.1024 8.85335 18.1024 9.14829 17.6945 9.27938C14.0562 10.3084 10.2798 14.0706 9.24691 17.6952C9.13506 18.1016 8.86532 18.1016 8.75348 17.6952Z"/>
+          </svg>
+          <h4 class="text-base font-medium text-[var(--brand-accent)]" data-i18n="prev.eyebrow">Интерактивный GUI софта</h4>
+        </div>
+        <h2 class="text-[clamp(2.2rem,4.5vw,3.6rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-[#f1f1ef]" data-i18n="prev.heading">
+          Панель управления derbin v1.8
+        </h2>
+        <p class="mt-4 text-[#adadad] text-sm max-w-xl mx-auto" data-i18n="prev.desc">
+          Полная интерактивная копия GUI из <code class="text-emerald-400 font-mono">derbin-1.8-all.jar</code>: переключайте вкладки, управляйте маршрутизацией 2-х ПК, настраивайте DHCP и тестируйте функционал прямо в браузере!
+        </p>
+
+        <!-- View Switcher Tabs (Interactive GUI vs Screenshots) -->
+        <div class="mt-8 inline-flex items-center gap-2 p-1.5 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-xl">
+          <button onclick="setPreviewDisplayMode('gui')" id="btn-mode-gui" class="px-5 py-2 rounded-full text-xs font-semibold text-white bg-[var(--brand-primary)] shadow-md transition-all flex items-center gap-2">
+            <i class="ph-bold ph-app-window text-sm"></i>
+            <span>Интерактивный Web GUI (тыкабельный)</span>
+          </button>
+          <button onclick="setPreviewDisplayMode('shots')" id="btn-mode-shots" class="px-5 py-2 rounded-full text-xs font-semibold text-[#adadad] hover:text-white transition-all flex items-center gap-2">
+            <i class="ph-bold ph-images text-sm"></i>
+            <span>Скриншоты реального клиента</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= 1. INTERACTIVE DERBIN GUI CONTAINER ================= -->
+      <div id="derbin-gui-container" class="derbin-app-window max-w-4xl mx-auto shadow-2xl relative border border-white/15">
+        
+        <!-- Custom Title Bar (from CustomTitleBar.java) -->
+        <div class="flex items-center justify-between px-5 py-3 border-b border-white/[0.08] bg-black/30">
+          <div class="flex items-center gap-3">
+            <img src="logo.png" alt="Derbin" class="h-6 w-6 object-contain drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]">
+            <span class="text-lg font-bold tracking-tight text-white font-['Fredoka']">Derbin</span>
+            <span class="text-[11px] font-medium px-2 py-0.5 rounded-md bg-white/[0.08] text-[#adadad] border border-white/10">v1.8</span>
+            <div class="hidden sm:inline-flex items-center gap-1.5 ml-2 text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/25">
+              <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="gui-window-status">Dual-PC Undetect Active</span>
+            </div>
+          </div>
+
+          <!-- Window Controls & Actions -->
+          <div class="flex items-center gap-2">
+            <button onclick="toggleGuiSound()" id="gui-sound-btn" class="hidden sm:inline-flex items-center gap-1.5 text-[11px] text-[#adadad] hover:text-white bg-white/[0.05] hover:bg-white/10 border border-white/10 px-2.5 py-1 rounded-lg transition mr-1" title="Звуки интерфейса">
+              <i class="ph-bold ph-speaker-high text-xs text-emerald-400" id="gui-sound-icon"></i>
+              <span id="gui-sound-label">Звук: Вкл</span>
+            </button>
+            <a href="https://discord.gg/ehWheFqAu" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center gap-1 text-[11px] text-[#96afff] bg-[#5865f2]/15 hover:bg-[#5865f2]/30 border border-[#5865f2]/30 px-2.5 py-1 rounded-lg transition mr-1">
+              <i class="ph-bold ph-discord-logo text-xs"></i>
+              <span>Discord</span>
+            </a>
+            <button onclick="toggleDerbinMinimize()" class="w-7 h-7 rounded-lg hover:bg-white/10 text-[#adadad] hover:text-white flex items-center justify-center transition text-xs font-mono" title="Свернуть">─</button>
+            <button onclick="showNotice('Окно развернуто в оптимальном масштабе.')" class="w-7 h-7 rounded-lg hover:bg-white/10 text-[#adadad] hover:text-white flex items-center justify-center transition text-xs" title="Развернуть">□</button>
+            <button onclick="closeDerbinMockWindow()" class="w-7 h-7 rounded-lg hover:bg-rose-500/30 text-[#adadad] hover:text-rose-400 flex items-center justify-center transition text-xs" title="Закрыть">✕</button>
+          </div>
+        </div>
+
+        <!-- Modern Segmented Tab Bar (from ModernSegmentedTabBar.java) -->
+        <div class="px-5 pt-3 pb-2 border-b border-white/[0.06] bg-black/20 overflow-x-auto scrollbar-none">
+          <div class="flex items-center gap-1.5 min-w-max" id="derbin-tab-bar">
+            <button onclick="setDerbinTab('general')" id="dtab-btn-general" class="derbin-tab-item active">
+              <i class="ph-bold ph-house text-sm text-[var(--brand-accent)]"></i>
+              <span>Основные</span>
+            </button>
+            <button onclick="setDerbinTab('advanced')" id="dtab-btn-advanced" class="derbin-tab-item">
+              <i class="ph-bold ph-git-fork text-sm text-[var(--brand-accent)]"></i>
+              <span>Маршрутизация</span>
+            </button>
+            <button onclick="setDerbinTab('dhcp')" id="dtab-btn-dhcp" class="derbin-tab-item">
+              <i class="ph-bold ph-network text-sm text-[var(--brand-accent)]"></i>
+              <span>DHCP</span>
+            </button>
+            <button onclick="setDerbinTab('detector')" id="dtab-btn-detector" class="derbin-tab-item">
+              <i class="ph-bold ph-shield-check text-sm text-[var(--brand-accent)]"></i>
+              <span>Детектор 4.3</span>
+            </button>
+            <button onclick="setDerbinTab('sniffer')" id="dtab-btn-sniffer" class="derbin-tab-item">
+              <i class="ph-bold ph-terminal-window text-sm text-[var(--brand-accent)]"></i>
+              <span>Сниффер</span>
+            </button>
+            <button onclick="setDerbinTab('optimizer')" id="dtab-btn-optimizer" class="derbin-tab-item">
+              <i class="ph-bold ph-chart-line-up text-sm text-[var(--brand-accent)]"></i>
+              <span>Оптимизатор</span>
+            </button>
+            <button onclick="setDerbinTab('accounts')" id="dtab-btn-accounts" class="derbin-tab-item">
+              <i class="ph-bold ph-user-circle text-sm text-[var(--brand-accent)]"></i>
+              <span>Аккаунты</span>
+            </button>
+            <button onclick="setDerbinTab('themes')" id="dtab-btn-themes" class="derbin-tab-item">
+              <i class="ph-bold ph-palette text-sm text-[var(--brand-accent)]"></i>
+              <span>Темы</span>
+            </button>
+            <button onclick="setDerbinTab('help')" id="dtab-btn-help" class="derbin-tab-item">
+              <i class="ph-bold ph-question text-sm text-[var(--brand-accent)]"></i>
+              <span>Справка</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Window Body Area -->
+        <div id="derbin-window-body" class="p-5 sm:p-7 min-h-[460px] transition-all duration-300">
+          
+          <!-- ================= TAB 1: GENERAL (Основные) ================= -->
+          <div id="dpanel-general" class="space-y-6">
+            <div class="flex items-center justify-between">
+              <h3 class="text-base font-semibold text-white tracking-tight flex items-center gap-2">
+                <span>Управление подключением</span>
+              </h3>
+              <span class="text-xs text-[#9196a8]">derbin dual-pc proxy engine</span>
+            </div>
+
+            <!-- Main Connection Card -->
+            <div class="derbin-card p-5 sm:p-6 space-y-5">
+              
+              <!-- Server Address Field -->
+              <div>
+                <label class="block text-xs font-medium text-[#9196a8] mb-1.5">
+                  Адрес сервера Minecraft
+                </label>
+                <div class="flex gap-2">
+                  <input type="text" id="gui-server-input" value="mc.reallyworld.ru" class="derbin-input w-full font-mono">
+                  <select onchange="document.getElementById('gui-server-input').value = this.value" class="derbin-input w-44 cursor-pointer">
+                    <option value="mc.reallyworld.ru">ReallyWorld</option>
+                    <option value="funtime.su">FunTime</option>
+                    <option value="spworld.ru">SP Worlds</option>
+                    <option value="holyworld.ru">HolyWorld</option>
+                    <option value="hypixel.net">Hypixel</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Minecraft Account Field -->
+              <div>
+                <label class="block text-xs font-medium text-[#9196a8] mb-1.5">
+                  Аккаунт Minecraft
+                </label>
+                <select id="gui-account-select" class="derbin-input w-full cursor-pointer">
+                  <option value="omar_torrez">omar_torrez (Mojang Лицензия)</option>
+                  <option value="nerfchik">nerfchik (Developer Access)</option>
+                  <option value="none">[Без аккаунта — пиратский режим]</option>
+                </select>
+              </div>
+
+              <!-- Dual-PC Devices Visualizer (Swap mechanics) -->
+              <div class="p-4 rounded-xl bg-black/40 border border-white/5">
+                <div class="text-xs font-semibold text-[#adadad] uppercase tracking-wider mb-3 text-center">
+                  Схема работы двух устройств (Dual-PC Undetect)
+                </div>
+
+                <div class="flex items-center justify-around gap-2 sm:gap-4">
+                  
+                  <!-- Left Device: PC 1 -->
+                  <div class="flex flex-col items-center text-center p-3 rounded-xl bg-white/[0.02] border border-white/5 w-36 transition-all" id="gui-dev-left">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-2xl mb-2 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                      <i class="ph-bold ph-desktop"></i>
+                    </div>
+                    <span class="text-xs font-bold text-white" id="gui-dev-left-title">Игровой ПК</span>
+                    <span class="text-[10px] font-semibold text-emerald-400 mt-0.5" id="gui-dev-left-status">Контроллер (Active)</span>
+                    <span class="text-[10px] font-mono text-[#777] mt-1" id="gui-dev-left-ping">0.1 ms</span>
+                  </div>
+
+                  <!-- Swap Controllers Button -->
+                  <div class="flex flex-col items-center">
+                    <button onclick="swapGuiControllers()" class="p-3 rounded-xl bg-white/10 hover:bg-emerald-500/20 hover:border-emerald-500/40 border border-white/15 text-white transition hover:scale-110 active:scale-95 shadow-lg group" title="Поменять управление ПК (Swap)">
+                      <i class="ph-bold ph-arrows-left-right text-xl text-emerald-400 group-hover:rotate-180 transition-transform duration-300"></i>
+                    </button>
+                    <span class="text-[9px] text-[#777] font-mono mt-1">SWAP</span>
+                  </div>
+
+                  <!-- Right Device: PC 2 -->
+                  <div class="flex flex-col items-center text-center p-3 rounded-xl bg-white/[0.02] border border-white/5 w-36 transition-all" id="gui-dev-right">
+                    <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 text-[#adadad] flex items-center justify-center text-2xl mb-2">
+                      <i class="ph-bold ph-laptop"></i>
+                    </div>
+                    <span class="text-xs font-bold text-white" id="gui-dev-right-title">Второй ПК</span>
+                    <span class="text-[10px] font-semibold text-[#adadad] mt-0.5" id="gui-dev-right-status">MITM Прокси</span>
+                    <span class="text-[10px] font-mono text-[#777] mt-1">192.168.178.1</span>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Action Buttons Row -->
+              <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
+                <button onclick="toggleGuiProxy()" id="gui-proxy-toggle-btn" class="liquid-btn-primary px-6 py-3 rounded-xl text-xs font-semibold text-white flex items-center gap-2">
+                  <i class="ph-bold ph-play" id="gui-proxy-icon"></i>
+                  <span id="gui-proxy-label">Запустить прокси</span>
+                </button>
+
+                <div class="flex items-center gap-3 text-xs">
+                  <span class="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" id="gui-proxy-indicator"></span>
+                  <span class="text-[#adadad] font-mono" id="gui-proxy-state-text">Ожидание запуска прокси</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Live Packet Stream Monitor -->
+            <div class="rounded-xl bg-black/60 border border-white/10 p-3.5 font-mono text-xs text-[#788a80]">
+              <div class="flex items-center justify-between text-white/50 mb-1.5 border-b border-white/5 pb-1 text-[11px]">
+                <span>DERBIN KERNEL PACKET MONITOR</span>
+                <span class="text-emerald-400" id="gui-packet-stats">0 PACKETS / SEC</span>
+              </div>
+              <div id="gui-packet-log" class="text-emerald-400/90 text-[11px] truncate">
+                [Idle]: Enter server address and click "Запустить прокси" to begin traffic redirect.
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= TAB 2: ADVANCED (Маршрутизация и Прокси) ================= -->
+          <div id="dpanel-advanced" class="space-y-6 hidden">
+            
+            <!-- Card 1: Routing & Network -->
+            <div class="derbin-card p-5 sm:p-6 space-y-4">
+              <h4 class="text-sm font-bold text-white flex items-center gap-2 border-b border-white/[0.08] pb-3">
+                <i class="ph-bold ph-git-fork text-[var(--brand-accent)] text-base"></i>
+                <span>Маршрутизация и Сеть</span>
+              </h4>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <label class="derbin-check-label">
+                  <input type="checkbox" id="gui-chk-traceroute" checked class="hidden" onchange="updateGuiDiagnostic()">
+                  <span class="derbin-check-box">
+                    <svg class="h-3 w-3 text-black stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg>
+                  </span>
+                  <span>Обход traceroute</span>
+                </label>
+
+                <label class="derbin-check-label">
+                  <input type="checkbox" id="gui-chk-mdns" checked class="hidden" onchange="updateGuiDiagnostic()">
+                  <span class="derbin-check-box">
+                    <svg class="h-3 w-3 text-black stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg>
+                  </span>
+                  <span>Отключить mDNS и LLMNR</span>
+                </label>
+
+                <label class="derbin-check-label">
+                  <input type="checkbox" id="gui-chk-router" checked class="hidden" onchange="updateGuiDiagnostic()">
+                  <span class="derbin-check-box">
+                    <svg class="h-3 w-3 text-black stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg>
+                  </span>
+                  <span>Режим роутера</span>
+                </label>
+
+                <label class="derbin-check-label">
+                  <input type="checkbox" id="gui-chk-block" checked class="hidden" onchange="updateGuiDiagnostic()">
+                  <span class="derbin-check-box">
+                    <svg class="h-3 w-3 text-black stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg>
+                  </span>
+                  <span>Блокировка трафика между сетями</span>
+                </label>
+              </div>
+
+              <!-- Network Interface Selector (From Screenshot!) -->
+              <div class="pt-2">
+                <label class="block text-xs font-medium text-[#9196a8] mb-1.5">
+                  Сетевой интерфейс для второго устройства
+                </label>
+                <select class="derbin-input w-full cursor-pointer font-mono text-xs">
+                  <option selected>Realtek PCIe GbE Family Controller-WFP Native MAC Layer LightWeight Filter</option>
+                  <option>Realtek PCIe GbE Family Controller-QoS Packet Scheduler-0000</option>
+                  <option>Realtek PCIe GbE Family Controller-WFP 802.3 MAC Layer LightWeight Filter-0000</option>
+                  <option>Realtek PCIe GbE Family Controller 192.168.178.181</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Card 2: Proxy & Security (With exact Tooltip from Screenshot!) -->
+            <div class="derbin-card p-5 sm:p-6 space-y-4">
+              <h4 class="text-sm font-bold text-white flex items-center gap-2 border-b border-white/[0.08] pb-3">
+                <i class="ph-bold ph-shield-check text-[var(--brand-accent)] text-base"></i>
+                <span>Прокси и Защита</span>
+              </h4>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                
+                <!-- Tooltip Trigger Checkbox (Exact screenshot feature!) -->
+                <div class="derbin-tooltip-container">
+                  <label class="derbin-check-label w-full">
+                    <input type="checkbox" checked class="hidden">
+                    <span class="derbin-check-box">
+                      <svg class="h-3 w-3 text-black stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg>
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                      <span>Поддержка лицензии</span>
+                      <i class="ph-bold ph-info text-xs text-emerald-400"></i>
+                    </span>
+                  </label>
+                  
+                  <!-- Tooltip Popover -->
+                  <div class="derbin-tooltip-box">
+                    Позволяет полноценно общаться в режиме защищённого чата и видеть скины на серверах, использующих проверку лицензии. Требуется учётная запись с действующей лицензией.
+                  </div>
+                </div>
+
+                <label class="derbin-check-label">
+                  <input type="checkbox" checked class="hidden">
+                  <span class="derbin-check-box">
+                    <svg class="h-3 w-3 text-black stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg>
+                  </span>
+                  <span>Защищённый чат</span>
+                </label>
+
+                <label class="derbin-check-label">
+                  <input type="checkbox" checked class="hidden">
+                  <span class="derbin-check-box">
+                    <svg class="h-3 w-3 text-black stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg>
+                  </span>
+                  <span>Разрешить прямые подключения</span>
+                </label>
+
+                <label class="derbin-check-label">
+                  <input type="checkbox" class="hidden">
+                  <span class="derbin-check-box">
+                    <svg class="h-3 w-3 text-black stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg>
+                  </span>
+                  <span>Показывать ошибки при кике</span>
+                </label>
+
+              </div>
+
+              <div class="pt-2">
+                <label class="block text-xs font-medium text-[#9196a8] mb-1.5">
+                  Адрес прокси-сервера:
+                </label>
+                <input type="text" value="127.0.0.1:25565" class="derbin-input w-full font-mono text-xs">
+              </div>
+            </div>
+
+            <!-- Card 3: Optimization -->
+            <div class="derbin-card p-5 sm:p-6 space-y-3">
+              <h4 class="text-sm font-bold text-white flex items-center gap-2 border-b border-white/[0.08] pb-3">
+                <i class="ph-bold ph-gauge text-[var(--brand-accent)] text-base"></i>
+                <span>Сетевая оптимизация и сниффинг</span>
+              </h4>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <label class="derbin-check-label">
+                  <input type="checkbox" checked class="hidden">
+                  <span class="derbin-check-box">
+                    <svg class="h-3 w-3 text-black stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg>
+                  </span>
+                  <span>Auto Latency</span>
+                </label>
+                <label class="derbin-check-label">
+                  <input type="checkbox" checked class="hidden">
+                  <span class="derbin-check-box">
+                    <svg class="h-3 w-3 text-black stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg>
+                  </span>
+                  <span>Ping Correction</span>
+                </label>
+                <label class="derbin-check-label">
+                  <input type="checkbox" class="hidden">
+                  <span class="derbin-check-box">
+                    <svg class="h-3 w-3 text-black stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg>
+                  </span>
+                  <span>Логировать пакеты</span>
+                </label>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ================= TAB 3: DHCP (Параметры сети из скриншота) ================= -->
+          <div id="dpanel-dhcp" class="space-y-6 hidden">
+            
+            <!-- Card 1: Network Adapter -->
+            <div class="derbin-card p-5 sm:p-6 space-y-3">
+              <h4 class="text-sm font-bold text-white flex items-center gap-2 border-b border-white/[0.08] pb-3">
+                <i class="ph-bold ph-cpu text-[var(--brand-accent)] text-base"></i>
+                <span>Сетевой интерфейс для DHCP сервера</span>
+              </h4>
+
+              <div>
+                <select class="derbin-input w-full cursor-pointer font-mono text-xs">
+                  <option selected>Realtek PCIe GbE Family Controller 192.168.178.181</option>
+                  <option>Intel(R) Wi-Fi 6 AX201 160MHz (Не рекомендуется: Wi-Fi)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Card 2: IP, Mask, DNS Fields (Exact layout from Screenshot!) -->
+            <div class="derbin-card p-5 sm:p-6 space-y-4">
+              <div class="flex items-center justify-between border-b border-white/[0.08] pb-3">
+                <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                  <i class="ph-bold ph-sliders text-[var(--brand-accent)] text-base"></i>
+                  <span>Параметры сети (DHCP)</span>
+                </h4>
+                <button onclick="randomizeGuiDhcp()" class="px-3 py-1 rounded-lg bg-white/10 hover:bg-emerald-500/20 text-xs text-emerald-400 border border-white/10 transition flex items-center gap-1.5">
+                  <i class="ph-bold ph-shuffle"></i>
+                  <span>Случайный IP</span>
+                </button>
+              </div>
+
+              <!-- 6 Inputs in 2 columns -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-medium text-[#9196a8] mb-1">IP address</label>
+                  <input type="text" id="dhcp-ip" value="192.168.178.1" class="derbin-input w-full font-mono text-xs">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-[#9196a8] mb-1">Mask</label>
+                  <input type="text" id="dhcp-mask" value="255.255.255.0" class="derbin-input w-full font-mono text-xs">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-[#9196a8] mb-1">Start ip</label>
+                  <input type="text" id="dhcp-start" value="192.168.178.10" class="derbin-input w-full font-mono text-xs">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-[#9196a8] mb-1">End ip</label>
+                  <input type="text" id="dhcp-end" value="192.168.178.254" class="derbin-input w-full font-mono text-xs">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-[#9196a8] mb-1">DNS 1</label>
+                  <input type="text" id="dhcp-dns1" value="1.1.1.1" class="derbin-input w-full font-mono text-xs">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-[#9196a8] mb-1">DNS 2</label>
+                  <input type="text" id="dhcp-dns2" value="1.0.0.1" class="derbin-input w-full font-mono text-xs">
+                </div>
+              </div>
+
+              <!-- Action button -->
+              <div class="pt-3 flex items-center justify-between">
+                <button onclick="toggleDhcpServerState()" id="dhcp-start-btn" class="liquid-btn-primary px-6 py-2.5 rounded-xl text-xs font-semibold text-white flex items-center gap-2">
+                  <i class="ph-bold ph-power"></i>
+                  <span id="dhcp-btn-label">Запустить DHCP сервер</span>
+                </button>
+                <span class="text-xs font-mono text-[#adadad]" id="dhcp-status-label">DHCP: Остановлен</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ================= TAB 4: ACCOUNTS (Аккаунты) ================= -->
+          <div id="dpanel-accounts" class="space-y-6 hidden">
+            <div class="derbin-card p-5 sm:p-6 space-y-4">
+              <div class="flex items-center justify-between border-b border-white/[0.08] pb-3">
+                <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                  <i class="ph-bold ph-users text-[var(--brand-accent)] text-base"></i>
+                  <span>Управление игровыми аккаунтами</span>
+                </h4>
+                <span class="text-xs text-[#9196a8]">2 аккаунта активно</span>
+              </div>
+
+              <!-- Account List -->
+              <div class="space-y-2.5" id="gui-accounts-list">
+                
+                <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/5 hover:border-white/15 transition">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-bold flex items-center justify-center font-mono">
+                      OT
+                    </div>
+                    <div>
+                      <div class="text-xs font-bold text-white">omar_torrez</div>
+                      <div class="text-[10px] text-[#adadad]">Mojang License • Токен авторизован</div>
+                    </div>
+                  </div>
+                  <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-semibold border border-emerald-500/30">Активен</span>
+                </div>
+
+                <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/5 hover:border-white/15 transition">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-bold flex items-center justify-center font-mono">
+                      NC
+                    </div>
+                    <div>
+                      <div class="text-xs font-bold text-white">nerfchik</div>
+                      <div class="text-[10px] text-[#adadad]">Developer Access • Microsoft OAuth</div>
+                    </div>
+                  </div>
+                  <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-semibold border border-emerald-500/30">Готов</span>
+                </div>
+
+              </div>
+
+              <!-- Add Account Input -->
+              <div class="pt-3 border-t border-white/[0.06] flex gap-2">
+                <input type="text" id="gui-new-account-name" placeholder="Введите никнейм для добавления..." class="derbin-input w-full text-xs">
+                <button onclick="addGuiAccount()" class="liquid-btn-primary px-5 py-2 rounded-xl text-xs font-semibold text-white whitespace-nowrap">
+                  + Добавить
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= TAB 5: THEMES (Темы Liquid Glass) ================= -->
+          <div id="dpanel-themes" class="space-y-6 hidden">
+            <div class="derbin-card p-5 sm:p-6 space-y-5">
+              <h4 class="text-sm font-bold text-white flex items-center gap-2 border-b border-white/[0.08] pb-3">
+                <i class="ph-bold ph-paint-brush text-[var(--brand-accent)] text-base"></i>
+                <span>Кастомизация Liquid Glass Theme</span>
+              </h4>
+
+              <!-- Accent Color Switcher -->
+              <div>
+                <label class="block text-xs font-medium text-[#9196a8] mb-2.5">
+                  Акцентный цвет интерфейса
+                </label>
+                <div class="flex flex-wrap gap-2.5">
+                  <button onclick="setGuiThemeColor('#10b981', '#34d399')" class="px-3.5 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 text-xs font-semibold flex items-center gap-2 hover:scale-105 transition">
+                    <span class="w-3 h-3 rounded-full bg-emerald-400"></span> Emerald (Default)
+                  </button>
+                  <button onclick="setGuiThemeColor('#06b6d4', '#22d3ee')" class="px-3.5 py-2 rounded-xl bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 text-xs font-semibold flex items-center gap-2 hover:scale-105 transition">
+                    <span class="w-3 h-3 rounded-full bg-cyan-400"></span> Neon Cyan
+                  </button>
+                  <button onclick="setGuiThemeColor('#8b5cf6', '#a78bfa')" class="px-3.5 py-2 rounded-xl bg-violet-500/20 border border-violet-500/50 text-violet-400 text-xs font-semibold flex items-center gap-2 hover:scale-105 transition">
+                    <span class="w-3 h-3 rounded-full bg-violet-400"></span> Moonlight Violet
+                  </button>
+                  <button onclick="setGuiThemeColor('#f43f5e', '#fb7185')" class="px-3.5 py-2 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-400 text-xs font-semibold flex items-center gap-2 hover:scale-105 transition">
+                    <span class="w-3 h-3 rounded-full bg-rose-400"></span> Crimson Rose
+                  </button>
+                  <button onclick="setGuiThemeColor('#f59e0b', '#fbbf24')" class="px-3.5 py-2 rounded-xl bg-amber-500/20 border border-amber-500/50 text-amber-400 text-xs font-semibold flex items-center gap-2 hover:scale-105 transition">
+                    <span class="w-3 h-3 rounded-full bg-amber-400"></span> Amber Gold
+                  </button>
+                </div>
+              </div>
+
+              <!-- Sliders -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
+                <div>
+                  <div class="flex justify-between text-xs text-[#9196a8] mb-1.5">
+                    <span>Размытие стекла (Backdrop Blur)</span>
+                    <span id="gui-blur-val" class="font-mono text-white">34px</span>
+                  </div>
+                  <input type="range" min="12" max="50" value="34" oninput="document.getElementById('gui-blur-val').innerText = this.value + 'px'; document.getElementById('derbin-gui-container').style.backdropFilter = 'blur(' + this.value + 'px) saturate(190%)';" class="w-full accent-emerald-500 cursor-pointer">
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs text-[#9196a8] mb-1.5">
+                    <span>Насыщенность отражения (Saturation)</span>
+                    <span id="gui-sat-val" class="font-mono text-white">190%</span>
+                  </div>
+                  <input type="range" min="100" max="250" value="190" oninput="document.getElementById('gui-sat-val').innerText = this.value + '%';" class="w-full accent-emerald-500 cursor-pointer">
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ================= TAB 6: HELP (Справка по обходу) ================= -->
+          <div id="dpanel-help" class="space-y-6 hidden">
+            <div class="derbin-card p-5 sm:p-6 space-y-4">
+              <h4 class="text-sm font-bold text-white flex items-center gap-2 border-b border-white/[0.08] pb-3">
+                <i class="ph-bold ph-book-open text-[var(--brand-accent)] text-base"></i>
+                <span>Инструкция по безопасности и обходу 4.3</span>
+              </h4>
+
+              <div class="space-y-3.5 text-xs text-[#ededeb] leading-relaxed">
+                <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
+                  <strong>Как работает схема двух ПК:</strong> Игровой клиент запускается на первом ПК абсолютно «чистым» без внедрения читов в память процесса. Все манипуляции с пакетами и ботами происходят на втором ПК через WFP-фильтр.
+                </div>
+                <div class="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                  <strong>Почему 0 банов по 4.3:</strong> Любая проверка экрана (AnyDesk, Paladin, Process Hacker, Everything) проверяет только игровой ПК, где нет ни одного файла софта, а сетевой шлюз маскируется под домашний роутер.
+                </div>
+                <div class="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                  <strong>Поддержка серверов:</strong> Полная совместимость с серверами FunTime, HolyWorld, SP Worlds, ReallyWorld и любыми проектами со строгой модерацией.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= TAB 7: DETECTOR (Анализатор скрытности и проверок 4.3) ================= -->
+          <div id="dpanel-detector" class="space-y-6 hidden">
+            
+            <!-- Top Status & Action Card -->
+            <div class="derbin-card p-5 sm:p-6 space-y-5">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.08] pb-4">
+                <div>
+                  <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                    <i class="ph-bold ph-shield-check text-[var(--brand-accent)] text-lg"></i>
+                    <span>Анализатор безопасности и проверок на 4.3</span>
+                  </h4>
+                  <p class="text-xs text-[#9196a8] mt-1">
+                    Стресс-тестирование системы на палевность (Echo, AnyDesk, Process Hacker, Paladin)
+                  </p>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                  <button onclick="exportAuditReport()" class="px-3.5 py-2 rounded-xl bg-white/[0.05] hover:bg-white/10 text-xs font-semibold text-white border border-white/10 transition flex items-center gap-1.5" title="Экспорт отчёта">
+                    <i class="ph-bold ph-download-simple text-emerald-400"></i>
+                    <span>Отчёт .txt</span>
+                  </button>
+                  <button onclick="runUndetectDiagnostic()" id="btn-run-detector" class="liquid-btn-primary px-5 py-2 rounded-xl text-xs font-semibold text-white flex items-center gap-2 shadow-lg shadow-emerald-500/20">
+                    <i class="ph-bold ph-play" id="detector-btn-icon"></i>
+                    <span id="detector-btn-label">Запустить аудит скрытности</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Stealth Gauge & Summary -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
+                
+                <!-- Gauge block -->
+                <div class="p-4 rounded-xl bg-black/40 border border-white/5 flex items-center gap-4">
+                  <div class="relative w-16 h-16 flex items-center justify-center">
+                    <svg class="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
+                      <path class="text-white/10" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                      <path id="detector-circle-bar" class="text-emerald-400 transition-all duration-1000 ease-out" stroke-dasharray="100, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    </svg>
+                    <span class="absolute text-xs font-bold text-white font-mono" id="detector-score-pct">100%</span>
+                  </div>
+                  <div>
+                    <div class="text-xs font-bold text-white" id="detector-verdict-title">СТАТУС: ЧИСТ</div>
+                    <div class="text-[11px] text-emerald-400 font-semibold" id="detector-verdict-desc">0 следов инъекций</div>
+                    <div class="text-[10px] text-[#777] font-mono mt-0.5">Dual-PC Rule 4.3: PASS</div>
+                  </div>
+                </div>
+
+                <!-- Sub-metrics -->
+                <div class="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2">
+                  <div class="flex justify-between text-xs">
+                    <span class="text-[#9196a8]">WebRTC утечка IP:</span>
+                    <span class="font-mono text-emerald-400 font-bold" id="detector-webrtc-state">Изолирован</span>
+                  </div>
+                  <div class="flex justify-between text-xs">
+                    <span class="text-[#9196a8]">JVM инъекции:</span>
+                    <span class="font-mono text-emerald-400 font-bold" id="detector-jvm-state">0 хуков (Clean)</span>
+                  </div>
+                  <div class="flex justify-between text-xs">
+                    <span class="text-[#9196a8]">Маскировка TTL:</span>
+                    <span class="font-mono text-emerald-400 font-bold">128 (Windows native)</span>
+                  </div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2">
+                  <div class="flex justify-between text-xs">
+                    <span class="text-[#9196a8]">Трейсы AnyDesk:</span>
+                    <span class="font-mono text-emerald-400 font-bold">0 сигнатур</span>
+                  </div>
+                  <div class="flex justify-between text-xs">
+                    <span class="text-[#9196a8]">WFP MAC Layer:</span>
+                    <span class="font-mono text-emerald-400 font-bold">Активен (Ring-0)</span>
+                  </div>
+                  <div class="flex justify-between text-xs">
+                    <span class="text-[#9196a8]">Prefetch & USN:</span>
+                    <span class="font-mono text-emerald-400 font-bold">Чисто (No .jar)</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Live Diagnostic Pipeline Steps -->
+              <div class="space-y-2.5" id="detector-steps-list">
+                
+                <!-- Step 1 -->
+                <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 transition" id="dstep-row-1">
+                  <div class="flex items-center gap-3">
+                    <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold font-mono" id="dstep-icon-1">✓</div>
+                    <div>
+                      <div class="text-xs font-bold text-white">WebRTC & STUN Leak Benchmark</div>
+                      <div class="text-[10px] text-[#adadad]" id="dstep-desc-1">Локальные кандидаты ICE изолированы внутри виртуальной подсети 192.168.178.1</div>
+                    </div>
+                  </div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" id="dstep-badge-1">SECURE</span>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 transition" id="dstep-row-2">
+                  <div class="flex items-center gap-3">
+                    <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold font-mono" id="dstep-icon-2">✓</div>
+                    <div>
+                      <div class="text-xs font-bold text-white">Screen Capture & Spy-API Monitor</div>
+                      <div class="text-[10px] text-[#adadad]" id="dstep-desc-2">Хуки захвата экрана сторонними утилитами модерации не обнаружены</div>
+                    </div>
+                  </div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" id="dstep-badge-2">PASS</span>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 transition" id="dstep-row-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold font-mono" id="dstep-icon-3">✓</div>
+                    <div>
+                      <div class="text-xs font-bold text-white">JVM Integrity & Memory Signatures</div>
+                      <div class="text-[10px] text-[#adadad]" id="dstep-desc-3">Сигнатуры Paladin, Process Hacker, Echo и Everything не находят модификаций памяти</div>
+                    </div>
+                  </div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" id="dstep-badge-3">PASS</span>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 transition" id="dstep-row-4">
+                  <div class="flex items-center gap-3">
+                    <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold font-mono" id="dstep-icon-4">✓</div>
+                    <div>
+                      <div class="text-xs font-bold text-white">TTL Mask & Traceroute Verification</div>
+                      <div class="text-[10px] text-[#adadad]" id="dstep-desc-4">Сетевой узел второго ПК маскируется под домашний маршрутизатор (TTL=128, 1 Hop)</div>
+                    </div>
+                  </div>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" id="dstep-badge-4">PASS</span>
+                </div>
+
+              </div>
+
+              <!-- Terminal Diagnostic Console -->
+              <div class="rounded-xl bg-black/70 border border-white/10 p-3.5 font-mono text-xs text-[#788a80]">
+                <div class="flex items-center justify-between text-white/50 mb-1.5 border-b border-white/5 pb-1 text-[11px]">
+                  <span>DIAGNOSTIC AUDIT LOG STREAM</span>
+                  <span class="text-emerald-400 font-semibold" id="detector-log-status">SYSTEM READY</span>
+                </div>
+                <div id="detector-console-log" class="text-emerald-400/90 text-[11px] leading-relaxed max-h-24 overflow-y-auto derbin-scrollbar whitespace-pre-wrap">
+[SYSTEM READY]: Click "Запустить аудит скрытности" to trigger real-time browser & network leak audit.
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- ================= TAB 8: SNIFFER (Живой сниффер и Hex-диссектор) ================= -->
+          <div id="dpanel-sniffer" class="space-y-6 hidden">
+            
+            <div class="derbin-card p-5 sm:p-6 space-y-4">
+              
+              <!-- Header & Filters -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-3">
+                <div class="flex items-center gap-2">
+                  <i class="ph-bold ph-terminal-window text-[var(--brand-accent)] text-lg"></i>
+                  <div>
+                    <h4 class="text-sm font-bold text-white">WFP Сетевой Сниффер и Hex-Инспектор</h4>
+                    <div class="text-[11px] text-[#9196a8]">Перехват и разбор пакетов протокола Minecraft в реальном времени</div>
+                  </div>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                  <select id="sniffer-filter-dir" onchange="filterSnifferPackets()" class="derbin-input px-2.5 py-1 text-xs cursor-pointer">
+                    <option value="all">Все направления</option>
+                    <option value="OUT">C -> S (Исходящие)</option>
+                    <option value="IN">S -> C (Входящие)</option>
+                  </select>
+
+                  <select id="sniffer-filter-type" onchange="filterSnifferPackets()" class="derbin-input px-2.5 py-1 text-xs cursor-pointer">
+                    <option value="all">Все типы пакетов</option>
+                    <option value="KeepAlive">KeepAlive (0x0F)</option>
+                    <option value="PlayerPosition">Position (0x04)</option>
+                    <option value="ChatMessage">Chat (0x03)</option>
+                    <option value="Handshake">Handshake (0x00)</option>
+                  </select>
+
+                  <button onclick="toggleSnifferLive()" id="sniffer-toggle-btn" class="px-3 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1 transition">
+                    <i class="ph-bold ph-pause" id="sniffer-pause-icon"></i>
+                    <span id="sniffer-pause-label">Пауза</span>
+                  </button>
+
+                  <button onclick="clearSnifferTable()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-[#adadad] hover:text-white border border-white/10 transition" title="Очистить лог">
+                    <i class="ph-bold ph-trash"></i>
+                  </button>
+
+                  <button onclick="exportSnifferPcap()" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-[#adadad] hover:text-white border border-white/10 transition" title="Экспорт JSON">
+                    <i class="ph-bold ph-download-simple"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Packet Table -->
+              <div class="rounded-xl border border-white/10 overflow-hidden bg-black/50">
+                <div class="max-h-48 overflow-y-auto derbin-scrollbar">
+                  <table class="w-full text-left text-xs font-mono">
+                    <thead class="bg-white/[0.04] text-[#9196a8] border-b border-white/10 sticky top-0 text-[10px] uppercase tracking-wider">
+                      <tr>
+                        <th class="p-2.5">Время</th>
+                        <th class="p-2.5">Напр.</th>
+                        <th class="p-2.5">ID</th>
+                        <th class="p-2.5">Тип</th>
+                        <th class="p-2.5">Размер</th>
+                        <th class="p-2.5">WFP Статус</th>
+                      </tr>
+                    </thead>
+                    <tbody id="sniffer-packet-tbody" class="divide-y divide-white/[0.04]">
+                      <!-- Rows dynamically injected via JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Selected Packet Hex Dissector Box -->
+              <div class="rounded-xl bg-black/70 border border-white/10 p-4 font-mono text-xs space-y-3">
+                <div class="flex items-center justify-between border-b border-white/5 pb-2">
+                  <div class="flex items-center gap-2">
+                    <span class="text-white font-bold" id="dissector-pkt-name">Пакет: 0x0F KeepAlive</span>
+                    <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-semibold" id="dissector-pkt-size">42 bytes</span>
+                  </div>
+                  <span class="text-[#777] text-[10px]" id="dissector-pkt-route">Route: Device 1 -> WFP 192.168.178.181 -> Server</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Raw Hex columns -->
+                  <div>
+                    <div class="text-[10px] text-[#9196a8] mb-1 uppercase tracking-wider">RAW HEX BYTES & ASCII DECODE</div>
+                    <pre id="dissector-hex-dump" class="p-2.5 rounded-lg bg-black/90 border border-white/5 text-[11px] text-emerald-400 derbin-hex-cell leading-tight overflow-x-auto">
+0000  00 2a 0f 00 00 01 8b 4a  53 2d 64 65 72 62 69 6e  |.*.....JS-derbin|
+0010  31 2e 38 2d 70 72 6f 78  79 2d 6f 6b 00 00 ff 1a  |1.8-proxy-ok....|
+0020  24 6b 65 65 70 5f 61 6c  69 76 65                 |$keep_alive     |
+                    </pre>
+                  </div>
+
+                  <!-- Decoded Fields Tree -->
+                  <div>
+                    <div class="text-[10px] text-[#9196a8] mb-1 uppercase tracking-wider">DECODED PROTOCOL FIELDS</div>
+                    <div class="p-2.5 rounded-lg bg-black/90 border border-white/5 text-[11px] text-[#adadad] space-y-1 font-mono leading-relaxed" id="dissector-fields-tree">
+                      <div><span class="text-white font-bold">Packet ID:</span> <span class="text-emerald-400">0x0F</span> (Play Clientbound KeepAlive)</div>
+                      <div><span class="text-white font-bold">Payload ID:</span> <span class="text-[#f1f1ef]">1745283921849L</span></div>
+                      <div><span class="text-white font-bold">Encryption:</span> <span class="text-emerald-400">AES-CFB8 Active</span></div>
+                      <div><span class="text-white font-bold">Compression:</span> Zlib Enabled (Threshold 256)</div>
+                      <div><span class="text-white font-bold">MITM Latency:</span> <span class="text-emerald-400">0.08 ms</span></div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Interactive Packet Injector Form -->
+              <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-3">
+                <div class="text-xs font-semibold text-white flex items-center gap-2">
+                  <i class="ph-bold ph-paper-plane-tilt text-emerald-400"></i>
+                  <span>Инжектор тестовых пакетов в сетевой туннель</span>
+                </div>
+
+                <div class="flex flex-wrap sm:flex-nowrap gap-2">
+                  <select id="injector-pkt-type" class="derbin-input w-48 text-xs cursor-pointer">
+                    <option value="chat">0x03 Chat Message</option>
+                    <option value="position">0x04 Player Position</option>
+                    <option value="keepalive">0x0F KeepAlive</option>
+                    <option value="status">0x19 Entity Action</option>
+                  </select>
+
+                  <input type="text" id="injector-payload-input" value="!derbin dual-pc stealth test active" placeholder="Введите текст или payload пакета..." class="derbin-input w-full text-xs font-mono">
+
+                  <button onclick="injectCustomPacket()" class="liquid-btn-primary px-5 py-2 rounded-xl text-xs font-semibold text-white whitespace-nowrap flex items-center gap-1.5 shadow-md">
+                    <i class="ph-bold ph-lightning"></i>
+                    <span>Инжектировать</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- ================= TAB 9: OPTIMIZER (Оптимизатор пинга с Живым Осциллографом) ================= -->
+          <div id="dpanel-optimizer" class="space-y-6 hidden">
+            
+            <div class="derbin-card p-5 sm:p-6 space-y-5">
+              
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-3">
+                <div class="flex items-center gap-2">
+                  <i class="ph-bold ph-chart-line-up text-[var(--brand-accent)] text-lg"></i>
+                  <div>
+                    <h4 class="text-sm font-bold text-white">Оптимизатор сетевой задержки и Сглаживатель Пинга</h4>
+                    <div class="text-[11px] text-[#9196a8]">Аппаратная стабилизация джиттера и визуальный осциллограф пакетов</div>
+                  </div>
+                </div>
+
+                <button onclick="benchmarkRealPing()" id="btn-bench-ping" class="px-3.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 text-xs font-semibold flex items-center gap-1.5 transition shadow-sm">
+                  <i class="ph-bold ph-wifi-high"></i>
+                  <span id="btn-bench-label">Замерить реальный интернет-пинг</span>
+                </button>
+              </div>
+
+              <!-- Live Canvas Oscilloscope -->
+              <div class="p-4 rounded-xl bg-black/60 border border-white/10 space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+                  <div class="flex items-center gap-3">
+                    <span class="text-white/50 text-[11px]">LIVE PACKET OSCILLOSCOPE</span>
+                    <span class="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-bold text-[11px] border border-emerald-500/30">
+                      PING: <span id="opt-cur-ping">22</span> ms
+                    </span>
+                  </div>
+                  <div class="flex items-center gap-3 text-[#9196a8] text-[11px]">
+                    <span>MIN: <strong class="text-white" id="opt-min-ping">18ms</strong></span>
+                    <span>MAX: <strong class="text-white" id="opt-max-ping">26ms</strong></span>
+                    <span>JITTER: <strong class="text-emerald-400" id="opt-jitter-val">±0.6ms</strong></span>
+                  </div>
+                </div>
+
+                <!-- Canvas element -->
+                <div class="w-full h-36 relative rounded-lg overflow-hidden bg-black/80 border border-white/5 flex items-center justify-center">
+                  <canvas id="gui-ping-canvas" width="700" height="140" class="w-full h-full block"></canvas>
+                </div>
+              </div>
+
+              <!-- Interactive Latency Sliders -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                
+                <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
+                  <div class="flex justify-between text-xs text-[#9196a8]">
+                    <span class="text-white font-medium">Искусственный спуф пинга (Target Delay)</span>
+                    <span id="opt-spoof-label" class="font-mono text-emerald-400 font-bold">+0 ms (Native)</span>
+                  </div>
+                  <input type="range" id="opt-spoof-slider" min="0" max="120" value="0" oninput="updatePingSpoof(this.value)" class="w-full accent-emerald-500 cursor-pointer">
+                  <p class="text-[10px] text-[#777]">Сдвигает среднее значение пинга в сетевом стеке для маскировки под обычного игрока</p>
+                </div>
+
+                <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
+                  <div class="flex justify-between text-xs text-[#9196a8]">
+                    <span class="text-white font-medium">Сглаживание джиттера (Jitter Smoothing)</span>
+                    <span id="opt-smooth-label" class="font-mono text-emerald-400 font-bold">85% (Высокое)</span>
+                  </div>
+                  <input type="range" id="opt-smooth-slider" min="10" max="100" value="85" oninput="updateJitterSmoothing(this.value)" class="w-full accent-emerald-500 cursor-pointer">
+                  <p class="text-[10px] text-[#777]">Устраняет резкие микроспайки в пакетах между контроллером и вторым ПК</p>
+                </div>
+
+              </div>
+
+              <!-- Network Stack Toggles -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                
+                <label class="derbin-check-label">
+                  <input type="checkbox" id="chk-tcp-nodelay" checked class="hidden" onchange="playGuiSound('click')">
+                  <span class="derbin-check-box">
+                    <svg class="h-3 w-3 text-black stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg>
+                  </span>
+                  <div class="text-xs">
+                    <div class="font-bold text-white">TCP_NODELAY (Отключение Nagle)</div>
+                    <div class="text-[10px] text-[#adadad]">Мгновенная отправка пакетов без ожидания буфера</div>
+                  </div>
+                </label>
+
+                <label class="derbin-check-label">
+                  <input type="checkbox" id="chk-wfp-bypass" checked class="hidden" onchange="playGuiSound('click')">
+                  <span class="derbin-check-box">
+                    <svg class="h-3 w-3 text-black stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg>
+                  </span>
+                  <div class="text-xs">
+                    <div class="font-bold text-white">WFP Ring-0 MAC Bypass</div>
+                    <div class="text-[10px] text-[#adadad]">Аппаратный приоритет сетевых прерываний</div>
+                  </div>
+                </label>
+
+                <label class="derbin-check-label">
+                  <input type="checkbox" id="chk-antispike" checked class="hidden" onchange="playGuiSound('click')">
+                  <span class="derbin-check-box">
+                    <svg class="h-3 w-3 text-black stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg>
+                  </span>
+                  <div class="text-xs">
+                    <div class="font-bold text-white">Anti-Spike Protection</div>
+                    <div class="text-[10px] text-[#adadad]">Сглаживание лагов при скачках домашнего Wi-Fi</div>
+                  </div>
+                </label>
+
+                <label class="derbin-check-label">
+                  <input type="checkbox" id="chk-mtu-clamp" checked class="hidden" onchange="playGuiSound('click')">
+                  <span class="derbin-check-box">
+                    <svg class="h-3 w-3 text-black stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M5 13l4 4L19 7"/></svg>
+                  </span>
+                  <div class="text-xs">
+                    <div class="font-bold text-white">MTU Clamp (1472 байта)</div>
+                    <div class="text-[10px] text-[#adadad]">Исключает фрагментацию IP пакетов</div>
+                  </div>
+                </label>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ================= 2. SCREENSHOTS GALLERY & LIGHTBOX (Toggleable) ================= -->
+      <div id="derbin-screenshots-container" class="mt-14 space-y-6">
+        <div class="flex items-center justify-between px-1">
+          <div class="text-xs font-semibold text-[#adadad] uppercase tracking-wider flex items-center gap-2">
+            <i class="ph-bold ph-camera text-emerald-400 text-sm"></i>
+            <span>Галерея реальных скриншотов derbin</span>
+          </div>
+          <span class="text-[11px] text-[#79787b]">Кликните для полноэкранного просмотра</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          
+          <!-- Shot 1 -->
+          <div onclick="openLightbox('assets/preview_routing.png', 'Маршрутизация и Сеть • derbin')" class="sadnes-card p-3 rounded-2xl cursor-pointer hover:border-emerald-500/50 transition group">
+            <div class="h-44 rounded-xl overflow-hidden bg-black/60 border border-white/5 mb-3 relative flex items-center justify-center">
+              <img src="assets/preview_routing.png" alt="Маршрутизация" class="w-full h-full object-contain group-hover:scale-105 transition duration-300">
+              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                <span class="px-3 py-1 rounded-full bg-emerald-500 text-black font-bold text-xs flex items-center gap-1 shadow-lg">
+                  <i class="ph-bold ph-arrows-out"></i> Увеличить
+                </span>
+              </div>
+            </div>
+            <div class="text-sm font-bold text-white truncate px-1">Маршрутизация и Сеть</div>
+            <div class="text-xs text-[#adadad] px-1 truncate">Обход traceroute, режим роутера</div>
+          </div>
+
+          <!-- Shot 2 -->
+          <div onclick="openLightbox('assets/preview_network.png', 'Конфигурация Сети и DHCP • derbin')" class="sadnes-card p-3 rounded-2xl cursor-pointer hover:border-emerald-500/50 transition group">
+            <div class="h-44 rounded-xl overflow-hidden bg-black/60 border border-white/5 mb-3 relative flex items-center justify-center">
+              <img src="assets/preview_network.png" alt="DHCP Сеть" class="w-full h-full object-contain group-hover:scale-105 transition duration-300">
+              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                <span class="px-3 py-1 rounded-full bg-emerald-500 text-black font-bold text-xs flex items-center gap-1 shadow-lg">
+                  <i class="ph-bold ph-arrows-out"></i> Увеличить
+                </span>
+              </div>
+            </div>
+            <div class="text-sm font-bold text-white truncate px-1">Параметры сети (DHCP)</div>
+            <div class="text-xs text-[#adadad] px-1 truncate">IP, маска, Start/End IP, DNS</div>
+          </div>
+
+          <!-- Shot 3 -->
+          <div onclick="openLightbox('assets/preview_interface.png', 'Сетевые адаптеры WFP • derbin')" class="sadnes-card p-3 rounded-2xl cursor-pointer hover:border-emerald-500/50 transition group">
+            <div class="h-44 rounded-xl overflow-hidden bg-black/60 border border-white/5 mb-3 relative flex items-center justify-center">
+              <img src="assets/preview_interface.png" alt="WFP Filter" class="w-full h-full object-contain group-hover:scale-105 transition duration-300">
+              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                <span class="px-3 py-1 rounded-full bg-emerald-500 text-black font-bold text-xs flex items-center gap-1 shadow-lg">
+                  <i class="ph-bold ph-arrows-out"></i> Увеличить
+                </span>
+              </div>
+            </div>
+            <div class="text-sm font-bold text-white truncate px-1">WFP Драйвер Realtek</div>
+            <div class="text-xs text-[#adadad] px-1 truncate">Аппаратная фильтрация MAC-слоя</div>
+          </div>
+
+          <!-- Shot 4 -->
+          <div onclick="openLightbox('assets/preview_tooltip.png', 'Поддержка лицензии и Защищённый чат • derbin')" class="sadnes-card p-3 rounded-2xl cursor-pointer hover:border-emerald-500/50 transition group">
+            <div class="h-44 rounded-xl overflow-hidden bg-black/60 border border-white/5 mb-3 relative flex items-center justify-center">
+              <img src="assets/preview_tooltip.png" alt="Лицензия и чат" class="w-full h-full object-contain group-hover:scale-105 transition duration-300">
+              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                <span class="px-3 py-1 rounded-full bg-emerald-500 text-black font-bold text-xs flex items-center gap-1 shadow-lg">
+                  <i class="ph-bold ph-arrows-out"></i> Увеличить
+                </span>
+              </div>
+            </div>
+            <div class="text-sm font-bold text-white truncate px-1">Прокси и Лицензия</div>
+            <div class="text-xs text-[#adadad] px-1 truncate">Защищённый чат, скины, тултип</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= OWNERS / CREATORS ================= -->
+  <section id="owners" class="relative bg-transparent px-5 py-[100px] z-10 border-t border-white/[0.04]">
+    <div class="mx-auto w-full max-w-[1100px]">
+      
+      <div class="mx-auto mb-16 max-w-[850px] text-center">
+        <div class="mb-4 flex items-center justify-center gap-2">
+          <svg viewBox="0 0 18 18" class="h-[18px] w-[18px] text-[var(--brand-accent)]" fill="currentColor">
+            <path d="M8.75348 17.6952C7.72056 14.0706 3.94416 10.3084 0.305928 9.27938C-0.101976 9.14829 -0.101976 8.8599 0.305928 8.72226C3.95074 7.68666 7.72056 3.931 8.76005 0.299863C8.8719 -0.0999545 9.14164 -0.0999545 9.25349 0.299863C10.2864 3.931 14.0628 7.68666 17.6945 8.72226C18.1024 8.85335 18.1024 9.14829 17.6945 9.27938C14.0562 10.3084 10.2798 14.0706 9.24691 17.6952C9.13506 18.1016 8.86532 18.1016 8.75348 17.6952Z"/>
+          </svg>
+          <h4 class="text-base font-medium text-[var(--brand-accent)]" data-i18n="owners.eyebrow">Команда проекта</h4>
+        </div>
+        <h2 class="text-[clamp(2.2rem,4.5vw,3.6rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-[#f1f1ef]" data-i18n="owners.heading">
+          Создатели и разработчики derbin
+        </h2>
+        <p class="mt-4 text-[#adadad] text-sm max-w-lg mx-auto" data-i18n="owners.desc">
+          Люди, которые лично разрабатывают архитектуру защиты, тестируют модули и отвечают за стабильность клиентов.
+        </p>
+      </div>
+
+      <!-- Owners Grid (omar_torrez and nerfchik) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+        
+        <!-- Owner 1: omar_torrez -->
+        <div class="sadnes-card rounded-[24px] p-8 flex flex-col items-center text-center relative overflow-hidden group">
+          <div class="absolute -top-12 -right-12 w-32 h-32 bg-[var(--brand-primary)]/10 rounded-full blur-2xl pointer-events-none group-hover:bg-[var(--brand-primary)]/20 transition"></div>
+          
+          <!-- Avatar Frame -->
+          <div class="relative mb-5">
+            <div class="w-24 h-24 rounded-2xl bg-gradient-to-tr from-[var(--brand-primary)] to-[#222226] p-[2px] shadow-xl shadow-[var(--brand-primary)]/20">
+              <div class="w-full h-full rounded-[14px] bg-[#161618] flex items-center justify-center text-3xl font-bold text-white tracking-wider font-mono">
+                OT
+              </div>
+            </div>
+            <span class="absolute -bottom-1 -right-1 flex h-4 w-4">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-[#161618]"></span>
+            </span>
+          </div>
+
+          <!-- Name & Role -->
+          <h3 class="text-2xl font-bold text-white tracking-tight">omar_torrez</h3>
+          <span class="mt-1 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[var(--brand-primary)]/20 text-[var(--brand-accent)] border border-[var(--brand-primary)]/30">
+            <i class="ph-bold ph-crown"></i>
+            <span data-i18n="owner.role1">Владелец / Основатель</span>
+          </span>
+
+          <p class="mt-4 text-xs text-[#adadad] max-w-xs leading-relaxed" data-i18n="owner.bio1">
+            Руководитель проекта derbin. Разработка ядра защиты, управление развитием софта и координация обновлений.
+          </p>
+
+          <!-- Contact buttons -->
+          <div class="mt-6 flex items-center gap-3">
+            <a href="https://t.me/stockholmef" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-white/[0.04] hover:bg-white/10 border border-white/10 text-xs font-medium text-white transition flex items-center gap-1.5 hover:border-emerald-500/40">
+              <i class="ph-bold ph-telegram-logo text-[var(--brand-accent)] text-sm"></i>
+              <span>Telegram</span>
+            </a>
+            <a href="https://discord.gg/ehWheFqAu" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-white/[0.04] hover:bg-white/10 border border-white/10 text-xs font-medium text-white transition flex items-center gap-1.5 hover:border-emerald-500/40">
+              <i class="ph-bold ph-discord-logo text-[var(--brand-accent)] text-sm"></i>
+              <span>Discord</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Owner 2: nerfchik -->
+        <div class="sadnes-card rounded-[24px] p-8 flex flex-col items-center text-center relative overflow-hidden group">
+          <div class="absolute -top-12 -right-12 w-32 h-32 bg-[var(--brand-primary)]/10 rounded-full blur-2xl pointer-events-none group-hover:bg-[var(--brand-primary)]/20 transition"></div>
+          
+          <!-- Avatar Frame -->
+          <div class="relative mb-5">
+            <div class="w-24 h-24 rounded-2xl bg-gradient-to-tr from-[var(--brand-primary)] to-[#222226] p-[2px] shadow-xl shadow-[var(--brand-primary)]/20">
+              <div class="w-full h-full rounded-[14px] bg-[#161618] flex items-center justify-center text-3xl font-bold text-white tracking-wider font-mono">
+                NC
+              </div>
+            </div>
+            <span class="absolute -bottom-1 -right-1 flex h-4 w-4">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-[#161618]"></span>
+            </span>
+          </div>
+
+          <!-- Name & Role -->
+          <h3 class="text-2xl font-bold text-white tracking-tight">nerfchik</h3>
+          <span class="mt-1 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[var(--brand-primary)]/20 text-[var(--brand-accent)] border border-[var(--brand-primary)]/30">
+            <i class="ph-bold ph-code"></i>
+            <span data-i18n="owner.role2">Создатель / Lead Developer</span>
+          </span>
+
+          <p class="mt-4 text-xs text-[#adadad] max-w-xs leading-relaxed" data-i18n="owner.bio2">
+            Главный разработчик логики обхода античитов, алгоритмов оптимизации рендеринга и работы с памятью.
+          </p>
+
+          <!-- Contact buttons -->
+          <div class="mt-6 flex items-center gap-3">
+            <a href="https://t.me/boss_mogger123" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-white/[0.04] hover:bg-white/10 border border-white/10 text-xs font-medium text-white transition flex items-center gap-1.5 hover:border-emerald-500/40">
+              <i class="ph-bold ph-telegram-logo text-[var(--brand-accent)] text-sm"></i>
+              <span>Telegram</span>
+            </a>
+            <a href="https://discord.gg/ehWheFqAu" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-white/[0.04] hover:bg-white/10 border border-white/10 text-xs font-medium text-white transition flex items-center gap-1.5 hover:border-emerald-500/40">
+              <i class="ph-bold ph-discord-logo text-[var(--brand-accent)] text-sm"></i>
+              <span>Discord</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= PRICING ================= -->
+  <section id="pricing" class="relative bg-transparent px-5 py-[120px] z-10 border-t border-white/[0.04]">
+    <div class="mx-auto w-full max-w-[1200px]">
+      
+      <div class="mx-auto mb-16 max-w-[850px] text-center">
+        <div class="mb-4 flex items-center justify-center gap-2">
+          <svg viewBox="0 0 18 18" class="h-[18px] w-[18px] text-[var(--brand-accent)]" fill="currentColor">
+            <path d="M8.75348 17.6952C7.72056 14.0706 3.94416 10.3084 0.305928 9.27938C-0.101976 9.14829 -0.101976 8.8599 0.305928 8.72226C3.95074 7.68666 7.72056 3.931 8.76005 0.299863C8.8719 -0.0999545 9.14164 -0.0999545 9.25349 0.299863C10.2864 3.931 14.0628 7.68666 17.6945 8.72226C18.1024 8.85335 18.1024 9.14829 17.6945 9.27938C14.0562 10.3084 10.2798 14.0706 9.24691 17.6952C9.13506 18.1016 8.86532 18.1016 8.75348 17.6952Z"/>
+          </svg>
+          <h4 class="text-base font-medium text-[var(--brand-accent)]" data-i18n="price.eyebrow">Тарифные планы derbin</h4>
+        </div>
+        <h2 class="text-[clamp(2.2rem,4.5vw,3.6rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-[#f1f1ef]" data-i18n="price.heading">
+          Выберите подходящий тариф
+        </h2>
+        <p class="mt-4 text-[#adadad] text-sm" data-i18n="price.desc">
+          Мгновенная выдача лицензионного ключа сразу после оплаты. Поддержка от omar_torrez и nerfchik.
+        </p>
+      </div>
+
+      <!-- Pricing Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+        
+        <!-- Plan 1 -->
+        <div class="sadnes-card rounded-[24px] p-8 flex flex-col justify-between">
+          <div>
+            <div class="text-xs uppercase tracking-wider font-semibold text-[#adadad] mb-2" data-i18n="plan1.badge">Стартовый доступ</div>
+            <h3 class="text-2xl font-bold text-white mb-4" data-i18n="plan1.title">Подписка 30 дней</h3>
+            <div class="text-4xl font-extrabold text-white mb-6 font-mono">
+              349 ₽ <span class="text-sm font-normal text-[#adadad]">/ 30 дней</span>
+            </div>
+            
+            <ul class="space-y-3.5 text-sm text-[#adadad] border-t border-white/[0.06] pt-6 mb-8">
+              <li class="flex items-center gap-2.5 text-white">
+                <i class="ph-bold ph-check text-[var(--brand-accent)]"></i> Полный доступ к клиенту derbin
+              </li>
+              <li class="flex items-center gap-2.5 text-white">
+                <i class="ph-bold ph-check text-[var(--brand-accent)]"></i> Базовая защита от проверок (4.3)
+              </li>
+              <li class="flex items-center gap-2.5 text-white">
+                <i class="ph-bold ph-check text-[var(--brand-accent)]"></i> Автоматические обновления
+              </li>
+              <li class="flex items-center gap-2.5 text-[#6c6c72]">
+                <i class="ph-bold ph-x"></i> Приоритетная поддержка в Discord
+              </li>
+            </ul>
+          </div>
+
+          <button onclick="openCheckout('Подписка 30 дней', '349 ₽')" class="w-full py-3.5 rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/10 text-white font-semibold text-sm transition-all hover:scale-105 active:scale-95" data-i18n="plan.buy">
+            Купить подписку
+          </button>
+        </div>
+
+        <!-- Plan 2 (Highlighted) -->
+        <div class="sadnes-card rounded-[24px] p-8 flex flex-col justify-between border-2 border-emerald-400/70 shadow-2xl shadow-emerald-500/25 relative">
+          <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-[var(--brand-primary)] text-white shadow-md shadow-emerald-500/30" data-i18n="plan2.hit">
+            ХИТ ВЫБОРА
+          </div>
+
+          <div>
+            <div class="text-xs uppercase tracking-wider font-semibold text-[var(--brand-accent)] mb-2 mt-2" data-i18n="plan2.badge">Рекомендуемый</div>
+            <h3 class="text-2xl font-bold text-white mb-4" data-i18n="plan2.title">Подписка 90 дней</h3>
+            <div class="text-4xl font-extrabold text-white mb-6 font-mono">
+              799 ₽ <span class="text-sm font-normal text-[#adadad]">/ 3 месяца</span>
+            </div>
+            
+            <ul class="space-y-3.5 text-sm text-[#adadad] border-t border-white/[0.06] pt-6 mb-8">
+              <li class="flex items-center gap-2.5 text-white">
+                <i class="ph-bold ph-check text-[var(--brand-accent)]"></i> Расширенный модуль скрытия процессов
+              </li>
+              <li class="flex items-center gap-2.5 text-white">
+                <i class="ph-bold ph-check text-[var(--brand-accent)]"></i> Приоритетный тикет-канал поддержки
+              </li>
+              <li class="flex items-center gap-2.5 text-white">
+                <i class="ph-bold ph-check text-[var(--brand-accent)]"></i> 1 бесплатный сброс HWID
+              </li>
+              <li class="flex items-center gap-2.5 text-white">
+                <i class="ph-bold ph-check text-[var(--brand-accent)]"></i> Конфигурации под топовые сервера
+              </li>
+            </ul>
+          </div>
+
+          <button onclick="openCheckout('Подписка 90 дней', '799 ₽')" class="w-full py-4 rounded-full bg-[var(--brand-primary)] hover:bg-[var(--brand-accent)] text-white font-semibold text-sm shadow-lg shadow-[var(--brand-primary)]/30 transition-all hover:scale-105 active:scale-95" data-i18n="plan.buy">
+            Купить подписку
+          </button>
+        </div>
+
+        <!-- Plan 3 -->
+        <div class="sadnes-card rounded-[24px] p-8 flex flex-col justify-between">
+          <div>
+            <div class="text-xs uppercase tracking-wider font-semibold text-[#adadad] mb-2" data-i18n="plan3.badge">Безлимит</div>
+            <h3 class="text-2xl font-bold text-white mb-4" data-i18n="plan3.title">Навсегда (Lifetime)</h3>
+            <div class="text-4xl font-extrabold text-white mb-6 font-mono">
+              1 599 ₽ <span class="text-sm font-normal text-[#adadad]">/ навсегда</span>
+            </div>
+            
+            <ul class="space-y-3.5 text-sm text-[#adadad] border-t border-white/[0.06] pt-6 mb-8">
+              <li class="flex items-center gap-2.5 text-white">
+                <i class="ph-bold ph-check text-[var(--brand-accent)]"></i> Пожизненная лицензия derbin
+              </li>
+              <li class="flex items-center gap-2.5 text-white">
+                <i class="ph-bold ph-check text-[var(--brand-accent)]"></i> Доступ к закрытой Beta от nerfchik
+              </li>
+              <li class="flex items-center gap-2.5 text-white">
+                <i class="ph-bold ph-check text-[var(--brand-accent)]"></i> Неограниченные сбросы HWID
+              </li>
+              <li class="flex items-center gap-2.5 text-white">
+                <i class="ph-bold ph-check text-[var(--brand-accent)]"></i> Личная связь с создателями
+              </li>
+            </ul>
+          </div>
+
+          <button onclick="openCheckout('Навсегда (Lifetime)', '1 599 ₽')" class="w-full py-3.5 rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/10 text-white font-semibold text-sm transition-all hover:scale-105 active:scale-95" data-i18n="plan.buy">
+            Купить подписку
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= STATS ================= -->
+  <section id="stats" class="relative bg-transparent px-5 pb-[120px] z-10">
+    <div class="mx-auto w-full max-w-[1100px]">
+      
+      <div class="mx-auto mb-16 max-w-[850px] text-center">
+        <div class="mb-4 flex items-center justify-center gap-2">
+          <svg viewBox="0 0 18 18" class="h-[18px] w-[18px] text-[var(--brand-accent)]" fill="currentColor">
+            <path d="M8.75348 17.6952C7.72056 14.0706 3.94416 10.3084 0.305928 9.27938C-0.101976 9.14829 -0.101976 8.8599 0.305928 8.72226C3.95074 7.68666 7.72056 3.931 8.76005 0.299863C8.8719 -0.0999545 9.14164 -0.0999545 9.25349 0.299863C10.2864 3.931 14.0628 7.68666 17.6945 8.72226C18.1024 8.85335 18.1024 9.14829 17.6945 9.27938C14.0562 10.3084 10.2798 14.0706 9.24691 17.6952C9.13506 18.1016 8.86532 18.1016 8.75348 17.6952Z"/>
+          </svg>
+          <h4 class="text-base font-medium text-[var(--brand-accent)]" data-i18n="stats.eyebrow">Статистика</h4>
+        </div>
+        <h2 class="text-[clamp(2.2rem,4.5vw,3.6rem)] font-semibold leading-[1.1] tracking-[-0.03em] text-[#f1f1ef]" data-i18n="stats.heading">
+          Статистика в реальном времени
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-10 text-center">
+        
+        <div class="flex flex-col items-center">
+          <span class="text-[clamp(2.8rem,5vw,4.2rem)] font-bold text-white tracking-tight">10</span>
+          <span class="mt-2 text-base font-semibold bg-gradient-to-b from-white to-[var(--brand-accent)] bg-clip-text text-transparent" data-i18n="stats.total">
+            Пользователей всего
+          </span>
+        </div>
+
+        <div class="flex flex-col items-center">
+          <span class="text-[clamp(2.8rem,5vw,4.2rem)] font-bold text-white tracking-tight">Сегодня</span>
+          <span class="mt-2 text-base font-semibold bg-gradient-to-b from-white to-[var(--brand-accent)] bg-clip-text text-transparent" data-i18n="stats.last">
+            Последнее обновление
+          </span>
+        </div>
+
+        <div class="flex flex-col items-center">
+          <span class="text-[clamp(2.8rem,5vw,4.2rem)] font-bold text-white tracking-tight flex items-center justify-center gap-3">
+            <span class="h-3 w-3 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>2</span>
+          </span>
+          <span class="mt-2 text-base font-semibold bg-gradient-to-b from-white to-[var(--brand-accent)] bg-clip-text text-transparent" data-i18n="stats.online">
+            Сейчас в сети
+          </span>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="border-t border-white/[0.06] bg-black/40 backdrop-blur-xl px-5 py-12 z-10">
+    <div class="mx-auto flex w-full max-w-[1140px] flex-col items-center gap-4 text-center">
+      
+      <div class="flex items-center gap-2.5 text-2xl font-bold text-[#f1f1ef]">
+        <img src="logo.png" alt="derbin logo" class="h-7 w-7 object-contain drop-shadow-[0_0_10px_rgba(16,185,129,0.35)]">
+        <span id="footer-brand">derbin</span>
+      </div>
+
+      <span class="text-xs text-[#79787b]">
+        Created by: <span class="text-[var(--brand-accent)]">omar_torrez</span> & <span class="text-[var(--brand-accent)]">nerfchik</span>
+      </span>
+
+      <nav class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-[#79787b]">
+        <a href="https://discord.gg/ehWheFqAu" target="_blank" rel="noopener noreferrer" class="transition hover:text-emerald-400 flex items-center gap-1">
+          <i class="ph-bold ph-discord-logo text-emerald-400"></i>
+          <span>Discord</span>
+        </a>
+        <span class="text-white/10">•</span>
+        <a href="#privacy" onclick="event.preventDefault(); showNotice('Политика: ваши данные зашифрованы и не передаются третьим лицам.')" class="transition hover:text-white" data-i18n="footer.privacy">Политика</a>
+        <span class="text-white/10">•</span>
+        <a href="#terms" onclick="event.preventDefault(); showNotice('Согласие: софт предоставляется для тестирования защищенности игровых сред.')" class="transition hover:text-white" data-i18n="footer.terms">Согласие</a>
+        <span class="text-white/10">•</span>
+        <a href="#offer" onclick="event.preventDefault(); showNotice('Оферта: моментальная доставка цифрового ключа активации.')" class="transition hover:text-white" data-i18n="footer.offer">Оферта</a>
+        <span class="text-white/10">•</span>
+        <a href="#rules" onclick="event.preventDefault(); showNotice('Правила: запрещены декомпиляция и попытки взлома лаунчера.')" class="transition hover:text-white" data-i18n="footer.rules">Правила</a>
+      </nav>
+
+      <div class="flex items-center justify-center gap-1.5 text-xs text-[#5b5b61]">
+        <span>© 2026 <span id="copyright-brand">derbin</span>. All rights reserved.</span>
+        <!-- Inconspicuous calculator trigger button -->
+        <button onclick="openCalcModal()" class="text-[#303632] hover:text-emerald-400 transition-colors p-1 rounded opacity-50 hover:opacity-100" title=" " aria-label="Tool">
+          <i class="ph-bold ph-calculator text-[12px]"></i>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= CHECKOUT MODAL ================= -->
+  <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+    <div class="sadnes-card rounded-[24px] w-full max-w-md p-6 sm:p-8 relative shadow-2xl scale-95 transition-transform duration-300" id="checkout-box">
+      
+      <button onclick="closeCheckout()" class="absolute top-5 right-5 text-[#adadad] hover:text-white p-2 rounded-full hover:bg-white/5 transition">
+        <i class="ph-bold ph-x text-lg"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-6">
+        <div class="h-10 w-10 rounded-xl bg-[var(--brand-primary)]/20 border border-[var(--brand-primary)]/30 flex items-center justify-center text-[var(--brand-accent)] text-xl">
+          <i class="ph-bold ph-lock-key"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-white" data-i18n="modal.title">Оформление заказа derbin</h3>
+          <p class="text-xs text-[#adadad]" id="modal-product-title">Подписка 30 дней</p>
+        </div>
+      </div>
+
+      <!-- Payment Methods -->
+      <div class="grid grid-cols-3 gap-2 p-1 bg-black/40 rounded-xl border border-white/5 mb-5 text-xs font-medium">
+        <button id="pay-card" onclick="setPayment('card')" class="py-2 rounded-lg bg-[var(--brand-primary)] text-white font-semibold transition">
+          Карта / СБП
+        </button>
+        <button id="pay-crypto" onclick="setPayment('crypto')" class="py-2 rounded-lg text-[#adadad] hover:text-white transition">
+          USDT
+        </button>
+        <button id="pay-funpay" onclick="setPayment('funpay')" class="py-2 rounded-lg text-[#adadad] hover:text-white transition">
+          FunPay
+        </button>
+      </div>
+
+      <form id="checkout-form" onsubmit="submitOrder(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs text-[#adadad] mb-1.5" data-i18n="modal.emailLabel">Ваш E-mail (для ключа derbin)</label>
+          <input required type="email" placeholder="example@mail.ru" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-[#555] text-sm focus:outline-none focus:border-[var(--brand-accent)] transition">
+        </div>
+
+        <div>
+          <label class="block text-xs text-[#adadad] mb-1.5" data-i18n="modal.nickLabel">Никнейм в игре / лаунчере</label>
+          <input required type="text" placeholder="Ваш игровой ник" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-[#555] text-sm focus:outline-none focus:border-[var(--brand-accent)] transition">
+        </div>
+
+        <div class="flex items-center justify-between pt-2 border-t border-white/[0.06] text-sm">
+          <span class="text-[#adadad]" data-i18n="modal.total">Итого:</span>
+          <span class="text-lg font-bold text-white font-mono" id="modal-price">349 ₽</span>
+        </div>
+
+        <button type="submit" id="pay-button" class="w-full py-3.5 rounded-xl bg-[var(--brand-primary)] hover:bg-[var(--brand-accent)] text-white font-semibold text-sm shadow-lg shadow-[var(--brand-primary)]/30 transition-all hover:scale-102 active:scale-98 flex items-center justify-center gap-2">
+          <span data-i18n="modal.proceed">Перейти к оплате</span>
+          <i class="ph-bold ph-arrow-right"></i>
+        </button>
+      </form>
+
+      <div id="order-success" class="hidden text-center py-6 space-y-3">
+        <div class="w-14 h-14 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-2xl flex items-center justify-center mx-auto">
+          <i class="ph-bold ph-check"></i>
+        </div>
+        <h4 class="text-lg font-bold text-white" data-i18n="modal.success">Заказ успешно сформирован!</h4>
+        <p class="text-xs text-[#adadad] max-w-xs mx-auto leading-relaxed" data-i18n="modal.successDesc">
+          Ключ активации derbin и инструкция по запуску без детекта отправлены на ваш E-mail.
+        </p>
+        <button onclick="closeCheckout()" class="mt-4 px-6 py-2 rounded-xl text-xs bg-white/10 hover:bg-white/20 text-white transition">
+          Закрыть
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= CALCULATOR MODAL (EASTER EGG TRIGGER) ================= -->
+  <div id="calc-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+    <div class="sadnes-card rounded-[26px] w-full max-w-[310px] p-5 relative shadow-2xl scale-95 transition-transform duration-300 border border-white/10 bg-[#111714]" id="calc-box">
+      
+      <div class="flex items-center justify-between mb-3.5">
+        <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-white">
+          <i class="ph-bold ph-calculator text-emerald-400 text-sm"></i>
+          <span>Калькулятор</span>
+        </div>
+        <button onclick="closeCalcModal()" class="text-[#adadad] hover:text-white p-1 rounded-lg hover:bg-white/10 transition">
+          <i class="ph-bold ph-x text-base"></i>
+        </button>
+      </div>
+
+      <!-- Display -->
+      <div class="bg-black/60 border border-white/10 rounded-2xl p-3.5 mb-3.5 text-right">
+        <div id="calc-history" class="text-[11px] text-[#777] font-mono h-4 overflow-hidden truncate"></div>
+        <div id="calc-display" class="text-3xl font-mono font-bold text-white tracking-wider overflow-x-auto whitespace-nowrap">0</div>
+      </div>
+
+      <!-- Keypad -->
+      <div class="grid grid-cols-4 gap-2 text-sm font-mono font-semibold">
+        <button onclick="calcClear()" class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-rose-400 transition">C</button>
+        <button onclick="calcBackspace()" class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-[#adadad] transition">⌫</button>
+        <button onclick="calcInput('%')" class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-emerald-400 transition">%</button>
+        <button onclick="calcInput('/')" class="py-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition">÷</button>
+
+        <button onclick="calcInput('7')" class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white transition">7</button>
+        <button onclick="calcInput('8')" class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white transition">8</button>
+        <button onclick="calcInput('9')" class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white transition">9</button>
+        <button onclick="calcInput('*')" class="py-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition">×</button>
+
+        <button onclick="calcInput('4')" class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white transition">4</button>
+        <button onclick="calcInput('5')" class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white transition">5</button>
+        <button onclick="calcInput('6')" class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white transition">6</button>
+        <button onclick="calcInput('-')" class="py-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition">−</button>
+
+        <button onclick="calcInput('1')" class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white transition">1</button>
+        <button onclick="calcInput('2')" class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white transition">2</button>
+        <button onclick="calcInput('3')" class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white transition">3</button>
+        <button onclick="calcInput('+')" class="py-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition">+</button>
+
+        <button onclick="calcInput('0')" class="col-span-2 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white transition">0</button>
+        <button onclick="calcInput('.')" class="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white transition">.</button>
+        <button onclick="calcEquals()" class="py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold transition shadow-lg shadow-emerald-500/20">=</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= EASTER EGG MODAL ================= -->
+  <div id="easter-egg-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden opacity-0 transition-opacity duration-300">
+    <div class="sadnes-card rounded-[28px] w-full max-w-lg p-5 sm:p-6 relative shadow-2xl scale-95 transition-transform duration-300 border-2 border-emerald-500/50 bg-[#0d1410] text-center" id="easter-egg-box">
+      
+      <button onclick="closeEasterEgg()" class="absolute top-4 right-4 text-[#adadad] hover:text-white p-2 rounded-full hover:bg-white/10 transition z-10">
+        <i class="ph-bold ph-x text-lg"></i>
+      </button>
+
+      <div class="mb-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-xs font-semibold">
+        <i class="ph-bold ph-sparkle text-sm"></i>
+        <span>Секретная пасхалка (код 333) активирована!</span>
+      </div>
+
+      <div class="rounded-2xl overflow-hidden border border-white/10 bg-black/60 shadow-2xl max-h-[68vh] flex items-center justify-center p-2">
+        <img src="easter_egg.jpg" alt="Secret Easter Egg Photo" class="w-full h-auto max-h-[64vh] object-contain rounded-xl">
+      </div>
+
+      <div class="mt-4 flex items-center justify-between text-xs text-[#adadad] px-1">
+        <span class="text-emerald-400 font-mono">Easter Egg unlocked</span>
+        <button onclick="closeEasterEgg()" class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold transition shadow-lg shadow-emerald-500/25">
+          Закрыть
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= LIGHTBOX MODAL ================= -->
+  <div id="lightbox-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl hidden opacity-0 transition-opacity duration-300">
+    <div class="relative max-w-4xl w-full sadnes-card rounded-[28px] p-4 sm:p-6 shadow-2xl border border-white/20 bg-[#0c130f] scale-95 transition-transform duration-300" id="lightbox-box">
+      
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
+        <div class="flex items-center gap-2 text-sm font-semibold text-white">
+          <i class="ph-bold ph-image text-emerald-400 text-lg"></i>
+          <span id="lightbox-title">Превью интерфейса derbin</span>
+        </div>
+        <button onclick="closeLightbox()" class="text-[#adadad] hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition">
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+      </div>
+
+      <div class="rounded-xl overflow-hidden border border-white/10 bg-black/75 flex items-center justify-center max-h-[75vh] p-2">
+        <img id="lightbox-img" src="" alt="Full Preview" class="w-full h-auto max-h-[70vh] object-contain rounded-lg">
+      </div>
+      
+      <div class="mt-3 flex items-center justify-between text-xs text-[#adadad] px-1">
+        <span class="text-emerald-400 font-mono">100% Native Bypass Screenshot</span>
+        <button onclick="closeLightbox()" class="px-5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium transition">
+          Закрыть
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="notice-toast" class="fixed bottom-6 right-6 z-50 rounded-2xl border border-white/10 bg-[#161618]/95 px-5 py-3.5 text-xs text-white shadow-2xl backdrop-blur-md hidden transition-opacity duration-300">
+    <span id="toast-text"></span>
+  </div>
+
+  <!-- ================= JAVASCRIPT ================= -->
+  <script>
+    const CLIENT_BRAND = "derbin";
+
+    document.getElementById("nav-brand").innerText = CLIENT_BRAND;
+    document.getElementById("hero-brand").innerText = CLIENT_BRAND;
+    document.getElementById("footer-brand").innerText = CLIENT_BRAND;
+    document.getElementById("copyright-brand").innerText = CLIENT_BRAND;
+
+    /* 1. Preloader letter animation */
+    const preloaderLetters = document.getElementById("preloader-letters");
+    const preloader = document.getElementById("preloader");
+    
+    CLIENT_BRAND.split("").forEach((char) => {
+      const span = document.createElement("span");
+      span.className = "char-anim";
+      span.innerText = char;
+      preloaderLetters.appendChild(span);
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const letterSpans = preloaderLetters.querySelectorAll(".char-anim");
+      letterSpans.forEach((span, i) => {
+        setTimeout(() => span.classList.add("active"), 110 * i);
+      });
+
+      setTimeout(() => {
+        preloader.classList.remove("opacity-100");
+        preloader.classList.add("opacity-0");
+        setTimeout(() => preloader.style.display = "none", 700);
+      }, (CLIENT_BRAND.length * 110) + 600);
+    });
+
+    /* 2. Ambient Canvas */
+    const cvs = document.getElementById('ambient-canvas');
+    const ctx = cvs.getContext('2d');
+    let cw, ch;
+    let particles = [];
+
+    function setCanvasSize() {
+      cw = cvs.width = window.innerWidth;
+      ch = cvs.height = window.innerHeight;
+    }
+    window.addEventListener('resize', setCanvasSize);
+    setCanvasSize();
+
+    for (let i = 0; i < 40; i++) {
+      particles.push({
+        x: Math.random() * cw,
+        y: Math.random() * ch,
+        r: Math.random() * 2 + 1,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        alpha: Math.random() * 0.4 + 0.1
+      });
+    }
+
+    function renderParticles() {
+      ctx.clearRect(0, 0, cw, ch);
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = cw;
+        if (p.x > cw) p.x = 0;
+        if (p.y < 0) p.y = ch;
+        if (p.y > ch) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(52, 211, 153, ${p.alpha})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(renderParticles);
+    }
+    requestAnimationFrame(renderParticles);
+
+    /* 3. Translations (RU / EN) */
+    let currentLang = 'ru';
+    const translations = {
+      ru: {
+        'nav.home': 'Главная',
+        'nav.advantages': 'Преимущества',
+        'nav.owners': 'Создатели',
+        'nav.pricing': 'Тарифы',
+        'nav.stats': 'Статистика',
+        'nav.get': 'Купить',
+        'hero.badge': 'Актуальная защита и обход проверок активны',
+        'hero.alpha': 'Alpha Build — возможны баги',
+        'hero.title1': 'Снова получил блокировку?',
+        'hero.title2': 'Надоели баны по 4.3?',
+        'hero.sub1': 'Тогда тебе к нам — ',
+        'hero.sub2': ' поможет обойти любую проверку.',
+        'hero.ctaPrimary': 'Оформить доступ',
+        'hero.ctaSecondary': 'Как это работает',
+        'hero.scroll': 'СКРОЛЛ ВНИЗ',
+        'adv.eyebrow': 'Наши преимущества',
+        'adv.heading': 'Полная безопасность, чистые логи и 0 банов по 4.3',
+        'adv.c1.title': 'Иммунитет к 4.3',
+        'adv.c1.desc': 'Работа через схему двух ПК и MITM Proxy для скрытой передачи управления. Полная защита DHCP — чистейший undetect без системных следов.',
+        'adv.c2.title': 'Стабильный FPS',
+        'adv.c2.desc': 'Максимальная оптимизация под любые устройства без лагов и просадок кадров — софт не может лагать в принципе. Частые регулярные обновления.',
+        'adv.c3.title': '0 банов и любые проверки',
+        'adv.c3.desc': 'Недорогой клиент для любых проверок на FT, HV, SP. За первый год ни одного бана по 4.3 или нахождению! При рисках моментально всё закрываем, выпускаем хуки и патчи.',
+        'tag.1': 'Полный undetect (DHCP)',
+        'tag.2': 'Любые проверки: FT, HV, SP',
+        'tag.3': 'MITM Proxy & схема 2 ПК',
+        'tag.4': '0 банов за 1-й год продукта',
+        'tag.5': 'Быстрые обновления, хуки и патчи',
+        'owners.eyebrow': 'Команда проекта',
+        'owners.heading': 'Создатели и разработчики derbin',
+        'owners.desc': 'Люди, которые лично разрабатывают архитектуру защиты, тестируют модули и отвечают за стабильность клиентов.',
+        'owner.role1': 'Владелец / Основатель',
+        'owner.bio1': 'Руководитель проекта derbin. Разработка ядра защиты, управление развитием софта и координация обновлений.',
+        'owner.role2': 'Создатель / Lead Developer',
+        'owner.bio2': 'Главный разработчик логики обхода проверок, алгоритмов оптимизации рендеринга и работы с памятью.',
+        'price.eyebrow': 'Тарифные планы derbin',
+        'price.heading': 'Выберите подходящий тариф',
+        'price.desc': 'Мгновенная выдача лицензионного ключа сразу после оплаты. Поддержка от omar_torrez и nerfchik.',
+        'plan1.badge': 'Стартовый доступ',
+        'plan1.title': 'Подписка 30 дней',
+        'plan2.hit': 'ХИТ ВЫБОРА',
+        'plan2.badge': 'Рекомендуемый',
+        'plan2.title': 'Подписка 90 дней',
+        'plan3.badge': 'Безлимит',
+        'plan3.title': 'Навсегда (Lifetime)',
+        'plan.buy': 'Купить подписку',
+        'stats.eyebrow': 'Статистика',
+        'stats.heading': 'Статистика в реальном времени',
+        'stats.total': 'Пользователей всего',
+        'stats.last': 'Последнее обновление',
+        'stats.online': 'Сейчас в сети',
+        'footer.privacy': 'Политика',
+        'footer.terms': 'Согласие',
+        'footer.offer': 'Оферта',
+        'footer.rules': 'Правила',
+        'modal.title': 'Оформление заказа derbin',
+        'modal.emailLabel': 'Ваш E-mail (для ключа derbin)',
+        'modal.nickLabel': 'Никнейм в игре / лаунчере',
+        'modal.total': 'Итого:',
+        'modal.proceed': 'Перейти к оплате',
+        'modal.success': 'Заказ успешно сформирован!',
+        'modal.successDesc': 'Ключ активации derbin и инструкция по запуску без детекта отправлены на ваш E-mail.',
+        'nav.preview': 'Обход',
+        'prev.eyebrow': 'Интерфейс и архитектура',
+        'prev.heading': 'Превью панели управления derbin',
+        'prev.desc': 'Реальный вид софта: тонкая маршрутизация через второй ПК, драйвер WFP MAC-уровня и полная изоляция от проверок.',
+        'prev.tab0': 'Маршрутизация',
+        'prev.tab1': 'DHCP & Сеть',
+        'prev.tab2': 'WFP Драйвер',
+        'prev.tab3': 'Прокси & Лицензия',
+        'prev.expand': 'Увеличить',
+        'prev.simTitle': 'Интерактивный симулятор обхода',
+        'prev.galleryTitle': 'Все скриншоты панели управления derbin'
+      },
+      en: {
+        'nav.home': 'Home',
+        'nav.advantages': 'Advantages',
+        'nav.owners': 'Creators',
+        'nav.pricing': 'Pricing',
+        'nav.stats': 'Statistics',
+        'nav.get': 'Purchase',
+        'hero.badge': 'Security patch & bypass modules active',
+        'hero.alpha': 'Alpha Build — may contain bugs',
+        'hero.title1': 'Banned once again?',
+        'hero.title2': 'Tired of 4.3 rule bans?',
+        'hero.sub1': 'Join us — ',
+        'hero.sub2': ' will help you bypass any screen-check.',
+        'hero.ctaPrimary': 'Get Access',
+        'hero.ctaSecondary': 'How It Works',
+        'hero.scroll': 'SCROLL DOWN',
+        'adv.eyebrow': 'Our Advantages',
+        'adv.heading': 'Complete Security, Pristine Logs & Zero 4.3 Bans',
+        'adv.c1.title': 'Immunity to 4.3',
+        'adv.c1.desc': 'Dual-PC setup with MITM Proxy for disguised input transfer. Full DHCP evasion — absolute undetect.',
+        'adv.c2.title': 'Rock-Solid FPS',
+        'adv.c2.desc': 'Flawless optimization across any machine with zero stutter or lag. Regular frequent updates for total stability.',
+        'adv.c3.title': 'Zero Bans & Pass Any Check',
+        'adv.c3.desc': 'Affordable bypass client for FT, HV, SP. 0 bans for 4.3 or detection across our 1st year! Instant hooks and patches at any risk.',
+        'tag.1': '100% Undetect (DHCP)',
+        'tag.2': 'Passes Checks: FT, HV, SP',
+        'tag.3': 'MITM Proxy & Dual-PC Control',
+        'tag.4': '0 Bans In 1st Product Year',
+        'tag.5': 'Instant Hooks & Fast Hotfixes',
+        'owners.eyebrow': 'Core Team',
+        'owners.heading': 'Creators & Developers of derbin',
+        'owners.desc': 'The team designing security mechanics, verifying stability, and keeping the software undetected.',
+        'owner.role1': 'Owner / Founder',
+        'owner.bio1': 'Project leader of derbin. Security architecture, strategic updates, and release pipelines.',
+        'owner.role2': 'Creator / Lead Developer',
+        'owner.bio2': 'Lead engineer of bypass techniques, memory evasion, and runtime optimization algorithms.',
+        'price.eyebrow': 'derbin Subscription Plans',
+        'price.heading': 'Choose Your License',
+        'price.desc': 'Instant key dispatch right after checkout. Direct support from omar_torrez and nerfchik.',
+        'plan1.badge': 'Starter Pass',
+        'plan1.title': '30 Days Pass',
+        'plan2.hit': 'BEST VALUE',
+        'plan2.badge': 'Recommended',
+        'plan2.title': '90 Days Pass',
+        'plan3.badge': 'Unlimited',
+        'plan3.title': 'Lifetime License',
+        'plan.buy': 'Purchase License',
+        'stats.eyebrow': 'Metrics',
+        'stats.heading': 'Real-Time Network Statistics',
+        'stats.total': 'Total Active Users',
+        'stats.last': 'Last Patch Deployed',
+        'stats.online': 'Players Online Now',
+        'footer.privacy': 'Privacy',
+        'footer.terms': 'Terms',
+        'footer.offer': 'Public Offer',
+        'footer.rules': 'Rules',
+        'modal.title': 'derbin Order Checkout',
+        'modal.emailLabel': 'Your E-mail (for derbin key delivery)',
+        'modal.nickLabel': 'Game / Launcher Nickname',
+        'modal.total': 'Total Due:',
+        'modal.proceed': 'Proceed to Payment',
+        'modal.success': 'Order Prepared Successfully!',
+        'modal.successDesc': 'Your derbin activation key and stealth instructions have been sent to your email.',
+        'nav.preview': 'Bypass UI',
+        'prev.eyebrow': 'Software Architecture',
+        'prev.heading': 'derbin Control Panel Preview',
+        'prev.desc': 'Native interface showcase: Dual-PC network routing, hardware WFP filter driver and zero-trace isolation.',
+        'prev.tab0': 'Routing & Net',
+        'prev.tab1': 'DHCP & Subnet',
+        'prev.tab2': 'WFP Driver',
+        'prev.tab3': 'Proxy & License',
+        'prev.expand': 'Zoom in',
+        'prev.simTitle': 'Interactive Bypass Simulator',
+        'prev.galleryTitle': 'derbin Control Center Screenshots'
+      }
+    };
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'ru' ? 'en' : 'ru';
+      document.getElementById('lang-label').innerText = currentLang.toUpperCase();
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[currentLang][key]) {
+          el.innerText = translations[currentLang][key];
+        }
+      });
+    }
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    /* 4. Checkout Modal */
+    const modal = document.getElementById('checkout-modal');
+    const modalBox = document.getElementById('checkout-box');
+    const modalProductTitle = document.getElementById('modal-product-title');
+    const modalPrice = document.getElementById('modal-price');
+
+    function openCheckout(title, price) {
+      modalProductTitle.innerText = title;
+      modalPrice.innerText = price;
+      
+      document.getElementById('checkout-form').classList.remove('hidden');
+      document.getElementById('order-success').classList.add('hidden');
+
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        modalBox.classList.remove('scale-95');
+        modalBox.classList.add('scale-100');
+      }, 10);
+    }
+
+    function closeCheckout() {
+      modal.classList.add('opacity-0');
+      modalBox.classList.remove('scale-100');
+      modalBox.classList.add('scale-95');
+      setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeCheckout();
+    });
+
+    function setPayment(method) {
+      const b1 = document.getElementById('pay-card');
+      const b2 = document.getElementById('pay-crypto');
+      const b3 = document.getElementById('pay-funpay');
+
+      [b1, b2, b3].forEach(b => {
+        b.className = "py-2 rounded-lg text-[#adadad] hover:text-white transition";
+      });
+
+      if (method === 'card') b1.className = "py-2 rounded-lg bg-[var(--brand-primary)] text-white font-semibold transition";
+      if (method === 'crypto') b2.className = "py-2 rounded-lg bg-[var(--brand-primary)] text-white font-semibold transition";
+      if (method === 'funpay') b3.className = "py-2 rounded-lg bg-[var(--brand-primary)] text-white font-semibold transition";
+    }
+
+    function submitOrder(e) {
+      e.preventDefault();
+      const btn = document.getElementById('pay-button');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin"></i> Обработка...`;
+
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Перейти к оплате</span> <i class="ph-bold ph-arrow-right"></i>`;
+        document.getElementById('checkout-form').classList.add('hidden');
+        document.getElementById('order-success').classList.remove('hidden');
+      }, 900);
+    }
+
+    function showNotice(text) {
+      const toast = document.getElementById('notice-toast');
+      const toastText = document.getElementById('toast-text');
+      toastText.innerText = text;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3500);
+    }
+
+    /* 5. Calculator & Easter Egg (Code: 333) */
+    const calcModal = document.getElementById('calc-modal');
+    const calcBox = document.getElementById('calc-box');
+    const calcDisplay = document.getElementById('calc-display');
+    const calcHistory = document.getElementById('calc-history');
+
+    const easterModal = document.getElementById('easter-egg-modal');
+    const easterBox = document.getElementById('easter-egg-box');
+
+    let calcExpression = '';
+    let calcIsEvaluated = false;
+
+    function openCalcModal() {
+      calcExpression = '';
+      calcDisplay.innerText = '0';
+      calcHistory.innerText = '';
+      calcModal.classList.remove('hidden');
+      setTimeout(() => {
+        calcModal.classList.remove('opacity-0');
+        calcBox.classList.remove('scale-95');
+        calcBox.classList.add('scale-100');
+      }, 10);
+    }
+
+    function closeCalcModal() {
+      calcModal.classList.add('opacity-0');
+      calcBox.classList.remove('scale-100');
+      calcBox.classList.add('scale-95');
+      setTimeout(() => calcModal.classList.add('hidden'), 300);
+    }
+
+    calcModal.addEventListener('click', (e) => {
+      if (e.target === calcModal) closeCalcModal();
+    });
+
+    function openEasterEgg() {
+      easterModal.classList.remove('hidden');
+      setTimeout(() => {
+        easterModal.classList.remove('opacity-0');
+        easterBox.classList.remove('scale-95');
+        easterBox.classList.add('scale-100');
+      }, 10);
+    }
+
+    function closeEasterEgg() {
+      easterModal.classList.add('opacity-0');
+      easterBox.classList.remove('scale-100');
+      easterBox.classList.add('scale-95');
+      setTimeout(() => easterModal.classList.add('hidden'), 300);
+    }
+
+    easterModal.addEventListener('click', (e) => {
+      if (e.target === easterModal) closeEasterEgg();
+    });
+
+    function checkEasterCode(str) {
+      const code = String(str).trim();
+      if (['333', '222', '111'].includes(code)) {
+        setTimeout(() => {
+          closeCalcModal();
+          openEasterEgg();
+        }, 180);
+        return true;
+      }
+      return false;
+    }
+
+    function calcInput(char) {
+      if (calcIsEvaluated && !['+', '-', '*', '/', '%'].includes(char)) {
+        calcExpression = '';
+        calcIsEvaluated = false;
+      } else {
+        calcIsEvaluated = false;
+      }
+
+      if (calcExpression.length >= 24) return;
+      calcExpression += char;
+      calcDisplay.innerText = calcExpression;
+
+      if (checkEasterCode(calcExpression)) return;
+    }
+
+    function calcClear() {
+      calcExpression = '';
+      calcDisplay.innerText = '0';
+      calcHistory.innerText = '';
+      calcIsEvaluated = false;
+    }
+
+    function calcBackspace() {
+      calcExpression = calcExpression.slice(0, -1);
+      calcDisplay.innerText = calcExpression || '0';
+      calcIsEvaluated = false;
+    }
+
+    function calcEquals() {
+      if (!calcExpression) return;
+      if (checkEasterCode(calcExpression)) return;
+
+      try {
+        const sanitized = calcExpression.replace(/[^0-9+\-*/.%]/g, '');
+        const res = Function('"use strict";return (' + sanitized + ')')();
+        calcHistory.innerText = calcExpression + ' =';
+        calcExpression = String(res);
+        calcDisplay.innerText = calcExpression;
+        calcIsEvaluated = true;
+        checkEasterCode(calcExpression);
+      } catch (err) {
+        calcDisplay.innerText = 'Ошибка';
+        calcExpression = '';
+        calcIsEvaluated = true;
+      }
+    }
+
+    /* 6. DERBIN INTERACTIVE GUI APP LOGIC */
+    let currentDerbinTab = 'general';
+    let isGuiProxyRunning = false;
+    let guiPacketInterval = null;
+    let guiPacketCount = 0;
+    let isSwapped = false;
+    let isDhcpRunning = false;
+
+    function setPreviewDisplayMode(mode) {
+      const guiBox = document.getElementById('derbin-gui-container');
+      const shotsBox = document.getElementById('derbin-screenshots-container');
+      const bGui = document.getElementById('btn-mode-gui');
+      const bShots = document.getElementById('btn-mode-shots');
+
+      if (mode === 'gui') {
+        guiBox.classList.remove('hidden');
+        bGui.className = "px-5 py-2 rounded-full text-xs font-semibold text-white bg-[var(--brand-primary)] shadow-md transition-all flex items-center gap-2";
+        bShots.className = "px-5 py-2 rounded-full text-xs font-semibold text-[#adadad] hover:text-white transition-all flex items-center gap-2";
+        guiBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        bShots.className = "px-5 py-2 rounded-full text-xs font-semibold text-white bg-[var(--brand-primary)] shadow-md transition-all flex items-center gap-2";
+        bGui.className = "px-5 py-2 rounded-full text-xs font-semibold text-[#adadad] hover:text-white transition-all flex items-center gap-2";
+        shotsBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function setDerbinTab(tabKey) {
+      currentDerbinTab = tabKey;
+      const tabs = ['general', 'advanced', 'dhcp', 'detector', 'sniffer', 'optimizer', 'accounts', 'themes', 'help'];
+      playGuiSound('tab');
+      
+      tabs.forEach(t => {
+        const btn = document.getElementById(`dtab-btn-${t}`);
+        const panel = document.getElementById(`dpanel-${t}`);
+        if (btn && panel) {
+          if (t === tabKey) {
+            btn.classList.add('active');
+            panel.classList.remove('hidden');
+            panel.style.opacity = '0';
+            panel.style.transform = 'translateY(6px)';
+            setTimeout(() => {
+              panel.style.transition = 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
+              panel.style.opacity = '1';
+              panel.style.transform = 'translateY(0)';
+            }, 10);
+
+            if (t === 'optimizer') {
+              startPingCanvasLoop();
+            }
+          } else {
+            btn.classList.remove('active');
+            panel.classList.add('hidden');
+          }
+        }
+      });
+    }
+
+    function toggleDerbinMinimize() {
+      const body = document.getElementById('derbin-window-body');
+      body.classList.toggle('hidden');
+      showNotice(body.classList.contains('hidden') ? 'Окно derbin свёрнуто' : 'Окно derbin развёрнуто');
+    }
+
+    function closeDerbinMockWindow() {
+      const win = document.getElementById('derbin-gui-container');
+      win.style.opacity = '0';
+      win.style.transform = 'scale(0.92)';
+      setTimeout(() => {
+        win.classList.add('hidden');
+        showNotice('Окно derbin скрыто. Нажмите режим "Интерактивный Web GUI" выше для восстановления.');
+      }, 300);
+    }
+
+    function swapGuiControllers() {
+      isSwapped = !isSwapped;
+      const leftStatus = document.getElementById('gui-dev-left-status');
+      const rightStatus = document.getElementById('gui-dev-right-status');
+      const leftTitle = document.getElementById('gui-dev-left-title');
+      const rightTitle = document.getElementById('gui-dev-right-title');
+      const leftBox = document.getElementById('gui-dev-left');
+      const rightBox = document.getElementById('gui-dev-right');
+
+      if (isSwapped) {
+        leftStatus.innerText = "Ведомый (MITM)";
+        leftStatus.className = "text-[10px] font-semibold text-[#adadad] mt-0.5";
+        leftTitle.innerText = "Второй ПК";
+        
+        rightStatus.innerText = "Контроллер (Active)";
+        rightStatus.className = "text-[10px] font-semibold text-emerald-400 mt-0.5";
+        rightTitle.innerText = "Игровой ПК";
+
+        leftBox.classList.remove('border-emerald-500/40');
+        rightBox.classList.add('border-emerald-500/40');
+        showNotice('Управление передано на Второй ПК (Swap активен)');
+      } else {
+        leftStatus.innerText = "Контроллер (Active)";
+        leftStatus.className = "text-[10px] font-semibold text-emerald-400 mt-0.5";
+        leftTitle.innerText = "Игровой ПК";
+
+        rightStatus.innerText = "MITM Прокси";
+        rightStatus.className = "text-[10px] font-semibold text-[#adadad] mt-0.5";
+        rightTitle.innerText = "Второй ПК";
+
+        rightBox.classList.remove('border-emerald-500/40');
+        leftBox.classList.add('border-emerald-500/40');
+        showNotice('Управление возвращено на Игровой ПК (Swap отключен)');
+      }
+    }
+
+    const mockLogs = [
+      "[WFP Kernel]: Intercepted ICMP traceroute packet -> masked as 192.168.178.1 (0 hops)",
+      "[DHCP Proxy]: Masked physical MAC -> Generic Realtek PCIe GbE Controller",
+      "[MITM Tunnel]: UDP payload forwarded to secondary PC: 128 bytes (latency 0.1ms)",
+      "[Anti-Leak]: mDNS and LLMNR query dropped from port 5353",
+      "[Client Heartbeat]: Keep-alive packet synchronized with target game server",
+      "[Licensing]: Skin cache verified, session token encrypted with AES-256"
+    ];
+
+    function toggleGuiProxy() {
+      isGuiProxyRunning = !isGuiProxyRunning;
+      const btn = document.getElementById('gui-proxy-toggle-btn');
+      const label = document.getElementById('gui-proxy-label');
+      const icon = document.getElementById('gui-proxy-icon');
+      const state = document.getElementById('gui-proxy-state-text');
+      const log = document.getElementById('gui-packet-log');
+      const stats = document.getElementById('gui-packet-stats');
+
+      if (isGuiProxyRunning) {
+        btn.className = "px-6 py-3 rounded-xl text-xs font-semibold text-white bg-rose-600 hover:bg-rose-500 flex items-center gap-2 shadow-lg shadow-rose-600/30 transition-all";
+        label.innerText = "Остановить прокси";
+        icon.className = "ph-bold ph-stop";
+        state.innerText = "🟢 Прокси активно • Трафик перенаправлен";
+        state.className = "text-emerald-400 font-mono";
+
+        guiPacketCount = 0;
+        let logIdx = 0;
+        guiPacketInterval = setInterval(() => {
+          guiPacketCount += Math.floor(Math.random() * 8) + 12;
+          stats.innerText = `${guiPacketCount * 14} PACKETS / SEC • 0.1ms`;
+          log.innerText = mockLogs[logIdx % mockLogs.length];
+          logIdx++;
+        }, 750);
+
+        showNotice('Прокси derbin успешно запущен! MITM-туннель активен.');
+      } else {
+        btn.className = "liquid-btn-primary px-6 py-3 rounded-xl text-xs font-semibold text-white flex items-center gap-2";
+        label.innerText = "Запустить прокси";
+        icon.className = "ph-bold ph-play";
+        state.innerText = "⚪ Ожидание запуска прокси";
+        state.className = "text-[#adadad] font-mono";
+        stats.innerText = "0 PACKETS / SEC";
+        log.innerText = "[Idle]: Proxy session stopped. Reconnect anytime.";
+        clearInterval(guiPacketInterval);
+        showNotice('Прокси derbin остановлен.');
+      }
+    }
+
+    function updateGuiDiagnostic() {
+      const c1 = document.getElementById('gui-chk-traceroute').checked;
+      const c2 = document.getElementById('gui-chk-mdns').checked;
+      const c3 = document.getElementById('gui-chk-router').checked;
+      const c4 = document.getElementById('gui-chk-block').checked;
+
+      const badge = document.getElementById('gui-window-status');
+      const count = [c1, c2, c3, c4].filter(Boolean).length;
+
+      if (count === 4) {
+        badge.innerText = "Dual-PC Undetect Active (100%)";
+        badge.parentElement.className = "hidden sm:inline-flex items-center gap-1.5 ml-2 text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/25";
+      } else if (count >= 2) {
+        badge.innerText = "Partial Shield (Check Settings)";
+        badge.parentElement.className = "hidden sm:inline-flex items-center gap-1.5 ml-2 text-[11px] font-mono text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/25";
+      } else {
+        badge.innerText = "Risk Detected • Shield Weak";
+        badge.parentElement.className = "hidden sm:inline-flex items-center gap-1.5 ml-2 text-[11px] font-mono text-rose-400 bg-rose-500/10 px-2.5 py-0.5 rounded-full border border-rose-500/25";
+      }
+    }
+
+    function randomizeGuiDhcp() {
+      const sub = Math.floor(Math.random() * 150) + 20;
+      document.getElementById('dhcp-ip').value = `192.168.${sub}.1`;
+      document.getElementById('dhcp-start').value = `192.168.${sub}.10`;
+      document.getElementById('dhcp-end').value = `192.168.${sub}.254`;
+      showNotice(`Сгенерирована новая чистая подсеть 192.168.${sub}.0/24!`);
+    }
+
+    function toggleDhcpServerState() {
+      isDhcpRunning = !isDhcpRunning;
+      const btnLabel = document.getElementById('dhcp-btn-label');
+      const statusLabel = document.getElementById('dhcp-status-label');
+      const btn = document.getElementById('dhcp-start-btn');
+
+      if (isDhcpRunning) {
+        btnLabel.innerText = "Остановить DHCP сервер";
+        statusLabel.innerText = "DHCP: Запущен (192.168.x.x)";
+        statusLabel.className = "text-xs font-mono text-emerald-400";
+        btn.className = "px-6 py-2.5 rounded-xl text-xs font-semibold text-white bg-rose-600 hover:bg-rose-500 transition shadow-lg shadow-rose-600/30 flex items-center gap-2";
+        showNotice('Локальный DHCP сервер derbin запущен!');
+      } else {
+        btnLabel.innerText = "Запустить DHCP сервер";
+        statusLabel.innerText = "DHCP: Остановлен";
+        statusLabel.className = "text-xs font-mono text-[#adadad]";
+        btn.className = "liquid-btn-primary px-6 py-2.5 rounded-xl text-xs font-semibold text-white flex items-center gap-2";
+        showNotice('DHCP сервер остановлен.');
+      }
+    }
+
+    function addGuiAccount() {
+      const input = document.getElementById('gui-new-account-name');
+      const name = input.value.trim();
+      if (!name) {
+        showNotice('Введите никнейм аккаунта!');
+        return;
+      }
+
+      const list = document.getElementById('gui-accounts-list');
+      const select = document.getElementById('gui-account-select');
+
+      const card = document.createElement('div');
+      card.className = "flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/5 hover:border-white/15 transition";
+      const initials = name.slice(0, 2).toUpperCase();
+      card.innerHTML = `
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-bold flex items-center justify-center font-mono">
+            ${initials}
+          </div>
+          <div>
+            <div class="text-xs font-bold text-white">${name}</div>
+            <div class="text-[10px] text-[#adadad]">Пользовательский аккаунт • Добавлен вручную</div>
+          </div>
+        </div>
+        <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-semibold border border-emerald-500/30">Активен</span>
+      `;
+      list.appendChild(card);
+
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.innerText = `${name} (Пользовательский)`;
+      opt.selected = true;
+      select.appendChild(opt);
+
+      input.value = '';
+      showNotice(`Аккаунт ${name} успешно добавлен в derbin!`);
+    }
+
+    function setGuiThemeColor(primary, accent) {
+      document.documentElement.style.setProperty('--brand-primary', primary);
+      document.documentElement.style.setProperty('--brand-accent', accent);
+      playGuiSound('click');
+      showNotice(`Тема оформления обновлена (${primary})`);
+    }
+
+    /* ================= 6.1 GUI SOUND SYNTHESIZER (WEB AUDIO API) ================= */
+    let guiSoundEnabled = true;
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) audioCtx = new AudioContextClass();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function toggleGuiSound() {
+      guiSoundEnabled = !guiSoundEnabled;
+      const icon = document.getElementById('gui-sound-icon');
+      const label = document.getElementById('gui-sound-label');
+      if (guiSoundEnabled) {
+        icon.className = "ph-bold ph-speaker-high text-xs text-emerald-400";
+        label.innerText = "Звук: Вкл";
+        playGuiSound('click');
+        showNotice('Звуковые эффекты GUI включены');
+      } else {
+        icon.className = "ph-bold ph-speaker-slash text-xs text-[#777]";
+        label.innerText = "Звук: Выкл";
+        showNotice('Звуковые эффекты GUI отключены');
+      }
+    }
+
+    function playGuiSound(type) {
+      if (!guiSoundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        if (type === 'click') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(800, now);
+          osc.frequency.exponentialRampToValueAtTime(300, now + 0.04);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.04);
+        } else if (type === 'tab') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.exponentialRampToValueAtTime(660, now + 0.06);
+          gain.gain.setValueAtTime(0.07, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.06);
+        } else if (type === 'success') {
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc1.type = 'sine';
+          osc2.type = 'sine';
+          osc1.frequency.setValueAtTime(523.25, now);
+          osc1.frequency.setValueAtTime(659.25, now + 0.08);
+          osc2.frequency.setValueAtTime(1046.50, now + 0.08);
+          gain.gain.setValueAtTime(0.09, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(ctx.destination);
+          osc1.start(now);
+          osc2.start(now + 0.08);
+          osc1.stop(now + 0.25);
+          osc2.stop(now + 0.25);
+        } else if (type === 'scan') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
+          gain.gain.setValueAtTime(0.04, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        }
+      } catch(e) {}
+    }
+
+    /* ================= 6.2 FEATURE 1: UNDETECT DIAGNOSTIC SUITE ================= */
+    let isDiagnosticRunning = false;
+
+    async function checkWebRTCLeak() {
+      return new Promise((resolve) => {
+        try {
+          const RTCPeer = window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+          if (!RTCPeer) return resolve({ candidateCount: 0, ips: [] });
+
+          const pc = new RTCPeer({ iceServers: [] });
+          const ips = [];
+          pc.createDataChannel('leakTest');
+          pc.createOffer().then(offer => pc.setLocalDescription(offer)).catch(() => {});
+
+          pc.onicecandidate = (event) => {
+            if (event && event.candidate && event.candidate.candidate) {
+              const line = event.candidate.candidate;
+              const match = line.match(/([0-9]{1,3}(\.[0-9]{1,3}){3})/);
+              if (match && !ips.includes(match[1])) ips.push(match[1]);
+            }
+          };
+
+          setTimeout(() => {
+            try { pc.close(); } catch(e){}
+            resolve({ candidateCount: ips.length, ips: ips });
+          }, 350);
+        } catch(e) {
+          resolve({ candidateCount: 0, ips: [] });
+        }
+      });
+    }
+
+    async function runUndetectDiagnostic() {
+      if (isDiagnosticRunning) return;
+      isDiagnosticRunning = true;
+      playGuiSound('scan');
+
+      const btn = document.getElementById('btn-run-detector');
+      const btnLabel = document.getElementById('detector-btn-label');
+      const btnIcon = document.getElementById('detector-btn-icon');
+      const logBox = document.getElementById('detector-console-log');
+      const logStatus = document.getElementById('detector-log-status');
+      const circleBar = document.getElementById('detector-circle-bar');
+      const scorePct = document.getElementById('detector-score-pct');
+
+      btn.classList.add('opacity-75', 'pointer-events-none');
+      btnLabel.innerText = "Диагностика...";
+      btnIcon.className = "ph-bold ph-spinner animate-spin";
+      logStatus.innerText = "SCANNING SYSTEM...";
+      logStatus.className = "text-amber-400 font-semibold animate-pulse";
+      scorePct.innerText = "0%";
+      circleBar.setAttribute('stroke-dasharray', '0, 100');
+
+      logBox.innerText = `[${new Date().toLocaleTimeString()}][INIT] Starting Derbin Kernel Undetect Audit...\n`;
+
+      const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+      for (let i = 1; i <= 4; i++) {
+        const row = document.getElementById(`dstep-row-${i}`);
+        const icon = document.getElementById(`dstep-icon-${i}`);
+        const badge = document.getElementById(`dstep-badge-${i}`);
+        row.className = "flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 transition";
+        icon.className = "w-7 h-7 rounded-lg bg-white/5 text-[#adadad] flex items-center justify-center text-xs font-mono";
+        icon.innerText = "...";
+        badge.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 text-[#adadad] border border-white/10";
+        badge.innerText = "PENDING";
+      }
+
+      await sleep(400);
+      playGuiSound('scan');
+      logBox.innerText += `[STEP 1/4] Probing WebRTC & STUN host address candidates...\n`;
+      logBox.scrollTop = logBox.scrollHeight;
+      const webrtcRes = await checkWebRTCLeak();
+      await sleep(350);
+
+      const r1 = document.getElementById('dstep-row-1');
+      const i1 = document.getElementById('dstep-icon-1');
+      const b1 = document.getElementById('dstep-badge-1');
+      const desc1 = document.getElementById('dstep-desc-1');
+      r1.className = "flex items-center justify-between p-3 rounded-xl bg-emerald-500/[0.05] border border-emerald-500/20 transition";
+      i1.className = "w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold font-mono";
+      i1.innerText = "✓";
+      b1.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+      b1.innerText = "PASS";
+      
+      const detectedIpStr = webrtcRes.ips.length > 0 ? webrtcRes.ips.join(', ') : 'mDNS shielded';
+      desc1.innerText = `WebRTC STUN изолирован: локальные сокеты защищены (${detectedIpStr} -> 192.168.178.1)`;
+      logBox.innerText += `[SUCCESS] WebRTC leak test passed. Local candidates: ${detectedIpStr}. WFP Shield: OK\n`;
+      scorePct.innerText = "25%";
+      circleBar.setAttribute('stroke-dasharray', '25, 100');
+
+      await sleep(450);
+      playGuiSound('scan');
+      logBox.innerText += `[STEP 2/4] Inspecting active desktop capture handles (AnyDesk/Discord/Echo hook audit)...\n`;
+      logBox.scrollTop = logBox.scrollHeight;
+      await sleep(400);
+
+      const r2 = document.getElementById('dstep-row-2');
+      const i2 = document.getElementById('dstep-icon-2');
+      const b2 = document.getElementById('dstep-badge-2');
+      r2.className = "flex items-center justify-between p-3 rounded-xl bg-emerald-500/[0.05] border border-emerald-500/20 transition";
+      i2.className = "w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold font-mono";
+      i2.innerText = "✓";
+      b2.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+      b2.innerText = "SECURE";
+      logBox.innerText += `[SUCCESS] Screen-share hook scan clean. No intrusive automation tokens detected.\n`;
+      scorePct.innerText = "50%";
+      circleBar.setAttribute('stroke-dasharray', '50, 100');
+
+      await sleep(450);
+      playGuiSound('scan');
+      logBox.innerText += `[STEP 3/4] Verifying JVM memory map & Native Bytecode patches...\n`;
+      logBox.scrollTop = logBox.scrollHeight;
+      await sleep(400);
+
+      const r3 = document.getElementById('dstep-row-3');
+      const i3 = document.getElementById('dstep-icon-3');
+      const b3 = document.getElementById('dstep-badge-3');
+      r3.className = "flex items-center justify-between p-3 rounded-xl bg-emerald-500/[0.05] border border-emerald-500/20 transition";
+      i3.className = "w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold font-mono";
+      i3.innerText = "✓";
+      b3.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+      b3.innerText = "100% CLEAN";
+      logBox.innerText += `[SUCCESS] Memory space untouched. Zero Java Agent injections. Paladin check: CLEAN.\n`;
+      scorePct.innerText = "75%";
+      circleBar.setAttribute('stroke-dasharray', '75, 100');
+
+      await sleep(450);
+      playGuiSound('scan');
+      logBox.innerText += `[STEP 4/4] Probing gateway hop count & TTL consistency...\n`;
+      logBox.scrollTop = logBox.scrollHeight;
+      await sleep(400);
+
+      const r4 = document.getElementById('dstep-row-4');
+      const i4 = document.getElementById('dstep-icon-4');
+      const b4 = document.getElementById('dstep-badge-4');
+      r4.className = "flex items-center justify-between p-3 rounded-xl bg-emerald-500/[0.05] border border-emerald-500/20 transition";
+      i4.className = "w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold font-mono";
+      i4.innerText = "✓";
+      b4.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+      b4.innerText = "VERIFIED";
+      logBox.innerText += `[SUCCESS] Hop count = 1. TTL = 128. Hardware MAC emulated. Traceroute undetectable.\n`;
+      scorePct.innerText = "100%";
+      circleBar.setAttribute('stroke-dasharray', '100, 100');
+
+      await sleep(200);
+      playGuiSound('success');
+      logBox.innerText += `[AUDIT COMPLETED] OVERALL VERDICT: 100% UNDETECTED. Ready for AnyDesk/Echo checks!\n`;
+      logBox.scrollTop = logBox.scrollHeight;
+
+      logStatus.innerText = "AUDIT PASSED (100% CLEAN)";
+      logStatus.className = "text-emerald-400 font-semibold";
+      btnLabel.innerText = "Повторить аудит";
+      btnIcon.className = "ph-bold ph-arrow-counter-clockwise";
+      btn.classList.remove('opacity-75', 'pointer-events-none');
+      isDiagnosticRunning = false;
+      showNotice('Аудит скрытности успешно завершён: 0 следов инъекций!');
+    }
+
+    function exportAuditReport() {
+      playGuiSound('click');
+      const timestamp = new Date().toISOString();
+      const reportText = `=====================================================
+DERBIN UNDETECT DIAGNOSTIC AUDIT REPORT
+Version: derbin v1.8 (Dual-PC Undetect Architecture)
+Generated At: ${timestamp}
+Audited Device: Gaming Primary PC (Active Gateway: 192.168.178.181)
+=====================================================
+
+1. WEBRTC & IP LEAK TEST:
+   - STUN Local Candidate Check: PASS
+   - IP Masking Status: Active (192.168.178.1)
+   - Real Physical IP Exposed: NO
+
+2. SCREEN CAPTURE & SPY MONITOR HOOKS:
+   - AnyDesk Screen Hook: 0 matches found
+   - Discord Screen Share Injection: NOT DETECTED
+   - Webdriver / Automation Flags: CLEAN (navigator.webdriver = false)
+
+3. JVM PROCESS & INJECTION AUDIT:
+   - Java Agent Injections: 0 (Pure Vanilla JVM)
+   - Native Memory Patches: NONE (All modifications on PC 2)
+   - Paladin / Echo / Process Hacker Signature Scans: 100% CLEAN
+
+4. NETWORK HOP & TTL MASQUERADE:
+   - ICMP / Traceroute Hops: 1 Hop (Emulated Home Router)
+   - Packet TTL: 128 (Windows Standard)
+   - WFP Driver Layer: Realtek PCIe GbE LightWeight Filter Ring-0
+
+=====================================================
+FINAL SECURITY VERDICT: 100% UNDETECTED
+Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
+Audit Hash: SHA256-${Math.random().toString(36).substring(2, 12).toUpperCase()}
+=====================================================`;
+
+      const blob = new Blob([reportText], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `derbin-audit-report-${Date.now()}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showNotice('Протокол аудита сохранён на устройство!');
+    }
+
+    /* ================= 6.3 FEATURE 2: WFP PACKET SNIFFER & HEX DISSECTOR ================= */
+    let snifferPackets = [
+      {
+        id: 1,
+        time: "18:24:02.102",
+        dir: "OUT",
+        hexId: "0x00",
+        name: "Handshake",
+        size: "38 B",
+        status: "Passed WFP",
+        bytes: "00 26 00 f5 05 0f 6d 63  2e 72 65 61 6c 6c 79 77  |.&....mc.reallyw|\n0010  6f 72 6c 64 2e 72 75 63  dd 02 00 00 00 00        |orld.ru.........|",
+        fields: { "Packet ID": "0x00 (Handshake)", "Protocol Version": "765 (1.20.4)", "Server Address": "mc.reallyworld.ru", "Server Port": "25565", "Next State": "2 (Login)" }
+      },
+      {
+        id: 2,
+        time: "18:24:02.419",
+        dir: "IN",
+        hexId: "0x02",
+        name: "LoginSuccess",
+        size: "64 B",
+        status: "Passed WFP",
+        bytes: "00 3e 02 12 a4 b7 89 23  44 11 09 a1 b2 c3 d4 e5  |.>.....#D.......|\n0010  6f 6d 61 72 5f 74 6f 72  72 65 7a 00 00 00 00 00  |omar_torrez.....|",
+        fields: { "Packet ID": "0x02 (Login Success)", "UUID": "12a4b789-2344-1109-a1b2-c3d4e5", "Username": "omar_torrez", "Properties": "0 (Vanilla Auth)" }
+      },
+      {
+        id: 3,
+        time: "18:24:03.015",
+        dir: "OUT",
+        hexId: "0x0F",
+        name: "KeepAlive",
+        size: "42 B",
+        status: "Passed WFP",
+        bytes: "00 2a 0f 00 00 01 8b 4a  53 2d 64 65 72 62 69 6e  |.*.....JS-derbin|\n0010  31 2e 38 2d 70 72 6f 78  79 2d 6f 6b 00 00 ff 1a  |1.8-proxy-ok....|\n0020  24 6b 65 65 70 5f 61 6c  69 76 65                 |$keep_alive     |",
+        fields: { "Packet ID": "0x0F (Play KeepAlive)", "Payload ID": "1745283921849L", "Encryption": "AES-CFB8 Active", "Compression": "Threshold 256", "MITM Latency": "0.08 ms" }
+      },
+      {
+        id: 4,
+        time: "18:24:03.541",
+        dir: "OUT",
+        hexId: "0x04",
+        name: "PlayerPosition",
+        size: "56 B",
+        status: "Passed WFP",
+        bytes: "00 36 04 40 5c 00 00 00  00 00 00 40 51 80 00 00  |.6.@\\......@Q...|\n0010  00 00 00 c0 69 00 00 00  00 00 00 01              |....i.......    |",
+        fields: { "Packet ID": "0x04 (Player Position)", "X": "112.0", "Y": "70.0", "Z": "-200.0", "On Ground": "true", "Desync Offset": "0.000 (Protected)" }
+      },
+      {
+        id: 5,
+        time: "18:24:04.218",
+        dir: "OUT",
+        hexId: "0x03",
+        name: "ChatMessage",
+        size: "48 B",
+        status: "Passed WFP",
+        bytes: "00 2e 03 14 2f 73 70 61  77 6e 20 64 75 61 6c 2d  |..../spawn dual-|\n0010  70 63 20 6f 6b 00 00 00  00 00 00 00              |pc ok.......    |",
+        fields: { "Packet ID": "0x03 (Chat Message)", "Message": "/spawn dual-pc ok", "Timestamp": "1745283923000", "Salt": "981240182", "Signed": "true" }
+      }
+    ];
+
+    let isSnifferLive = true;
+    let selectedPacketId = 3;
+    let snifferAutoInterval = null;
+
+    function renderSnifferPackets() {
+      const tbody = document.getElementById('sniffer-packet-tbody');
+      if (!tbody) return;
+
+      const dirFilter = document.getElementById('sniffer-filter-dir')?.value || 'all';
+      const typeFilter = document.getElementById('sniffer-filter-type')?.value || 'all';
+
+      const filtered = snifferPackets.filter(p => {
+        if (dirFilter !== 'all' && p.dir !== dirFilter) return false;
+        if (typeFilter !== 'all' && p.name !== typeFilter) return false;
+        return true;
+      });
+
+      tbody.innerHTML = '';
+      filtered.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.className = `derbin-table-row ${p.id === selectedPacketId ? 'derbin-hex-active' : ''}`;
+        tr.onclick = () => selectSnifferPacket(p.id);
+
+        const dirBadge = p.dir === 'OUT' 
+          ? '<span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 font-semibold text-[9px] border border-blue-500/30">C->S</span>'
+          : '<span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 font-semibold text-[9px] border border-amber-500/30">S->C</span>';
+
+        tr.innerHTML = `
+          <td class="p-2.5 text-[#adadad]">${p.time}</td>
+          <td class="p-2.5">${dirBadge}</td>
+          <td class="p-2.5 text-emerald-400 font-bold">${p.hexId}</td>
+          <td class="p-2.5 text-white font-medium">${p.name}</td>
+          <td class="p-2.5 text-[#adadad]">${p.size}</td>
+          <td class="p-2.5">
+            <span class="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-semibold">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ${p.status}
+            </span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function selectSnifferPacket(id) {
+      selectedPacketId = id;
+      playGuiSound('click');
+      const pkt = snifferPackets.find(p => p.id === id);
+      if (!pkt) return;
+
+      document.getElementById('dissector-pkt-name').innerText = `Пакет: ${pkt.hexId} ${pkt.name}`;
+      document.getElementById('dissector-pkt-size').innerText = pkt.size;
+      document.getElementById('dissector-hex-dump').innerText = pkt.bytes;
+
+      const tree = document.getElementById('dissector-fields-tree');
+      tree.innerHTML = '';
+      for (const [k, v] of Object.entries(pkt.fields)) {
+        const div = document.createElement('div');
+        div.innerHTML = `<span class="text-white font-bold">${k}:</span> <span class="text-emerald-400">${v}</span>`;
+        tree.appendChild(div);
+      }
+
+      renderSnifferPackets();
+    }
+
+    function filterSnifferPackets() {
+      playGuiSound('click');
+      renderSnifferPackets();
+    }
+
+    function toggleSnifferLive() {
+      isSnifferLive = !isSnifferLive;
+      playGuiSound('click');
+      const icon = document.getElementById('sniffer-pause-icon');
+      const label = document.getElementById('sniffer-pause-label');
+
+      if (isSnifferLive) {
+        icon.className = "ph-bold ph-pause";
+        label.innerText = "Пауза";
+        startSnifferInterval();
+        showNotice('Захват сетевых пакетов возобновлен');
+      } else {
+        icon.className = "ph-bold ph-play";
+        label.innerText = "Старт";
+        clearInterval(snifferAutoInterval);
+        showNotice('Захват пакетов приостановлен');
+      }
+    }
+
+    function clearSnifferTable() {
+      playGuiSound('click');
+      snifferPackets = [];
+      renderSnifferPackets();
+      showNotice('Буфер сниффера очищен');
+    }
+
+    function injectCustomPacket() {
+      const typeSelect = document.getElementById('injector-pkt-type').value;
+      const input = document.getElementById('injector-payload-input');
+      const payload = input.value.trim() || "test_payload";
+
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}.${String(now.getMilliseconds()).padStart(3, '0')}`;
+
+      let pkt = {
+        id: Date.now(),
+        time: timeStr,
+        dir: "OUT",
+        status: "Injected via WFP"
+      };
+
+      if (typeSelect === 'chat') {
+        pkt.hexId = "0x03";
+        pkt.name = "ChatMessage";
+        pkt.size = `${payload.length + 14} B`;
+        pkt.bytes = `00 ${((payload.length + 14).toString(16)).padStart(2,'0')} 03 12 ${payload.slice(0, 12).split('').map(c => c.charCodeAt(0).toString(16)).join(' ')}  |.${payload.slice(0, 12)}|\n0010  ff aa 01 00 20 44 65 72  62 69 6e 21 00           |...Derbin!..    |`;
+        pkt.fields = { "Packet ID": "0x03 (Chat Message)", "Payload Message": payload, "Injected Gateway": "192.168.178.181 (Device 2)", "Signed State": "Valid AES-256 Key" };
+      } else if (typeSelect === 'position') {
+        pkt.hexId = "0x04";
+        pkt.name = "PlayerPosition";
+        pkt.size = "56 B";
+        pkt.bytes = "00 36 04 40 5c 00 00 00  00 00 00 40 51 80 00 00  |.6.@\\......@Q...|\n0010  00 00 00 c0 69 00 00 00  00 00 00 01              |....i.......    |";
+        pkt.fields = { "Packet ID": "0x04 (Player Position)", "X": "145.24", "Y": "72.0", "Z": "-85.6", "Custom Payload": payload };
+      } else if (typeSelect === 'keepalive') {
+        pkt.hexId = "0x0F";
+        pkt.name = "KeepAlive";
+        pkt.size = "42 B";
+        pkt.bytes = "00 2a 0f 00 00 01 8b 4a  53 2d 64 65 72 62 69 6e  |.*.....JS-derbin|\n0010  31 2e 38 2d 70 72 6f 78  79 2d 6f 6b 00 00 ff 1a  |1.8-proxy-ok....|";
+        pkt.fields = { "Packet ID": "0x0F (KeepAlive)", "Challenge ID": Date.now().toString(), "Comment": payload };
+      } else {
+        pkt.hexId = "0x19";
+        pkt.name = "EntityAction";
+        pkt.size = "28 B";
+        pkt.bytes = "00 1c 19 01 00 03 00 00  00 00 00 00 00 00 00 00  |................|";
+        pkt.fields = { "Packet ID": "0x19 (Entity Action)", "Action": "START_SPRINTING", "Aux Data": payload };
+      }
+
+      snifferPackets.unshift(pkt);
+      if (snifferPackets.length > 25) snifferPackets.pop();
+
+      playGuiSound('success');
+      selectSnifferPacket(pkt.id);
+      showNotice(`Пакет ${pkt.hexId} (${pkt.name}) успешно отправлен через WFP шлюз!`);
+    }
+
+    function exportSnifferPcap() {
+      playGuiSound('click');
+      const blob = new Blob([JSON.stringify(snifferPackets, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `derbin-packets-capture-${Date.now()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showNotice('Дамп сетевых пакетов экспортирован в JSON!');
+    }
+
+    function startSnifferInterval() {
+      clearInterval(snifferAutoInterval);
+      snifferAutoInterval = setInterval(() => {
+        if (!isSnifferLive) return;
+        const types = [
+          { hex: "0x0F", name: "KeepAlive", size: "42 B", dir: "OUT" },
+          { hex: "0x04", name: "PlayerPosition", size: "56 B", dir: "OUT" },
+          { hex: "0x21", name: "ChunkData", size: "1.2 KB", dir: "IN" },
+          { hex: "0x1F", name: "EntityVelocity", size: "32 B", dir: "IN" }
+        ];
+        const pick = types[Math.floor(Math.random() * types.length)];
+        const now = new Date();
+        const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}.${String(now.getMilliseconds()).padStart(3, '0')}`;
+
+        snifferPackets.unshift({
+          id: Date.now(),
+          time: timeStr,
+          dir: pick.dir,
+          hexId: pick.hex,
+          name: pick.name,
+          size: pick.size,
+          status: "Passed WFP",
+          bytes: `00 2a ${pick.hex.slice(2)} 00 00 01 8b 4a  53 2d 64 65 72 62 69 6e  |.*.....JS-derbin|\n0010  31 2e 38 2d 70 72 6f 78  79 2d 6f 6b 00 00 ff 1a  |1.8-proxy-ok....|`,
+          fields: { "Packet ID": `${pick.hex} (${pick.name})`, "Captured Direction": pick.dir, "Size": pick.size, "Integrity": "AES-CFB8 Valid" }
+        });
+
+        if (snifferPackets.length > 25) snifferPackets.pop();
+        if (currentDerbinTab === 'sniffer') renderSnifferPackets();
+      }, 3500);
+    }
+
+    /* ================= 6.4 FEATURE 3: PING OPTIMIZER & LIVE CANVAS OSCILLOSCOPE ================= */
+    let optSpoofPing = 0;
+    let optJitterFactor = 0.15;
+    let pingCanvasLoopId = null;
+    let pingHistory = new Array(80).fill(22);
+    let pingPhase = 0;
+
+    function updatePingSpoof(val) {
+      optSpoofPing = parseInt(val, 10);
+      const label = document.getElementById('opt-spoof-label');
+      label.innerText = optSpoofPing === 0 ? '+0 ms (Native)' : `+${optSpoofPing} ms (Spoof)`;
+      playGuiSound('click');
+    }
+
+    function updateJitterSmoothing(val) {
+      const pct = parseInt(val, 10);
+      optJitterFactor = ((100 - pct) / 100) * 0.9;
+      const label = document.getElementById('opt-smooth-label');
+      label.innerText = `${pct}% (${pct > 70 ? 'Высокое' : pct > 40 ? 'Среднее' : 'Минимум'})`;
+      playGuiSound('click');
+    }
+
+    async function benchmarkRealPing() {
+      const btn = document.getElementById('btn-bench-ping');
+      const label = document.getElementById('btn-bench-label');
+      btn.classList.add('opacity-75', 'pointer-events-none');
+      label.innerText = "Замеряем реальный пинг...";
+      playGuiSound('scan');
+
+      let samples = [];
+      const testUrl = 'https://cloudflare.com/cdn-cgi/trace';
+
+      for (let i = 0; i < 3; i++) {
+        const t0 = performance.now();
+        try {
+          await fetch(testUrl, { mode: 'no-cors', cache: 'no-store' });
+          const delta = performance.now() - t0;
+          samples.push(delta);
+        } catch(e) {
+          samples.push(Math.floor(Math.random() * 8) + 18);
+        }
+      }
+
+      btn.classList.remove('opacity-75', 'pointer-events-none');
+      label.innerText = "Замерить реальный интернет-пинг";
+      playGuiSound('success');
+
+      const avg = Math.round(samples.reduce((a, b) => a + b, 0) / samples.length);
+      const min = Math.round(Math.min(...samples));
+      const max = Math.round(Math.max(...samples));
+      const jitter = ((max - min) / 2).toFixed(1);
+
+      document.getElementById('opt-cur-ping').innerText = avg;
+      document.getElementById('opt-min-ping').innerText = `${min}ms`;
+      document.getElementById('opt-max-ping').innerText = `${max}ms`;
+      document.getElementById('opt-jitter-val').innerText = `±${jitter}ms`;
+
+      pingHistory = pingHistory.map(() => avg + (Math.random() - 0.5) * parseFloat(jitter) * 2);
+      showNotice(`Реальный пинг замерен: ${avg} ms (Джиттер: ±${jitter} ms)`);
+    }
+
+    function startPingCanvasLoop() {
+      if (pingCanvasLoopId) return;
+
+      const canvas = document.getElementById('gui-ping-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      function draw() {
+        if (currentDerbinTab !== 'optimizer') {
+          pingCanvasLoopId = null;
+          return;
+        }
+
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+        ctx.lineWidth = 1;
+        for (let y = 20; y < h; y += 30) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(w, y);
+          ctx.stroke();
+        }
+
+        pingPhase += 0.08;
+        const baseTarget = 22 + optSpoofPing;
+        const noise = (Math.sin(pingPhase) * 2 + (Math.random() - 0.5) * 8) * optJitterFactor;
+        const curPingVal = Math.max(5, Math.round(baseTarget + noise));
+
+        pingHistory.push(curPingVal);
+        pingHistory.shift();
+
+        document.getElementById('opt-cur-ping').innerText = curPingVal;
+        const minP = Math.min(...pingHistory);
+        const maxP = Math.max(...pingHistory);
+        document.getElementById('opt-min-ping').innerText = `${minP}ms`;
+        document.getElementById('opt-max-ping').innerText = `${maxP}ms`;
+
+        ctx.beginPath();
+        const step = w / (pingHistory.length - 1);
+
+        for (let i = 0; i < pingHistory.length; i++) {
+          const val = pingHistory[i];
+          const y = h - ((val / 160) * (h - 20) + 10);
+          const x = i * step;
+
+          if (i === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            const prevX = (i - 1) * step;
+            const prevY = h - ((pingHistory[i - 1] / 160) * (h - 20) + 10);
+            const cx = (prevX + x) / 2;
+            ctx.quadraticCurveTo(prevX, prevY, cx, (prevY + y) / 2);
+          }
+        }
+
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 2.5;
+        ctx.shadowColor = '#10b981';
+        ctx.shadowBlur = 10;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+        grad.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        pingCanvasLoopId = requestAnimationFrame(draw);
+      }
+
+      pingCanvasLoopId = requestAnimationFrame(draw);
+    }
+
+    // Initialize sniffer on load
+    renderSnifferPackets();
+    startSnifferInterval();
+
+    /* 7. Fullscreen Lightbox */
+    const lightboxModal = document.getElementById('lightbox-modal');
+    const lightboxBox = document.getElementById('lightbox-box');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxTitle = document.getElementById('lightbox-title');
+
+    function openLightbox(src, title) {
+      lightboxImg.src = src;
+      if (title) lightboxTitle.innerText = title;
+      lightboxModal.classList.remove('hidden');
+      setTimeout(() => {
+        lightboxModal.classList.remove('opacity-0');
+        lightboxBox.classList.remove('scale-95');
+        lightboxBox.classList.add('scale-100');
+      }, 10);
+    }
+
+    function closeLightbox() {
+      lightboxModal.classList.add('opacity-0');
+      lightboxBox.classList.remove('scale-100');
+      lightboxBox.classList.add('scale-95');
+      setTimeout(() => lightboxModal.classList.add('hidden'), 300);
+    }
+
+    lightboxModal.addEventListener('click', (e) => {
+      if (e.target === lightboxModal) closeLightbox();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (!calcModal.classList.contains('hidden')) {
+        if (e.key >= '0' && e.key <= '9') {
+          calcInput(e.key);
+        } else if (['+', '-', '*', '/', '%', '.'].includes(e.key)) {
+          calcInput(e.key);
+        } else if (e.key === 'Enter' || e.key === '=') {
+          e.preventDefault();
+          calcEquals();
+        } else if (e.key === 'Backspace') {
+          e.preventDefault();
+          calcBackspace();
+        } else if (e.key === 'Escape') {
+          closeCalcModal();
+        }
+      } else if (!easterModal.classList.contains('hidden')) {
+        if (e.key === 'Escape') {
+          closeEasterEgg();
+        }
+      } else if (!lightboxModal.classList.contains('hidden')) {
+        if (e.key === 'Escape') {
+          closeLightbox();
+        }
+      }
+    });
+  </script>
+</body>
+</html>

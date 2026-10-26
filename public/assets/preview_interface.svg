@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 380" fill="none">
+  <rect width="640" height="380" rx="22" fill="#0b1116"/>
+  <rect x="12" y="12" width="616" height="356" rx="18" fill="#111822" stroke="rgba(255,255,255,0.16)" stroke-width="1.5"/>
+  <text x="34" y="46" fill="#ffffff" font-family="Inter, sans-serif" font-weight="700" font-size="16">WFP Драйвер Realtek · Аппаратная фильтрация MAC-слоя</text>
+  <line x1="28" y1="62" x2="612" y2="62" stroke="rgba(255,255,255,0.08)" />
+  <rect x="34" y="82" width="572" height="250" rx="14" fill="#080c11" stroke="rgba(52,211,153,0.35)" stroke-width="1.5"/>
+  <rect x="44" y="96" width="552" height="44" rx="10" fill="rgba(16,185,129,0.18)"/>
+  <text x="60" y="123" fill="#34d399" font-family="monospace" font-weight="700" font-size="13">✓ Realtek PCIe GbE Family Controller-WFP Native MAC Layer LightWeight Filter</text>
+  <text x="60" y="172" fill="#e4e6ee" font-family="monospace" font-size="13">  Realtek PCIe GbE Family Controller-QoS Packet Scheduler-0000</text>
+  <text x="60" y="216" fill="#e4e6ee" font-family="monospace" font-size="13">  Realtek PCIe GbE Family Controller-WFP 802.3 MAC Layer LightWeight Filter</text>
+  <text x="60" y="260" fill="#9196a8" font-family="monospace" font-size="13">  Realtek PCIe GbE Family Controller 192.168.178.181</text>
+  <text x="60" y="304" fill="#6ee7b7" font-family="Inter, sans-serif" font-size="12">Аппаратный перехват трафика второго ПК без следов в системе</text>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 380" fill="none">
+  <rect width="640" height="380" rx="22" fill="#0b1116"/>
+  <rect x="12" y="12" width="616" height="356" rx="18" fill="#111822" stroke="rgba(255,255,255,0.16)" stroke-width="1.5"/>
+  <text x="34" y="46" fill="#ffffff" font-family="Inter, sans-serif" font-weight="700" font-size="16">Прокси и Защита · Поддержка лицензии</text>
+  <line x1="28" y1="62" x2="612" y2="62" stroke="rgba(255,255,255,0.08)" />
+  <rect x="44" y="88" width="440" height="94" rx="14" fill="#161d2b" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+  <text x="64" y="118" fill="#f1f1ef" font-family="Inter, sans-serif" font-size="13">Позволяет полноценно общаться в режиме защищённого</text>
+  <text x="64" y="140" fill="#f1f1ef" font-family="Inter, sans-serif" font-size="13">чата и видеть скины на серверах, использующих проверку</text>
+  <text x="64" y="162" fill="#34d399" font-family="Inter, sans-serif" font-size="13">лицензии. Требуется учётная запись с действующей лицензией.</text>
+  <rect x="44" y="206" width="22" height="22" rx="6" fill="#10b981"/>
+  <path d="M50 217L54 221L61 213" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="78" y="222" fill="#ffffff" font-family="Inter, sans-serif" font-weight="600" font-size="14">Поддержка лицензии</text>
+  <rect x="330" y="206" width="22" height="22" rx="6" fill="#10b981"/>
+  <path d="M336 217L340 221L347 213" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="364" y="222" fill="#ffffff" font-family="Inter, sans-serif" font-weight="600" font-size="14">Защищённый чат</text>
+  <text x="44" y="274" fill="#9196a8" font-family="Inter, sans-serif" font-size="13">Адрес прокси-сервера:</text>
+  <rect x="44" y="286" width="552" height="42" rx="10" fill="#090d13" stroke="rgba(255,255,255,0.14)"/>
+  <text x="60" y="312" fill="#34d399" font-family="monospace" font-size="14">127.0.0.1:25565</text>
+</svg>

@@ -1,0 +1,246 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Pillar 0: Global Default-Deny Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Global Hardened Primitives
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isVerifiedOwner(userId) {
+      return isVerifiedUser() && request.auth.uid == userId;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Validation Blueprint: UserProfile
+    function isValidUserProfile(data) {
+      return data.keys().hasAll([
+          'uid',
+          'displayName',
+          'minecraftNick',
+          'subscriptionPlan',
+          'licenseKey',
+          'hwidStatus',
+          'glassPreset',
+          'createdAt',
+          'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'uid',
+          'displayName',
+          'minecraftNick',
+          'subscriptionPlan',
+          'licenseKey',
+          'hwidStatus',
+          'glassPreset',
+          'createdAt',
+          'updatedAt'
+        ]) &&
+        data.uid is string && data.uid.size() >= 1 && data.uid.size() <= 128 && data.uid.matches('^[a-zA-Z0-9_\\-]+$') &&
+        data.uid == request.auth.uid &&
+        data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 60 &&
+        data.minecraftNick is string && data.minecraftNick.size() >= 2 && data.minecraftNick.size() <= 32 && data.minecraftNick.matches('^[a-zA-Z0-9_]+$') &&
+        data.subscriptionPlan is string && data.subscriptionPlan.size() <= 16 && (
+          data.subscriptionPlan == 'free' ||
+          data.subscriptionPlan == '30d' ||
+          data.subscriptionPlan == '90d' ||
+          data.subscriptionPlan == 'lifetime'
+        ) &&
+        data.licenseKey is string && data.licenseKey.size() >= 4 && data.licenseKey.size() <= 64 &&
+        data.hwidStatus is string && data.hwidStatus.size() <= 16 && (
+          data.hwidStatus == 'bound' ||
+          data.hwidStatus == 'unbound' ||
+          data.hwidStatus == 'reset_ready'
+        ) &&
+        data.glassPreset is string && data.glassPreset.size() <= 24 && (
+          data.glassPreset == 'amber_gold' ||
+          data.glassPreset == 'emerald_liquid' ||
+          data.glassPreset == 'prismatic_ios26' ||
+          data.glassPreset == 'obsidian_frost'
+        ) &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    // Validation Blueprint: UserPrivateInfo
+    function isValidUserPrivateInfo(data) {
+      return data.keys().hasAll(['uid', 'email', 'updatedAt']) &&
+        data.keys().hasOnly(['uid', 'email', 'updatedAt']) &&
+        data.uid is string && data.uid.size() >= 1 && data.uid.size() <= 128 && data.uid.matches('^[a-zA-Z0-9_\\-]+$') &&
+        data.uid == request.auth.uid &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 120 &&
+        data.updatedAt is timestamp;
+    }
+
+    // Validation Blueprint: ProxyConfig
+    function isValidProxyConfig(data) {
+      return data.keys().hasAll([
+          'uid',
+          'name',
+          'serverAddress',
+          'accountName',
+          'dhcpSubnet',
+          'pingSpoofMs',
+          'jitterSmoothPct',
+          'tracerouteBypass',
+          'routerMode',
+          'createdAt',
+          'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'uid',
+          'name',
+          'serverAddress',
+          'accountName',
+          'dhcpSubnet',
+          'pingSpoofMs',
+          'jitterSmoothPct',
+          'tracerouteBypass',
+          'routerMode',
+          'createdAt',
+          'updatedAt'
+        ]) &&
+        data.uid is string && data.uid.size() >= 1 && data.uid.size() <= 128 && data.uid.matches('^[a-zA-Z0-9_\\-]+$') &&
+        data.uid == request.auth.uid &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 50 &&
+        data.serverAddress is string && data.serverAddress.size() >= 3 && data.serverAddress.size() <= 100 &&
+        data.accountName is string && data.accountName.size() >= 2 && data.accountName.size() <= 32 && data.accountName.matches('^[a-zA-Z0-9_]+$') &&
+        data.dhcpSubnet is string && data.dhcpSubnet.size() >= 7 && data.dhcpSubnet.size() <= 20 &&
+        data.pingSpoofMs is number && data.pingSpoofMs >= 0 && data.pingSpoofMs <= 120 &&
+        data.jitterSmoothPct is number && data.jitterSmoothPct >= 10 && data.jitterSmoothPct <= 100 &&
+        data.tracerouteBypass is bool &&
+        data.routerMode is bool &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    // Collection 1: /users/{userId}
+    match /users/{userId} {
+      allow get: if isOwner(userId) && isValidId(userId);
+      allow list: if false;
+
+      allow create: if isVerifiedOwner(userId) &&
+        isValidId(userId) &&
+        isValidUserProfile(incoming()) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+
+      allow update: if isVerifiedOwner(userId) &&
+        isValidId(userId) &&
+        isValidUserProfile(incoming()) &&
+        incoming().uid == existing().uid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time && (
+          // Action 1: Update profile details, Minecraft nick, or UI glass theme
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'displayName',
+            'minecraftNick',
+            'glassPreset',
+            'hwidStatus',
+            'updatedAt'
+          ]) ||
+          // Action 2: Activate or upgrade subscription plan and license key
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'subscriptionPlan',
+            'licenseKey',
+            'hwidStatus',
+            'updatedAt'
+          ])
+        );
+
+      allow delete: if false;
+
+      // Subcollection 2: /users/{userId}/private/{docId}
+      match /private/{docId} {
+        allow get: if isOwner(userId) && isValidId(userId) && docId == 'info' &&
+          exists(/databases/$(database)/documents/users/$(userId));
+        allow list: if false;
+
+        allow create: if isVerifiedOwner(userId) &&
+          isValidId(userId) &&
+          docId == 'info' &&
+          isValidUserPrivateInfo(incoming()) &&
+          incoming().updatedAt == request.time &&
+          exists(/databases/$(database)/documents/users/$(userId));
+
+        allow update: if isVerifiedOwner(userId) &&
+          isValidId(userId) &&
+          docId == 'info' &&
+          isValidUserPrivateInfo(incoming()) &&
+          incoming().uid == existing().uid &&
+          incoming().updatedAt == request.time &&
+          incoming().diff(existing()).affectedKeys().hasOnly(['email', 'updatedAt']) &&
+          exists(/databases/$(database)/documents/users/$(userId));
+
+        allow delete: if false;
+      }
+
+      // Subcollection 3: /users/{userId}/configs/{configId}
+      match /configs/{configId} {
+        allow get: if isOwner(userId) &&
+          isValidId(userId) &&
+          isValidId(configId) &&
+          exists(/databases/$(database)/documents/users/$(userId));
+
+        allow list: if isOwner(userId) &&
+          resource.data.uid == request.auth.uid;
+
+        allow create: if isVerifiedOwner(userId) &&
+          isValidId(userId) &&
+          isValidId(configId) &&
+          isValidProxyConfig(incoming()) &&
+          incoming().createdAt == request.time &&
+          incoming().updatedAt == request.time &&
+          exists(/databases/$(database)/documents/users/$(userId));
+
+        allow update: if isVerifiedOwner(userId) &&
+          isValidId(userId) &&
+          isValidId(configId) &&
+          isValidProxyConfig(incoming()) &&
+          incoming().uid == existing().uid &&
+          incoming().createdAt == existing().createdAt &&
+          incoming().updatedAt == request.time &&
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'name',
+            'serverAddress',
+            'accountName',
+            'dhcpSubnet',
+            'pingSpoofMs',
+            'jitterSmoothPct',
+            'tracerouteBypass',
+            'routerMode',
+            'updatedAt'
+          ]) &&
+          exists(/databases/$(database)/documents/users/$(userId));
+
+        allow delete: if isVerifiedOwner(userId) &&
+          isValidId(userId) &&
+          isValidId(configId) &&
+          exists(/databases/$(database)/documents/users/$(userId));
+      }
+    }
+  }
+}

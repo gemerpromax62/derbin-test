@@ -1,0 +1,675 @@
+@import "tailwindcss";
+
+:root {
+  --brand-primary: #10b981;
+  --brand-accent: #34d399;
+  --brand-glow: rgba(16, 185, 129, 0.28);
+  --color-background: #080c0a;
+  --color-card: #0f1612;
+  --glass-blur: 38px;
+  --glass-saturate: 210%;
+}
+
+[data-glass-preset="amber_gold"] {
+  --brand-primary: #f59e0b;
+  --brand-accent: #fbbf24;
+  --brand-glow: rgba(245, 158, 11, 0.32);
+}
+
+[data-glass-preset="emerald_liquid"] {
+  --brand-primary: #10b981;
+  --brand-accent: #34d399;
+  --brand-glow: rgba(16, 185, 129, 0.28);
+}
+
+[data-glass-preset="prismatic_ios26"] {
+  --brand-primary: #10b981;
+  --brand-accent: #34d399;
+  --brand-glow: rgba(16, 185, 129, 0.28);
+}
+
+[data-glass-preset="obsidian_frost"] {
+  --brand-primary: #06b6d4;
+  --brand-accent: #22d3ee;
+  --brand-glow: rgba(6, 182, 212, 0.28);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-background);
+  color: #f1f1ef;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Ambient glow & liquid blobs from original site */
+.hero-glow {
+  position: absolute;
+  top: -140px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100vw, 1250px);
+  height: 820px;
+  background: radial-gradient(circle at 50% 30%, rgba(16, 185, 129, 0.3) 0%, rgba(52, 211, 153, 0.12) 45%, rgba(8, 12, 10, 0) 75%);
+  pointer-events: none;
+  z-index: 0;
+  animation: floatLiquidGlow 14s ease-in-out infinite alternate;
+}
+
+@keyframes floatLiquidGlow {
+  0% { transform: translateX(-50%) translateY(0) scale(1); }
+  100% { transform: translateX(-50%) translateY(30px) scale(1.06); }
+}
+
+.liquid-blob-1 {
+  position: absolute;
+  top: 25%;
+  left: -120px;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.24) 0%, rgba(52, 211, 153, 0.08) 50%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  animation: floatBlob1 22s ease-in-out infinite alternate;
+}
+
+.liquid-blob-2 {
+  position: absolute;
+  top: 60%;
+  right: -140px;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.22) 0%, rgba(251, 191, 36, 0.06) 50%, transparent 70%);
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+  animation: floatBlob2 26s ease-in-out infinite alternate;
+}
+
+@keyframes floatBlob1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(70px, -50px) scale(1.18); }
+}
+@keyframes floatBlob2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-80px, 60px) scale(1.15); }
+}
+
+/* ================= TRANSPARENT REFRACTIVE LIQUID GLASS SYSTEM ================= */
+.liquid-glass-nav {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(16, 26, 20, 0.38) 52%,
+    rgba(10, 16, 13, 0.48) 100%
+  ) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(215%) brightness(112%) !important;
+  backdrop-filter: blur(40px) saturate(215%) brightness(112%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.24) !important;
+  box-shadow:
+    inset 0 2px 2px 0 rgba(255, 255, 255, 0.75),
+    inset 1px 0 2px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -2px 3px 0 rgba(251, 191, 36, 0.22),
+    0 22px 48px -10px rgba(0, 0, 0, 0.65),
+    0 0 32px -5px rgba(16, 185, 129, 0.22) !important;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease !important;
+}
+
+/* Transparent Refractive Liquid Glass Cards */
+.sadnes-card,
+.ios26-glass-slab {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.11) 0%,
+    rgba(255, 255, 255, 0.03) 45%,
+    rgba(16, 185, 129, 0.04) 80%,
+    rgba(251, 191, 36, 0.04) 100%
+  );
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(110%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(110%);
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  border-radius: 28px;
+  box-shadow:
+    inset 0 2px 2.5px 0 rgba(255, 255, 255, 0.72),
+    inset 1.5px 0 2px 0 rgba(255, 255, 255, 0.26),
+    inset -1.5px -2px 4px 0 rgba(251, 191, 36, 0.22),
+    inset 0 -2px 6px 0 rgba(16, 185, 129, 0.14),
+    0 22px 48px -14px rgba(0, 0, 0, 0.6),
+    0 0 28px -8px rgba(16, 185, 129, 0.16);
+  transition:
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.35s ease,
+    box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.35s ease;
+  overflow: hidden;
+}
+
+/* Specular liquid gloss line across top */
+.sadnes-card::before,
+.ios26-glass-slab::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1.5px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.92),
+    rgba(52, 211, 153, 0.72),
+    rgba(251, 191, 36, 0.55),
+    transparent
+  );
+  pointer-events: none;
+  border-radius: 999px;
+  z-index: 2;
+}
+
+/* Diagonal glass refraction sheen */
+.sadnes-card::after,
+.ios26-glass-slab::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 34%,
+    transparent 62%
+  );
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.sadnes-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  border-color: rgba(255, 255, 255, 0.38);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.045) 45%,
+    rgba(16, 185, 129, 0.07) 80%,
+    rgba(251, 191, 36, 0.06) 100%
+  );
+  box-shadow:
+    inset 0 2.5px 3px 0 rgba(255, 255, 255, 0.9),
+    inset 0 0 28px 0 rgba(52, 211, 153, 0.18),
+    inset -2px -2.5px 5px 0 rgba(251, 191, 36, 0.32),
+    0 30px 64px -12px rgba(0, 0, 0, 0.72),
+    0 0 38px 0 rgba(16, 185, 129, 0.32);
+}
+
+/* Liquid Glass Depression (Squish on Press) for Cards */
+.sadnes-card:active {
+  transform: scale(0.972, 0.962) translateY(2px);
+  border-color: rgba(52, 211, 153, 0.7);
+  box-shadow:
+    inset 0 4px 10px 0 rgba(255, 255, 255, 0.75),
+    inset 0 0 34px 0 rgba(52, 211, 153, 0.28),
+    inset 0 -3px 8px 0 rgba(251, 191, 36, 0.38),
+    0 12px 24px -10px rgba(0, 0, 0, 0.65);
+}
+
+/* Liquid Tag Pills — Clear Refractive Glass + Squish */
+.liquid-tag {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.03) 55%,
+    rgba(16, 185, 129, 0.05) 100%
+  ) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(205%) !important;
+  backdrop-filter: blur(28px) saturate(205%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.24) !important;
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.68),
+    inset 0 -1.5px 2.5px rgba(251, 191, 36, 0.2),
+    0 12px 26px -6px rgba(0, 0, 0, 0.45) !important;
+  transition:
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.3s ease,
+    box-shadow 0.35s ease !important;
+}
+.liquid-tag:hover {
+  transform: translateY(-4px) scale(1.03) !important;
+  border-color: rgba(255, 255, 255, 0.42) !important;
+  box-shadow:
+    inset 0 2.5px 2.5px rgba(255, 255, 255, 0.85),
+    inset 0 -2px 3px rgba(52, 211, 153, 0.3),
+    0 18px 34px -6px rgba(16, 185, 129, 0.32) !important;
+}
+.liquid-tag:active {
+  transform: scale(0.93, 0.9) translateY(2px) !important;
+  box-shadow:
+    inset 0 3px 8px rgba(255, 255, 255, 0.85),
+    inset 0 0 18px rgba(52, 211, 153, 0.35),
+    0 6px 14px -4px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Liquid Glass Primary & Clear Buttons — With Elastic Squish Physics */
+.liquid-btn-primary,
+.ios26-btn-primary {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(52, 211, 153, 0.88) 0%,
+    rgba(16, 185, 129, 0.78) 50%,
+    rgba(5, 150, 105, 0.85) 100%
+  ) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.48) !important;
+  box-shadow:
+    inset 0 2.5px 2.5px rgba(255, 255, 255, 0.82),
+    inset 0 -2.5px 4px rgba(0, 0, 0, 0.25),
+    0 14px 32px -6px rgba(16, 185, 129, 0.52) !important;
+  overflow: hidden;
+  transition:
+    transform 0.48s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.35s ease,
+    border-color 0.3s ease !important;
+}
+.liquid-btn-primary::before,
+.ios26-btn-primary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
+  pointer-events: none;
+}
+.liquid-btn-primary:hover,
+.ios26-btn-primary:hover {
+  transform: translateY(-3px) scale(1.035) !important;
+  box-shadow:
+    inset 0 3px 3px rgba(255, 255, 255, 0.92),
+    0 20px 42px -6px rgba(16, 185, 129, 0.68) !important;
+}
+.liquid-btn-primary:active,
+.ios26-btn-primary:active {
+  transform: scale(0.925, 0.89) translateY(2.5px) !important;
+  box-shadow:
+    inset 0 4px 10px rgba(255, 255, 255, 0.95),
+    inset 0 0 22px rgba(255, 255, 255, 0.45),
+    0 6px 16px -4px rgba(16, 185, 129, 0.55) !important;
+}
+
+.liquid-btn-glass,
+.ios26-btn-secondary {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.04) 55%,
+    rgba(255, 255, 255, 0.08) 100%
+  ) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(210%) !important;
+  backdrop-filter: blur(30px) saturate(210%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.28) !important;
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.72),
+    inset 0 -2px 3px rgba(251, 191, 36, 0.18),
+    0 12px 28px -8px rgba(0, 0, 0, 0.5) !important;
+  transition:
+    transform 0.48s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.3s ease,
+    box-shadow 0.35s ease !important;
+}
+.liquid-btn-glass:hover,
+.ios26-btn-secondary:hover {
+  transform: translateY(-3px) scale(1.035) !important;
+  border-color: rgba(255, 255, 255, 0.48) !important;
+  box-shadow:
+    inset 0 2.5px 3px rgba(255, 255, 255, 0.88),
+    inset 0 -2px 4px rgba(52, 211, 153, 0.28),
+    0 18px 38px -8px rgba(16, 185, 129, 0.34) !important;
+}
+.liquid-btn-glass:active,
+.ios26-btn-secondary:active {
+  transform: scale(0.925, 0.89) translateY(2.5px) !important;
+  border-color: rgba(52, 211, 153, 0.7) !important;
+  box-shadow:
+    inset 0 4px 10px rgba(255, 255, 255, 0.88),
+    inset 0 0 20px rgba(52, 211, 153, 0.32),
+    0 6px 14px -4px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Generic button press squish across the entire app */
+button:active,
+a.rounded-full:active {
+  transform: scale(0.935, 0.91) translateY(1.5px);
+}
+
+.star-icon {
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.group:hover .star-icon {
+  transform: rotate(90deg);
+}
+
+/* ================= DERBIN SWING GUI REPLICA (TRANSPARENT REFRACTIVE GLASS) ================= */
+.derbin-app-window {
+  font-family: 'Fredoka', 'Inter', -apple-system, sans-serif;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.11) 0%,
+    rgba(16, 24, 22, 0.48) 48%,
+    rgba(10, 15, 14, 0.62) 100%
+  ) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(110%) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(110%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.26) !important;
+  box-shadow:
+    inset 0 2.5px 2.5px 0 rgba(255, 255, 255, 0.72),
+    inset 1.5px 0 2px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -2.5px 4px 0 rgba(251, 191, 36, 0.24),
+    0 30px 72px -15px rgba(0, 0, 0, 0.82),
+    0 0 42px -8px rgba(16, 185, 129, 0.24) !important;
+  border-radius: 28px;
+  overflow: hidden;
+  transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.derbin-card {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.09) 0%,
+    rgba(255, 255, 255, 0.025) 55%,
+    rgba(251, 191, 36, 0.03) 100%
+  );
+  -webkit-backdrop-filter: blur(26px) saturate(195%);
+  backdrop-filter: blur(26px) saturate(195%);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.52),
+    inset 0 -1.5px 3px rgba(251, 191, 36, 0.16),
+    0 10px 28px -6px rgba(0, 0, 0, 0.45);
+  transition:
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.35s ease;
+}
+.derbin-card:hover {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.04) 55%,
+    rgba(16, 185, 129, 0.05) 100%
+  );
+}
+
+.derbin-tab-item {
+  position: relative;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #b4b8c5;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+.derbin-tab-item:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.09);
+  transform: translateY(-1.5px);
+}
+.derbin-tab-item:active {
+  transform: scale(0.91, 0.88) translateY(1.5px);
+}
+.derbin-tab-item.active {
+  color: #ffffff !important;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.24) 0%,
+    rgba(16, 185, 129, 0.22) 60%,
+    rgba(251, 191, 36, 0.14) 100%
+  ) !important;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.78),
+    inset 0 -1.5px 2px rgba(251, 191, 36, 0.25),
+    0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.derbin-input,
+.ios26-input {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(10, 14, 20, 0.52) 100%
+  ) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.22) !important;
+  border-radius: 14px !important;
+  color: #f1f1ef !important;
+  font-size: 13px !important;
+  padding: 8px 12px !important;
+  outline: none !important;
+  box-shadow:
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.28),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.35) !important;
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.25s,
+    box-shadow 0.25s !important;
+}
+.derbin-input:focus,
+.ios26-input:focus {
+  border-color: rgba(255, 255, 255, 0.55) !important;
+  box-shadow:
+    inset 0 2px 3px rgba(255, 255, 255, 0.48),
+    0 0 0 3px rgba(16, 185, 129, 0.28) !important;
+  transform: scale(1.005);
+}
+
+/* Segmented bar in modals */
+.ios26-segmented-bar {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1.5px 2px rgba(0, 0, 0, 0.35);
+}
+.ios26-segmented-pill-active {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(16, 185, 129, 0.24) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  box-shadow:
+    inset 0 2px 1.5px rgba(255, 255, 255, 0.72),
+    0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* Transparent Glass Capsule Switch for Checkboxes (Inspired by Photo 2 Green Glass Capsule) */
+.derbin-check-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 13px;
+  color: #e4e6ee;
+  padding: 7px 11px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition:
+    transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+.derbin-check-label:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1.5px);
+}
+.derbin-check-label:active {
+  transform: scale(0.94, 0.91) translateY(1.5px);
+}
+
+.derbin-check-box {
+  width: 34px;
+  height: 20px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.38);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 100%);
+  box-shadow:
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.55),
+    0 4px 10px rgba(0, 0, 0, 0.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.derbin-check-box.checked {
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 55%, #10b981 100%);
+  border-color: rgba(255, 255, 255, 0.85);
+  box-shadow:
+    inset 0 2px 2.5px rgba(255, 255, 255, 0.9),
+    0 0 16px rgba(34, 197, 94, 0.55);
+}
+
+/* Range Sliders with Clear Refractive Glass Lens Thumb (Inspired by Photo 2) */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #3b82f6 0%, #ec4899 50%, #f59e0b 80%, #10b981 100%);
+  box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.45);
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 22px;
+  border-radius: 999px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(255, 255, 255, 0.22) 55%,
+    rgba(255, 255, 255, 0.5) 100%
+  );
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  box-shadow:
+    inset 0 2px 2.5px rgba(255, 255, 255, 0.98),
+    0 6px 14px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.14);
+}
+input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(0.9, 0.85);
+}
+
+/* Derbin Tooltip Box */
+.derbin-tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+.derbin-tooltip-box {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: rgba(16, 22, 28, 0.82);
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  color: #f1f1ef;
+  font-size: 12px;
+  line-height: 1.45;
+  padding: 10px 14px;
+  border-radius: 14px;
+  width: max-content;
+  max-width: 340px;
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.65),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(28px) saturate(200%);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 50;
+}
+.derbin-tooltip-container:hover .derbin-tooltip-box {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.derbin-hex-cell {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+.derbin-hex-active {
+  background: rgba(16, 185, 129, 0.18) !important;
+  border-color: rgba(16, 185, 129, 0.45) !important;
+}
+.derbin-table-row {
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+.derbin-table-row:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+/* Preloader letter animation */
+.char-anim {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.char-anim.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes floatChevron {
+  0%, 100% { transform: translateY(0px); opacity: 0.85; }
+  50% { transform: translateY(7px); opacity: 0.3; }
+}
+.scrollhint-chevron {
+  animation: floatChevron 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #080c0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #17241e;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #23382e;
+}
