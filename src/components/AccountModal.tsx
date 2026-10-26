@@ -131,7 +131,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
     free: 'Starter Free Trial',
     '30d': 'Подписка 30 дней (349 ₽)',
     '90d': 'Подписка 90 дней (799 ₽)',
-    lifetime: 'Навсегда · Lifetime (1 599 ₽)',
+    lifetime: 'Навсегда · Lifetime (4 999 ₽)',
   };
 
   return (
@@ -389,7 +389,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                 >
                   <option value="30d">Подписка 30 дней — 349 ₽</option>
                   <option value="90d">Подписка 90 дней — 799 ₽ (ХИТ)</option>
-                  <option value="lifetime">Навсегда (Lifetime) — 1 599 ₽</option>
+                  <option value="lifetime">Навсегда (Lifetime) — 4 999 ₽</option>
                   <option value="free">Starter Free Trial</option>
                 </select>
                 <button

@@ -1844,6 +1844,18 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
               {
+                src: '/derbin_icon_fhd.png',
+                lightTitle: 'Оригинальная иконка derbin в Full HD (1920×1920 Liquid Glass)',
+                title: 'Иконка derbin в Full HD',
+                sub: '1920×1920 · Liquid Glass D',
+              },
+              {
+                src: '/derbin_wallpaper_fhd.png',
+                lightTitle: 'Фирменные обои derbin в Full HD (1920×1080 16:9)',
+                title: 'Обои derbin Full HD',
+                sub: '1920×1080 · 16:9 Wallpaper',
+              },
+              {
                 src: '/assets/preview_routing.svg',
                 lightTitle: 'Маршрутизация и Сеть • derbin',
                 title: 'Маршрутизация и Сеть',

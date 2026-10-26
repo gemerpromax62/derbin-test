@@ -1,0 +1,160 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <radialGradient id="wallBg" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#0f261c" stop-opacity="1" />
+      <stop offset="35%" stop-color="#0a1a13" stop-opacity="1" />
+      <stop offset="70%" stop-color="#06100c" stop-opacity="1" />
+      <stop offset="100%" stop-color="#030806" stop-opacity="1" />
+    </radialGradient>
+
+    <radialGradient id="lightBeam" cx="50%" cy="30%" r="55%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.22" />
+      <stop offset="45%" stop-color="#34d399" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id="groundReflect" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.18" />
+      <stop offset="60%" stop-color="#059669" stop-opacity="0.04" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Glass Tile Base Gradient -->
+    <linearGradient id="tileGlassBody2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#165338" stop-opacity="0.92" />
+      <stop offset="30%" stop-color="#0b2e20" stop-opacity="0.88" />
+      <stop offset="70%" stop-color="#071e15" stop-opacity="0.92" />
+      <stop offset="100%" stop-color="#030e0a" stop-opacity="0.96" />
+    </linearGradient>
+
+    <linearGradient id="specularRim2" x1="0%" y1="0%" x2="70%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="20%" stop-color="#a7f3d0" stop-opacity="0.7" />
+      <stop offset="50%" stop-color="#34d399" stop-opacity="0.25" />
+      <stop offset="80%" stop-color="#064e3b" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.8" />
+    </linearGradient>
+
+    <linearGradient id="innerSheen2" x1="15%" y1="0%" x2="85%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4" />
+      <stop offset="35%" stop-color="#34d399" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.2" />
+    </linearGradient>
+
+    <linearGradient id="letterGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a7f3d0" />
+      <stop offset="35%" stop-color="#34d399" />
+      <stop offset="80%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <radialGradient id="dotRadial2" cx="38%" cy="38%" r="65%">
+      <stop offset="0%" stop-color="#ecfdf5" />
+      <stop offset="40%" stop-color="#6ee7b7" />
+      <stop offset="75%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#047857" />
+    </radialGradient>
+
+    <filter id="tileShadow2" x="-20%" y="-20%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="32" stdDeviation="40" flood-color="#000000" flood-opacity="0.9" />
+      <feDropShadow dx="0" dy="12" stdDeviation="22" flood-color="#10b981" flood-opacity="0.3" />
+    </filter>
+
+    <filter id="neonGlow2" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="24" result="blurBig" />
+      <feGaussianBlur stdDeviation="8" result="blurMed" />
+      <feMerge>
+        <feMergeNode in="blurBig" />
+        <feMergeNode in="blurMed" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Environment -->
+  <rect width="1920" height="1080" fill="url(#wallBg)" />
+  <rect width="1920" height="1080" fill="url(#lightBeam)" />
+
+  <!-- Pedestal ground reflection -->
+  <ellipse cx="960" cy="880" rx="520" ry="110" fill="url(#groundReflect)" />
+
+  <!-- Atmospheric bokeh floating orbs -->
+  <circle cx="340" cy="280" r="180" fill="#10b981" opacity="0.08" filter="url(#neonGlow2)" />
+  <circle cx="1620" cy="740" r="220" fill="#34d399" opacity="0.06" filter="url(#neonGlow2)" />
+  <circle cx="1480" cy="240" r="140" fill="#10b981" opacity="0.09" filter="url(#neonGlow2)" />
+
+  <!-- Centered Glass Icon Group (Scaled to 640x640, centered at 960, 520) -->
+  <g transform="translate(640, 200)">
+    
+    <!-- Squircle Tile -->
+    <g filter="url(#tileShadow2)">
+      <rect x="0" y="0" width="640" height="640" rx="175" ry="175" 
+            fill="url(#tileGlassBody2)" 
+            stroke="url(#specularRim2)" 
+            stroke-width="10" />
+
+      <rect x="12" y="12" width="616" height="616" rx="163" ry="163" 
+            fill="url(#innerSheen2)" 
+            stroke="rgba(255, 255, 255, 0.16)" 
+            stroke-width="3" />
+
+      <!-- Top Specular Highlight -->
+      <path d="M 110 12 C 220 4, 420 4, 530 12 C 480 34, 160 34, 110 12 Z" 
+            fill="rgba(255, 255, 255, 0.6)" />
+    </g>
+
+    <!-- Glyph D Ambient Glow -->
+    <ellipse cx="320" cy="320" rx="180" ry="180" fill="#10b981" opacity="0.35" filter="url(#neonGlow2)" />
+
+    <!-- Outer D path stroke -->
+    <g filter="url(#neonGlow2)" opacity="0.85">
+      <path d="M 225 180 
+               H 325 
+               C 405 180, 460 238, 460 320 
+               C 460 402, 405 460, 325 460 
+               H 225 
+               Z" 
+            fill="none" 
+            stroke="#10b981" 
+            stroke-width="52" 
+            stroke-linejoin="round" 
+            stroke-linecap="round" />
+      <circle cx="320" cy="320" r="42" fill="#34d399" />
+    </g>
+
+    <g>
+      <path d="M 225 180 
+               H 325 
+               C 405 180, 460 238, 460 320 
+               C 460 402, 405 460, 325 460 
+               H 225 
+               Z" 
+            fill="none" 
+            stroke="url(#letterGrad2)" 
+            stroke-width="48" 
+            stroke-linejoin="round" 
+            stroke-linecap="round" />
+
+      <!-- Top letter gloss -->
+      <path d="M 225 180 H 325 C 385 180, 435 218, 452 288" 
+            fill="none" 
+            stroke="rgba(255, 255, 255, 0.85)" 
+            stroke-width="14" 
+            stroke-linecap="round" />
+
+      <line x1="200" y1="184" x2="200" y2="456" 
+            stroke="rgba(255, 255, 255, 0.75)" 
+            stroke-width="8" 
+            stroke-linecap="round" />
+
+      <circle cx="320" cy="320" r="40" fill="url(#dotRadial2)" />
+      <ellipse cx="306" cy="306" rx="13" ry="7" transform="rotate(-35 306 306)" fill="rgba(255, 255, 255, 0.85)" />
+    </g>
+
+  </g>
+
+  <!-- Typography below icon in wallpaper -->
+  <text x="960" y="930" text-anchor="middle" font-family="'Space Grotesk', -apple-system, sans-serif" font-weight="700" font-size="34" letter-spacing="8" fill="#ffffff">DERBIN</text>
+  <text x="960" y="965" text-anchor="middle" font-family="-apple-system, sans-serif" font-weight="500" font-size="14" letter-spacing="4" fill="#34d399">NEXT-GEN CLIENT &amp; SECURITY PROTECTION</text>
+</svg>

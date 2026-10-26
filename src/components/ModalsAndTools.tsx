@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Lock, Check, ArrowRight, Calculator, Sparkles, Image as ImageIcon } from 'lucide-react';
+import { X, Lock, Check, ArrowRight, Calculator, Sparkles, Image as ImageIcon, Download } from 'lucide-react';
 import {
   SubscriptionPlan,
   evaluateCalculatorExpression,
@@ -31,7 +31,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   onClose,
   onCompleteOrder,
 }) => {
-  const [payMethod, setPayMethod] = useState<'card' | 'crypto' | 'funpay'>('card');
+  const [payMethod, setPayMethod] = useState<'card' | 'crypto'>('card');
   const [email, setEmail] = useState(defaultEmail);
   const [nick, setNick] = useState(defaultNick);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -100,13 +100,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
         {!generatedKey ? (
           <>
-            {/* Payment Method Selector */}
-            <div className="grid grid-cols-3 gap-1.5 p-1.5 rounded-2xl ios26-segmented-bar mb-5 text-xs font-semibold">
+            {/* Payment Method Selector (Card / Crypto) */}
+            <div className="grid grid-cols-2 gap-1.5 p-1.5 rounded-2xl ios26-segmented-bar mb-5 text-xs font-semibold">
               {(
                 [
                   { id: 'card', label: 'Карта / СБП' },
-                  { id: 'crypto', label: 'USDT' },
-                  { id: 'funpay', label: 'FunPay' },
+                  { id: 'crypto', label: 'USDT (Криптовалюта)' },
                 ] as const
               ).map((m) => (
                 <button
@@ -492,14 +491,24 @@ export const LightboxModal: React.FC<{
         </div>
 
         <div className="mt-3 flex items-center justify-between text-xs text-[#9ca3af]">
-          <span className="text-emerald-400 font-mono">100% Native Bypass Screenshot</span>
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold transition"
-          >
-            Закрыть
-          </button>
+          <span className="text-emerald-400 font-mono">Full HD Resolution Available</span>
+          <div className="flex items-center gap-2">
+            <a
+              href={src}
+              download={src.split('/').pop() || 'derbin_image'}
+              className="px-4 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold flex items-center gap-1.5 transition shadow-md shadow-emerald-500/20"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Скачать в Full HD</span>
+            </a>
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold transition"
+            >
+              Закрыть
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -9,7 +9,27 @@ import {
   buildInjectedPacket,
   validateUserProfilePayload,
   validateProxyConfigPayload,
+  getPlanPrice,
+  CURRENCY_CONFIG,
 } from './derbinLogic';
+
+test('currency plans format prices correctly across RUB, USD, EUR, UAH and 4999 RUB lifetime', () => {
+  const rubLife = getPlanPrice('lifetime', 'RUB');
+  assert.equal(rubLife.priceFormatted, '4 999 ₽');
+  assert.equal(rubLife.numeric, 4999);
+
+  const usdLife = getPlanPrice('lifetime', 'USD');
+  assert.equal(usdLife.priceFormatted, '$54.99');
+
+  const eurLife = getPlanPrice('lifetime', 'EUR');
+  assert.equal(eurLife.priceFormatted, '49.99 €');
+
+  const uahLife = getPlanPrice('lifetime', 'UAH');
+  assert.equal(uahLife.priceFormatted, '2 350 ₴');
+
+  const rub30d = getPlanPrice('30d', 'RUB');
+  assert.equal(rub30d.priceFormatted, '349 ₽');
+});
 
 test('calculator evaluates arithmetic and detects secret 333 easter egg code', () => {
   const res1 = evaluateCalculatorExpression('333');

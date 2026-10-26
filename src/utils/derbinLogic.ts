@@ -1,6 +1,68 @@
 export type SubscriptionPlan = 'free' | '30d' | '90d' | 'lifetime';
 export type HwidStatus = 'bound' | 'unbound' | 'reset_ready';
 export type GlassPresetId = 'amber_gold' | 'emerald_liquid' | 'prismatic_ios26' | 'obsidian_frost';
+export type Currency = 'RUB' | 'USD' | 'EUR' | 'UAH';
+
+export interface PlanPriceDetail {
+  priceFormatted: string;
+  periodFormatted: string;
+  periodEn: string;
+  numeric: number;
+}
+
+export const CURRENCY_CONFIG: Record<
+  Currency,
+  {
+    symbol: string;
+    label: string;
+    plans: Record<SubscriptionPlan, PlanPriceDetail>;
+  }
+> = {
+  RUB: {
+    symbol: '₽',
+    label: 'RUB (₽)',
+    plans: {
+      free: { priceFormatted: '0 ₽', periodFormatted: '/ пробный', periodEn: '/ free', numeric: 0 },
+      '30d': { priceFormatted: '349 ₽', periodFormatted: '/ 30 дней', periodEn: '/ 30 days', numeric: 349 },
+      '90d': { priceFormatted: '799 ₽', periodFormatted: '/ 3 месяца', periodEn: '/ 3 months', numeric: 799 },
+      lifetime: { priceFormatted: '4 999 ₽', periodFormatted: '/ навсегда', periodEn: '/ lifetime', numeric: 4999 },
+    },
+  },
+  USD: {
+    symbol: '$',
+    label: 'USD ($)',
+    plans: {
+      free: { priceFormatted: '$0', periodFormatted: '/ trial', periodEn: '/ free', numeric: 0 },
+      '30d': { priceFormatted: '$3.99', periodFormatted: '/ 30 дней', periodEn: '/ 30 days', numeric: 3.99 },
+      '90d': { priceFormatted: '$8.99', periodFormatted: '/ 3 месяца', periodEn: '/ 3 months', numeric: 8.99 },
+      lifetime: { priceFormatted: '$54.99', periodFormatted: '/ навсегда', periodEn: '/ lifetime', numeric: 54.99 },
+    },
+  },
+  EUR: {
+    symbol: '€',
+    label: 'EUR (€)',
+    plans: {
+      free: { priceFormatted: '0 €', periodFormatted: '/ пробный', periodEn: '/ free', numeric: 0 },
+      '30d': { priceFormatted: '3.69 €', periodFormatted: '/ 30 дней', periodEn: '/ 30 days', numeric: 3.69 },
+      '90d': { priceFormatted: '8.29 €', periodFormatted: '/ 3 месяца', periodEn: '/ 3 months', numeric: 8.29 },
+      lifetime: { priceFormatted: '49.99 €', periodFormatted: '/ навсегда', periodEn: '/ lifetime', numeric: 49.99 },
+    },
+  },
+  UAH: {
+    symbol: '₴',
+    label: 'UAH (₴)',
+    plans: {
+      free: { priceFormatted: '0 ₴', periodFormatted: '/ пробный', periodEn: '/ free', numeric: 0 },
+      '30d': { priceFormatted: '165 ₴', periodFormatted: '/ 30 дней', periodEn: '/ 30 days', numeric: 165 },
+      '90d': { priceFormatted: '375 ₴', periodFormatted: '/ 3 месяца', periodEn: '/ 3 months', numeric: 375 },
+      lifetime: { priceFormatted: '2 350 ₴', periodFormatted: '/ навсегда', periodEn: '/ lifetime', numeric: 2350 },
+    },
+  },
+};
+
+export function getPlanPrice(plan: SubscriptionPlan, currency: Currency = 'RUB'): PlanPriceDetail {
+  return CURRENCY_CONFIG[currency]?.plans[plan] || CURRENCY_CONFIG.RUB.plans[plan];
+}
 
 export interface UserProfileData {
   uid: string;

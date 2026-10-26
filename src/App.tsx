@@ -18,6 +18,9 @@ import {
   ProxyConfigData,
   GlassPresetId,
   SubscriptionPlan,
+  Currency,
+  getPlanPrice,
+  CURRENCY_CONFIG,
 } from './utils/derbinLogic';
 import { Lang, translations, playGuiSound } from './utils/i18nAndAudio';
 import { DerbinInteractiveGui } from './components/DerbinInteractiveGui';
@@ -74,6 +77,7 @@ const StarIcon = ({ className = 'h-[18px] w-[18px] text-[var(--brand-accent)]' }
 
 export default function App() {
   const [lang, setLang] = useState<Lang>('ru');
+  const [currency, setCurrency] = useState<Currency>('RUB');
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -386,6 +390,17 @@ export default function App() {
     setLang((prev) => (prev === 'ru' ? 'en' : 'ru'));
   };
 
+  const selectCurrency = (cur: Currency) => {
+    playGuiSound('click', soundEnabled);
+    setCurrency(cur);
+    showNotice(`Валюта изменена на ${CURRENCY_CONFIG[cur].label}`);
+  };
+
+  // Pre-calculated prices based on selected currency
+  const price30d = getPlanPrice('30d', currency);
+  const price90d = getPlanPrice('90d', currency);
+  const priceLifetime = getPlanPrice('lifetime', currency);
+
   return (
     <div className="min-h-full flex flex-col justify-between relative">
       {/* ================= PRELOADER ================= */}
@@ -426,7 +441,7 @@ export default function App() {
 
       {/* ================= NAVBAR ================= */}
       <header className="sticky top-0 z-40 px-4 pt-3 sm:pt-4" id="navbar">
-        <nav className="liquid-glass-nav mx-auto flex h-16 max-w-6xl items-center justify-between rounded-full px-5 sm:px-6 shadow-2xl backdrop-blur-2xl lg:px-8">
+        <nav className="liquid-glass-nav mx-auto flex h-16 max-w-6xl items-center justify-between rounded-full px-4 sm:px-6 shadow-2xl backdrop-blur-2xl lg:px-8">
           {/* Brand Logo */}
           <a href="#hero" className="inline-flex items-center gap-2.5 group shrink-0">
             <img
@@ -486,13 +501,32 @@ export default function App() {
           </div>
 
           {/* Controls */}
-          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            {/* Currency Quick-Selector in Navbar */}
+            <div className="hidden md:inline-flex items-center p-0.5 rounded-full liquid-btn-glass text-[11px] font-semibold">
+              {(['RUB', 'USD', 'EUR', 'UAH'] as const).map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => selectCurrency(c)}
+                  className={`px-2 py-1 rounded-full transition-all ${
+                    currency === c
+                      ? 'bg-[var(--brand-primary)] text-white shadow-sm font-bold'
+                      : 'text-[#adadad] hover:text-white'
+                  }`}
+                  title={CURRENCY_CONFIG[c].label}
+                >
+                  {CURRENCY_CONFIG[c].symbol}
+                </button>
+              ))}
+            </div>
+
             {/* Discord Community Link */}
             <a
               href="https://discord.gg/ehWheFqAu"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-full liquid-btn-glass px-3.5 py-1.5 text-xs font-semibold text-[#ededeb] transition hover:border-emerald-500/50 hover:text-emerald-400"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-full liquid-btn-glass px-3 py-1.5 text-xs font-semibold text-[#ededeb] transition hover:border-emerald-500/50 hover:text-emerald-400"
             >
               <i className="ph-bold ph-discord-logo text-emerald-400 text-sm"></i>
               <span>Discord</span>
@@ -503,7 +537,7 @@ export default function App() {
               id="lang-btn"
               type="button"
               onClick={toggleLanguage}
-              className="flex items-center gap-2 rounded-full liquid-btn-glass px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#ededeb] transition hover:border-white/30"
+              className="flex items-center gap-1.5 rounded-full liquid-btn-glass px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#ededeb] transition hover:border-white/30"
             >
               <span className="h-2 w-2 rounded-full bg-[var(--brand-accent)] animate-pulse"></span>
               <span id="lang-label">{lang.toUpperCase()}</span>
@@ -516,7 +550,7 @@ export default function App() {
                 playGuiSound('click', soundEnabled);
                 setAccountModalOpen(true);
               }}
-              className="inline-flex items-center gap-1.5 rounded-full liquid-btn-glass px-3.5 py-1.5 text-xs font-semibold text-white transition hover:border-emerald-500/50"
+              className="inline-flex items-center gap-1.5 rounded-full liquid-btn-glass px-3 py-1.5 text-xs font-semibold text-white transition hover:border-emerald-500/50"
               title="Личный кабинет и регистрация"
             >
               <i className="ph-bold ph-user-circle text-emerald-400 text-sm"></i>
@@ -526,7 +560,7 @@ export default function App() {
             {/* CTA Buy Button in header */}
             <a
               href="#pricing"
-              className="hidden sm:inline-flex items-center justify-center rounded-full liquid-btn-primary px-5 py-2 text-xs font-semibold text-white shadow-lg transition-all"
+              className="hidden sm:inline-flex items-center justify-center rounded-full liquid-btn-primary px-4 sm:px-5 py-2 text-xs font-semibold text-white shadow-lg transition-all"
             >
               {t('nav.get')}
             </a>
@@ -550,6 +584,27 @@ export default function App() {
             className="lg:hidden mx-auto mt-2 max-w-5xl rounded-3xl sadnes-card p-6 backdrop-blur-2xl shadow-2xl transition-all"
           >
             <div className="flex flex-col gap-4 text-base font-medium text-white">
+              {/* Mobile Currency Switcher */}
+              <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                <span className="text-xs text-[#adadad]">Валюта:</span>
+                <div className="flex gap-1">
+                  {(['RUB', 'USD', 'EUR', 'UAH'] as const).map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => selectCurrency(c)}
+                      className={`px-2.5 py-1 rounded-xl text-xs font-semibold transition ${
+                        currency === c
+                          ? 'bg-[var(--brand-primary)] text-white shadow-sm'
+                          : 'bg-white/5 text-[#adadad] hover:text-white'
+                      }`}
+                    >
+                      {CURRENCY_CONFIG[c].label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <a
                 href="#hero"
                 onClick={() => setMobileMenuOpen(false)}
@@ -988,7 +1043,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* ================= PRICING (WITH FRAMER MOTION FADE-IN UP & LIQUID SQUISH) ================= */}
+      {/* ================= PRICING (WITH DYNAMIC CURRENCY SELECTION & CONVERSION) ================= */}
       <section
         id="pricing"
         className="relative bg-transparent px-5 py-[120px] z-10 border-t border-white/[0.04]"
@@ -999,7 +1054,7 @@ export default function App() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.25 }}
             transition={{ type: 'spring', stiffness: 220, damping: 24 }}
-            className="mx-auto mb-16 max-w-[850px] text-center"
+            className="mx-auto mb-12 max-w-[850px] text-center"
           >
             <div className="mb-4 flex items-center justify-center gap-2">
               <StarIcon />
@@ -1011,7 +1066,38 @@ export default function App() {
             <p className="mt-4 text-[#adadad] text-sm">{t('price.desc')}</p>
           </motion.div>
 
-          {/* Pricing Cards (Exact original 3 plans with Framer Motion fade-in up & liquid squish) */}
+          {/* DEDICATED CURRENCY SELECTOR (СВЕРХУ ОТДЕЛЬНО ВЫБРАТЬ ВАЛЮТУ) */}
+          <div className="mb-12 flex flex-col items-center justify-center gap-2.5">
+            <span className="text-xs font-semibold uppercase tracking-wider text-[#adadad] flex items-center gap-1.5">
+              <i className="ph-bold ph-currency-circle-dollar text-emerald-400 text-sm"></i>
+              <span>Выберите валюту оплаты:</span>
+            </span>
+            <div className="inline-flex flex-wrap items-center justify-center gap-1.5 p-1.5 rounded-2xl liquid-glass-nav border border-white/20">
+              {(
+                [
+                  { code: 'RUB', label: '₽ Рубли (RUB)' },
+                  { code: 'USD', label: '$ Доллары (USD)' },
+                  { code: 'EUR', label: '€ Евро (EUR)' },
+                  { code: 'UAH', label: '₴ Гривны (UAH)' },
+                ] as const
+              ).map((curItem) => (
+                <button
+                  key={curItem.code}
+                  type="button"
+                  onClick={() => selectCurrency(curItem.code)}
+                  className={`px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all ${
+                    currency === curItem.code
+                      ? 'liquid-btn-primary text-white shadow-md'
+                      : 'text-[#adadad] hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  {curItem.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Pricing Cards (3 plans with dynamic currency price and 4999 RUB lifetime) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
             {/* Plan 1 */}
             <motion.div
@@ -1029,7 +1115,10 @@ export default function App() {
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-4">{t('plan1.title')}</h3>
                 <div className="text-4xl font-extrabold text-white mb-6 font-mono">
-                  349 ₽ <span className="text-sm font-normal text-[#adadad]">/ 30 дней</span>
+                  {price30d.priceFormatted}{' '}
+                  <span className="text-sm font-normal text-[#adadad]">
+                    {lang === 'ru' ? price30d.periodFormatted : price30d.periodEn}
+                  </span>
                 </div>
 
                 <ul className="space-y-3.5 text-sm text-[#adadad] border-t border-white/[0.08] pt-6 mb-8">
@@ -1055,8 +1144,8 @@ export default function App() {
                 onClick={() =>
                   setCheckoutState({
                     open: true,
-                    title: 'Подписка 30 дней',
-                    price: '349 ₽',
+                    title: `Подписка 30 дней (${price30d.priceFormatted})`,
+                    price: price30d.priceFormatted,
                     code: '30d',
                   })
                 }
@@ -1086,7 +1175,10 @@ export default function App() {
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-4">{t('plan2.title')}</h3>
                 <div className="text-4xl font-extrabold text-white mb-6 font-mono">
-                  799 ₽ <span className="text-sm font-normal text-[#adadad]">/ 3 месяца</span>
+                  {price90d.priceFormatted}{' '}
+                  <span className="text-sm font-normal text-[#adadad]">
+                    {lang === 'ru' ? price90d.periodFormatted : price90d.periodEn}
+                  </span>
                 </div>
 
                 <ul className="space-y-3.5 text-sm text-[#adadad] border-t border-white/[0.08] pt-6 mb-8">
@@ -1112,8 +1204,8 @@ export default function App() {
                 onClick={() =>
                   setCheckoutState({
                     open: true,
-                    title: 'Подписка 90 дней',
-                    price: '799 ₽',
+                    title: `Подписка 90 дней (${price90d.priceFormatted})`,
+                    price: price90d.priceFormatted,
                     code: '90d',
                   })
                 }
@@ -1123,7 +1215,7 @@ export default function App() {
               </motion.button>
             </motion.div>
 
-            {/* Plan 3 */}
+            {/* Plan 3 (Lifetime - 4999 RUB) */}
             <motion.div
               initial={{ opacity: 0, y: 42, scale: 0.96 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -1139,7 +1231,10 @@ export default function App() {
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-4">{t('plan3.title')}</h3>
                 <div className="text-4xl font-extrabold text-white mb-6 font-mono">
-                  1 599 ₽ <span className="text-sm font-normal text-[#adadad]">/ навсегда</span>
+                  {priceLifetime.priceFormatted}{' '}
+                  <span className="text-sm font-normal text-[#adadad]">
+                    {lang === 'ru' ? priceLifetime.periodFormatted : priceLifetime.periodEn}
+                  </span>
                 </div>
 
                 <ul className="space-y-3.5 text-sm text-[#adadad] border-t border-white/[0.08] pt-6 mb-8">
@@ -1165,8 +1260,8 @@ export default function App() {
                 onClick={() =>
                   setCheckoutState({
                     open: true,
-                    title: 'Навсегда (Lifetime)',
-                    price: '1 599 ₽',
+                    title: `Навсегда (Lifetime) (${priceLifetime.priceFormatted})`,
+                    price: priceLifetime.priceFormatted,
                     code: 'lifetime',
                   })
                 }
