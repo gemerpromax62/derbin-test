@@ -147,7 +147,6 @@ export const DerbinInteractiveGui: React.FC<DerbinInteractiveGuiProps> = ({
   onNotify,
   onOpenLightbox,
 }) => {
-  const [previewMode, setPreviewMode] = useState<'gui' | 'shots'>('gui');
   const [activeTab, setActiveTab] = useState<DerbinTab>('general');
   const [isMinimized, setIsMinimized] = useState(false);
   const [isWindowClosed, setIsWindowClosed] = useState(false);
@@ -221,7 +220,6 @@ export const DerbinInteractiveGui: React.FC<DerbinInteractiveGuiProps> = ({
   const [satVal, setSatVal] = useState(190);
 
   const guiBoxRef = useRef<HTMLDivElement | null>(null);
-  const shotsBoxRef = useRef<HTMLDivElement | null>(null);
 
   const t = (key: string) => translations[lang][key] || key;
 
@@ -330,7 +328,7 @@ export const DerbinInteractiveGui: React.FC<DerbinInteractiveGuiProps> = ({
         }
       }
 
-      ctx.strokeStyle = '#10b981';
+      ctx.strokeStyle = '#3b82f6';
       ctx.lineWidth = 2.5;
       ctx.stroke();
 
@@ -338,8 +336,8 @@ export const DerbinInteractiveGui: React.FC<DerbinInteractiveGuiProps> = ({
       ctx.lineTo(0, h);
       ctx.closePath();
       const grad = ctx.createLinearGradient(0, 0, 0, h);
-      grad.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
-      grad.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+      grad.addColorStop(0, 'rgba(59, 130, 246, 0.28)');
+      grad.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
       ctx.fillStyle = grad;
       ctx.fill();
     };
@@ -462,44 +460,15 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
             {t('prev.heading')}
           </h2>
           <p className="mt-4 text-[#adadad] text-sm max-w-xl mx-auto">
-            Полная интерактивная копия GUI из <code className="text-emerald-400 font-mono">derbin-1.8-all.jar</code>:
+            Полная интерактивная копия GUI из <code className="text-blue-400 font-mono">derbin-1.8-all.jar</code>:
             переключайте вкладки, управляйте маршрутизацией 2-х ПК, настраивайте DHCP и тестируйте функционал прямо в
             браузере!
           </p>
 
-          {/* View Switcher Tabs */}
-          <div className="mt-8 inline-flex flex-wrap items-center justify-center gap-2 p-1.5 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-xl">
-            <button
-              type="button"
-              onClick={() => {
-                setPreviewMode('gui');
-                setIsWindowClosed(false);
-                guiBoxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }}
-              className={`px-5 py-2 rounded-full text-xs font-semibold transition-all flex items-center gap-2 ${
-                previewMode === 'gui'
-                  ? 'text-white bg-[var(--brand-primary)] shadow-md'
-                  : 'text-[#adadad] hover:text-white'
-              }`}
-            >
-              <i className="ph-bold ph-app-window text-sm"></i>
-              <span>Интерактивный Web GUI (тыкабельный)</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setPreviewMode('shots');
-                shotsBoxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              }}
-              className={`px-5 py-2 rounded-full text-xs font-semibold transition-all flex items-center gap-2 ${
-                previewMode === 'shots'
-                  ? 'text-white bg-[var(--brand-primary)] shadow-md'
-                  : 'text-[#adadad] hover:text-white'
-              }`}
-            >
-              <i className="ph-bold ph-images text-sm"></i>
-              <span>Скриншоты реального клиента</span>
-            </button>
+          {/* Interactive GUI Status Badge */}
+          <div className="mt-7 inline-flex items-center gap-2 px-5 py-2 rounded-full liquid-btn-glass text-xs font-semibold text-blue-300">
+            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+            <span>Интерактивный Web GUI • Кликабельная копия софта v1.8</span>
           </div>
         </div>
 
@@ -520,7 +489,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                 <img
                   src="/logo.svg"
                   alt="Derbin"
-                  className="h-6 w-6 object-contain drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]"
+                  className="h-6 w-6 object-contain drop-shadow-[0_0_8px_rgba(59,130,246,0.4)]"
                 />
                 <span className="text-lg font-bold tracking-tight text-white font-['Fredoka']">Derbin</span>
                 <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-white/[0.08] text-[#adadad] border border-white/10">
@@ -529,7 +498,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                 <div
                   className={`hidden sm:inline-flex items-center gap-1.5 ml-2 text-[11px] font-mono px-2.5 py-0.5 rounded-full border ${
                     stealthSummary.tone === 'emerald'
-                      ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/25'
+                      ? 'text-blue-400 bg-blue-500/10 border-blue-500/25'
                       : stealthSummary.tone === 'amber'
                       ? 'text-amber-400 bg-amber-500/10 border-amber-500/25'
                       : 'text-rose-400 bg-rose-500/10 border-rose-500/25'
@@ -548,7 +517,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                 >
                   <i
                     className={`ph-bold ${
-                      soundEnabled ? 'ph-speaker-high text-emerald-400' : 'ph-speaker-slash text-[#777]'
+                      soundEnabled ? 'ph-speaker-high text-blue-400' : 'ph-speaker-slash text-[#777]'
                     } text-xs`}
                   ></i>
                   <span>{soundEnabled ? 'Звук: Вкл' : 'Звук: Выкл'}</span>
@@ -603,7 +572,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                     { id: 'general', label: 'Основные', icon: 'ph-house' },
                     { id: 'advanced', label: 'Маршрутизация', icon: 'ph-git-fork' },
                     { id: 'dhcp', label: 'DHCP', icon: 'ph-network' },
-                    { id: 'detector', label: 'Детектор 4.3', icon: 'ph-shield-check' },
+                    { id: 'detector', label: 'Детектор проверок', icon: 'ph-shield-check' },
                     { id: 'sniffer', label: 'Сниффер', icon: 'ph-terminal-window' },
                     { id: 'optimizer', label: 'Оптимизатор', icon: 'ph-chart-line-up' },
                     { id: 'accounts', label: 'Аккаунты', icon: 'ph-user-circle' },
@@ -654,7 +623,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                           <select
                             aria-label="Выбор сервера"
                             value={
-                              ['mc.reallyworld.ru', 'funtime.su', 'spworld.ru', 'holyworld.ru', 'hypixel.net'].includes(
+                              ['mc.reallyworld.ru', 'funtime.su', 'spookytime.su', 'holyworld.ru', 'hypixel.net'].includes(
                                 serverInput
                               )
                                 ? serverInput
@@ -665,7 +634,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                           >
                             <option value="mc.reallyworld.ru">ReallyWorld</option>
                             <option value="funtime.su">FunTime</option>
-                            <option value="spworld.ru">SP Worlds</option>
+                            <option value="spookytime.su">SpookyTime (СП)</option>
                             <option value="holyworld.ru">HolyWorld</option>
                             <option value="hypixel.net">Hypixel</option>
                           </select>
@@ -698,10 +667,10 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                         <div className="flex items-center justify-around gap-2 sm:gap-4">
                           <div
                             className={`flex flex-col items-center text-center p-3 rounded-xl bg-white/[0.02] border w-36 transition-all ${
-                              !isSwapped ? 'border-emerald-500/40' : 'border-white/5'
+                              !isSwapped ? 'border-blue-500/40' : 'border-white/5'
                             }`}
                           >
-                            <div className="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-2xl mb-2 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                            <div className="w-12 h-12 rounded-xl bg-blue-500/20 border border-blue-500/40 text-blue-400 flex items-center justify-center text-2xl mb-2 shadow-[0_0_15px_rgba(59,130,246,0.25)]">
                               <i className="ph-bold ph-desktop"></i>
                             </div>
                             <span className="text-xs font-bold text-white">
@@ -709,7 +678,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                             </span>
                             <span
                               className={`text-[10px] font-semibold mt-0.5 ${
-                                !isSwapped ? 'text-emerald-400' : 'text-[#adadad]'
+                                !isSwapped ? 'text-blue-400' : 'text-[#adadad]'
                               }`}
                             >
                               {isSwapped ? 'Ведомый (MITM)' : 'Контроллер (Active)'}
@@ -728,17 +697,17 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                                     : 'Управление возвращено на Игровой ПК (Swap отключен)'
                                 );
                               }}
-                              className="p-3 rounded-xl bg-white/10 hover:bg-emerald-500/20 hover:border-emerald-500/40 border border-white/15 text-white transition hover:scale-110 active:scale-95 shadow-lg group"
+                              className="p-3 rounded-xl bg-white/10 hover:bg-blue-500/20 hover:border-blue-500/40 border border-white/15 text-white transition hover:scale-110 active:scale-95 shadow-lg group"
                               title="Поменять управление ПК (Swap)"
                             >
-                              <i className="ph-bold ph-arrows-left-right text-xl text-emerald-400 group-hover:rotate-180 transition-transform duration-300"></i>
+                              <i className="ph-bold ph-arrows-left-right text-xl text-blue-400 group-hover:rotate-180 transition-transform duration-300"></i>
                             </button>
                             <span className="text-[9px] text-[#777] font-mono mt-1">SWAP</span>
                           </div>
 
                           <div
                             className={`flex flex-col items-center text-center p-3 rounded-xl bg-white/[0.02] border w-36 transition-all ${
-                              isSwapped ? 'border-emerald-500/40' : 'border-white/5'
+                              isSwapped ? 'border-blue-500/40' : 'border-white/5'
                             }`}
                           >
                             <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 text-[#adadad] flex items-center justify-center text-2xl mb-2">
@@ -749,7 +718,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                             </span>
                             <span
                               className={`text-[10px] font-semibold mt-0.5 ${
-                                isSwapped ? 'text-emerald-400' : 'text-[#adadad]'
+                                isSwapped ? 'text-blue-400' : 'text-[#adadad]'
                               }`}
                             >
                               {isSwapped ? 'Контроллер (Active)' : 'MITM Прокси'}
@@ -786,8 +755,8 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                         </button>
 
                         <div className="flex items-center gap-3 text-xs">
-                          <span className="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                          <span className={`font-mono ${isProxyRunning ? 'text-emerald-400' : 'text-[#adadad]'}`}>
+                          <span className="h-2.5 w-2.5 rounded-full bg-blue-500 animate-pulse"></span>
+                          <span className={`font-mono ${isProxyRunning ? 'text-blue-400' : 'text-[#adadad]'}`}>
                             {isProxyRunning
                               ? '🟢 Прокси активно • Трафик перенаправлен'
                               : 'Ожидание запуска прокси'}
@@ -819,7 +788,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                                 routerMode,
                               })
                             }
-                            className="liquid-btn-glass px-4 py-2 rounded-xl text-xs font-semibold text-emerald-400 whitespace-nowrap"
+                            className="liquid-btn-glass px-4 py-2 rounded-xl text-xs font-semibold text-blue-400 whitespace-nowrap"
                           >
                             + В облако Firebase
                           </button>
@@ -839,7 +808,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                                     setSelectedAccount(cfg.accountName);
                                     onNotify(`Загружен пресет "${cfg.name}"`);
                                   }}
-                                  className="text-white hover:text-emerald-400"
+                                  className="text-white hover:text-blue-400"
                                 >
                                   {cfg.name}
                                 </button>
@@ -862,11 +831,11 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                     <div className="rounded-xl bg-black/60 border border-white/10 p-3.5 font-mono text-xs text-[#788a80]">
                       <div className="flex items-center justify-between text-white/50 mb-1.5 border-b border-white/5 pb-1 text-[11px]">
                         <span>DERBIN KERNEL PACKET MONITOR</span>
-                        <span className="text-emerald-400">
+                        <span className="text-blue-400">
                           {isProxyRunning ? `${packetRate * 14} PACKETS / SEC • 0.1ms` : '0 PACKETS / SEC'}
                         </span>
                       </div>
-                      <div className="text-emerald-400/90 text-[11px] truncate">{kernelLogLine}</div>
+                      <div className="text-blue-400/90 text-[11px] truncate">{kernelLogLine}</div>
                     </div>
                   </div>
                 )}
@@ -930,7 +899,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                             <CheckBoxIcon checked={licenseSupport} />
                             <span className="flex items-center gap-1.5">
                               <span>Поддержка лицензии</span>
-                              <i className="ph-bold ph-info text-xs text-emerald-400"></i>
+                              <i className="ph-bold ph-info text-xs text-blue-400"></i>
                             </span>
                           </label>
                           <div className="derbin-tooltip-box">
@@ -1017,7 +986,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                             setDhcpConfig(next);
                             onNotify(`Сгенерирована новая чистая подсеть 192.168.${next.subnetOctet}.0/24!`);
                           }}
-                          className="px-3 py-1 rounded-lg bg-white/10 hover:bg-emerald-500/20 text-xs text-emerald-400 border border-white/10 transition flex items-center gap-1.5"
+                          className="px-3 py-1 rounded-lg bg-white/10 hover:bg-blue-500/20 text-xs text-blue-400 border border-white/10 transition flex items-center gap-1.5"
                         >
                           <i className="ph-bold ph-shuffle"></i>
                           <span>Случайный IP</span>
@@ -1098,7 +1067,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                           <i className="ph-bold ph-power"></i>
                           <span>{isDhcpRunning ? 'Остановить DHCP сервер' : 'Запустить DHCP сервер'}</span>
                         </button>
-                        <span className={`text-xs font-mono ${isDhcpRunning ? 'text-emerald-400' : 'text-[#adadad]'}`}>
+                        <span className={`text-xs font-mono ${isDhcpRunning ? 'text-blue-400' : 'text-[#adadad]'}`}>
                           {isDhcpRunning ? 'DHCP: Запущен (192.168.x.x)' : 'DHCP: Остановлен'}
                         </span>
                       </div>
@@ -1114,7 +1083,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                         <div>
                           <h4 className="text-sm font-bold text-white flex items-center gap-2">
                             <i className="ph-bold ph-shield-check text-[var(--brand-accent)] text-lg"></i>
-                            <span>Анализатор безопасности и проверок на 4.3</span>
+                            <span>Анализатор безопасности и чекеров (Error / AnyDesk)</span>
                           </h4>
                           <p className="text-xs text-[#9196a8] mt-1">
                             Стресс-тестирование системы на палевность (Echo, AnyDesk, Process Hacker, Paladin)
@@ -1126,7 +1095,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                             onClick={handleExportAuditReport}
                             className="px-3.5 py-2 rounded-xl bg-white/[0.05] hover:bg-white/10 text-xs font-semibold text-white border border-white/10 transition flex items-center gap-1.5"
                           >
-                            <i className="ph-bold ph-download-simple text-emerald-400"></i>
+                            <i className="ph-bold ph-download-simple text-blue-400"></i>
                             <span>Отчёт .txt</span>
                           </button>
                           <button
@@ -1153,7 +1122,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                                 d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                               />
                               <path
-                                className="text-emerald-400 transition-all duration-700 ease-out"
+                                className="text-blue-400 transition-all duration-700 ease-out"
                                 strokeDasharray={`${auditScore}, 100`}
                                 strokeWidth="3.5"
                                 strokeLinecap="round"
@@ -1166,7 +1135,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                           </div>
                           <div>
                             <div className="text-xs font-bold text-white">СТАТУС: ЧИСТ</div>
-                            <div className="text-[11px] text-emerald-400 font-semibold">0 следов инъекций</div>
+                            <div className="text-[11px] text-blue-400 font-semibold">0 следов инъекций</div>
                             <div className="text-[10px] text-[#777] font-mono mt-0.5">Dual-PC Rule 4.3: PASS</div>
                           </div>
                         </div>
@@ -1174,30 +1143,30 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                         <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2">
                           <div className="flex justify-between text-xs">
                             <span className="text-[#9196a8]">WebRTC утечка IP:</span>
-                            <span className="font-mono text-emerald-400 font-bold">Изолирован</span>
+                            <span className="font-mono text-blue-400 font-bold">Изолирован</span>
                           </div>
                           <div className="flex justify-between text-xs">
                             <span className="text-[#9196a8]">JVM инъекции:</span>
-                            <span className="font-mono text-emerald-400 font-bold">0 хуков (Clean)</span>
+                            <span className="font-mono text-blue-400 font-bold">0 хуков (Clean)</span>
                           </div>
                           <div className="flex justify-between text-xs">
                             <span className="text-[#9196a8]">Маскировка TTL:</span>
-                            <span className="font-mono text-emerald-400 font-bold">128 (Windows native)</span>
+                            <span className="font-mono text-blue-400 font-bold">128 (Windows native)</span>
                           </div>
                         </div>
 
                         <div className="p-4 rounded-xl bg-black/40 border border-white/5 space-y-2">
                           <div className="flex justify-between text-xs">
                             <span className="text-[#9196a8]">Трейсы AnyDesk:</span>
-                            <span className="font-mono text-emerald-400 font-bold">0 сигнатур</span>
+                            <span className="font-mono text-blue-400 font-bold">0 сигнатур</span>
                           </div>
                           <div className="flex justify-between text-xs">
                             <span className="text-[#9196a8]">WFP MAC Layer:</span>
-                            <span className="font-mono text-emerald-400 font-bold">Активен (Ring-0)</span>
+                            <span className="font-mono text-blue-400 font-bold">Активен (Ring-0)</span>
                           </div>
                           <div className="flex justify-between text-xs">
                             <span className="text-[#9196a8]">Prefetch &amp; USN:</span>
-                            <span className="font-mono text-emerald-400 font-bold">Чисто (No .jar)</span>
+                            <span className="font-mono text-blue-400 font-bold">Чисто (No .jar)</span>
                           </div>
                         </div>
                       </div>
@@ -1226,7 +1195,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                             className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 transition"
                           >
                             <div className="flex items-center gap-3">
-                              <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold font-mono">
+                              <div className="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs font-bold font-mono">
                                 ✓
                               </div>
                               <div>
@@ -1234,7 +1203,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                                 <div className="text-[10px] text-[#adadad]">{step.desc}</div>
                               </div>
                             </div>
-                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
                               {stepBadges[i]}
                             </span>
                           </div>
@@ -1244,11 +1213,11 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                       <div className="rounded-xl bg-black/70 border border-white/10 p-3.5 font-mono text-xs text-[#788a80]">
                         <div className="flex items-center justify-between text-white/50 mb-1.5 border-b border-white/5 pb-1 text-[11px]">
                           <span>DIAGNOSTIC AUDIT LOG STREAM</span>
-                          <span className="text-emerald-400 font-semibold">
+                          <span className="text-blue-400 font-semibold">
                             {isAuditing ? 'SCANNING...' : 'SYSTEM READY'}
                           </span>
                         </div>
-                        <div className="text-emerald-400/90 text-[11px] leading-relaxed max-h-24 overflow-y-auto whitespace-pre-wrap">
+                        <div className="text-blue-400/90 text-[11px] leading-relaxed max-h-24 overflow-y-auto whitespace-pre-wrap">
                           {auditLogs}
                         </div>
                       </div>
@@ -1299,7 +1268,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                           <button
                             type="button"
                             onClick={() => setIsSnifferLive(!isSnifferLive)}
-                            className="px-3 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1 transition"
+                            className="px-3 py-1 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-500/30 text-xs font-semibold flex items-center gap-1 transition"
                           >
                             <i className={`ph-bold ${isSnifferLive ? 'ph-pause' : 'ph-play'}`}></i>
                             <span>{isSnifferLive ? 'Пауза' : 'Старт'}</span>
@@ -1365,11 +1334,11 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                                       </span>
                                     )}
                                   </td>
-                                  <td className="p-2.5 text-emerald-400 font-bold">{p.hexId}</td>
+                                  <td className="p-2.5 text-blue-400 font-bold">{p.hexId}</td>
                                   <td className="p-2.5 text-white font-medium">{p.name}</td>
                                   <td className="p-2.5 text-[#adadad]">{p.size}</td>
                                   <td className="p-2.5">
-                                    <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 font-semibold">
+                                    <span className="inline-flex items-center gap-1 text-[10px] text-blue-400 font-semibold">
                                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> {p.status}
                                     </span>
                                   </td>
@@ -1387,7 +1356,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                               <span className="text-white font-bold">
                                 Пакет: {activePacket.hexId} {activePacket.name}
                               </span>
-                              <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-semibold">
+                              <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px] font-semibold">
                                 {activePacket.size}
                               </span>
                             </div>
@@ -1401,7 +1370,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                               <div className="text-[10px] text-[#9196a8] mb-1 uppercase tracking-wider">
                                 RAW HEX BYTES &amp; ASCII DECODE
                               </div>
-                              <pre className="p-2.5 rounded-lg bg-black/90 border border-white/5 text-[11px] text-emerald-400 derbin-hex-cell leading-tight overflow-x-auto">
+                              <pre className="p-2.5 rounded-lg bg-black/90 border border-white/5 text-[11px] text-blue-400 derbin-hex-cell leading-tight overflow-x-auto">
                                 {activePacket.bytes}
                               </pre>
                             </div>
@@ -1413,7 +1382,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                                 {Object.entries(activePacket.fields).map(([k, v]) => (
                                   <div key={k}>
                                     <span className="text-white font-bold">{k}:</span>{' '}
-                                    <span className="text-emerald-400">{v}</span>
+                                    <span className="text-blue-400">{v}</span>
                                   </div>
                                 ))}
                               </div>
@@ -1424,7 +1393,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
 
                       <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-3">
                         <div className="text-xs font-semibold text-white flex items-center gap-2">
-                          <i className="ph-bold ph-paper-plane-tilt text-emerald-400"></i>
+                          <i className="ph-bold ph-paper-plane-tilt text-blue-400"></i>
                           <span>Инжектор тестовых пакетов в сетевой туннель</span>
                         </div>
                         <div className="flex flex-wrap sm:flex-nowrap gap-2">
@@ -1496,7 +1465,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                             playGuiSound('success', soundEnabled);
                             onNotify(`Реальный пинг замерен: ${currentPing} ms (Джиттер: ±0.4 ms)`);
                           }}
-                          className="px-3.5 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"
+                          className="px-3.5 py-1.5 rounded-xl bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-500/40 text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"
                         >
                           <i className="ph-bold ph-wifi-high"></i>
                           <span>
@@ -1509,7 +1478,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                         <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
                           <div className="flex items-center gap-3">
                             <span className="text-white/50 text-[11px]">LIVE PACKET OSCILLOSCOPE</span>
-                            <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-bold text-[11px] border border-emerald-500/30">
+                            <span className="px-2 py-0.5 rounded bg-blue-500/15 text-blue-400 font-bold text-[11px] border border-blue-500/30">
                               PING: {currentPing} ms
                             </span>
                           </div>
@@ -1521,7 +1490,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                               MAX: <strong className="text-white">{maxPing}ms</strong>
                             </span>
                             <span>
-                              JITTER: <strong className="text-emerald-400">±{jitterVal}ms</strong>
+                              JITTER: <strong className="text-blue-400">±{jitterVal}ms</strong>
                             </span>
                           </div>
                         </div>
@@ -1540,7 +1509,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                         <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
                           <div className="flex justify-between text-xs text-[#9196a8]">
                             <span className="text-white font-medium">Искусственный спуф пинга (Target Delay)</span>
-                            <span className="font-mono text-emerald-400 font-bold">
+                            <span className="font-mono text-blue-400 font-bold">
                               {pingSpoofMs === 0 ? '+0 ms (Native)' : `+${pingSpoofMs} ms (Spoof)`}
                             </span>
                           </div>
@@ -1560,7 +1529,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                         <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 space-y-2">
                           <div className="flex justify-between text-xs text-[#9196a8]">
                             <span className="text-white font-medium">Сглаживание джиттера (Jitter Smoothing)</span>
-                            <span className="font-mono text-emerald-400 font-bold">
+                            <span className="font-mono text-blue-400 font-bold">
                               {jitterSmoothPct}% ({jitterSmoothPct > 70 ? 'Высокое' : 'Среднее'})
                             </span>
                           </div>
@@ -1633,7 +1602,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                             className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/5 hover:border-white/15 transition"
                           >
                             <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-bold flex items-center justify-center font-mono">
+                              <div className="w-9 h-9 rounded-lg bg-blue-500/20 border border-blue-500/40 text-blue-400 font-bold flex items-center justify-center font-mono">
                                 {a.name.slice(0, 2).toUpperCase()}
                               </div>
                               <div>
@@ -1641,7 +1610,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                                 <div className="text-[10px] text-[#adadad]">{a.desc}</div>
                               </div>
                             </div>
-                            <span className="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-semibold border border-emerald-500/30">
+                            <span className="px-2.5 py-1 rounded-full bg-blue-500/15 text-blue-400 text-[10px] font-semibold border border-blue-500/30">
                               {a.tag}
                             </span>
                           </div>
@@ -1702,57 +1671,57 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                           <button
                             type="button"
                             onClick={() => {
-                              document.documentElement.style.setProperty('--brand-primary', '#10b981');
-                              document.documentElement.style.setProperty('--brand-accent', '#34d399');
-                              onSelectPreset('emerald_liquid');
+                              document.documentElement.style.setProperty('--brand-primary', '#2563eb');
+                              document.documentElement.style.setProperty('--brand-accent', '#60a5fa');
+                              onSelectPreset('prismatic_ios26');
                             }}
-                            className="px-3.5 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 text-xs font-semibold flex items-center gap-2 hover:scale-105 transition"
+                            className="px-3.5 py-2 rounded-xl bg-blue-500/20 border border-blue-500/50 text-blue-400 text-xs font-semibold flex items-center gap-2 hover:scale-105 transition"
                           >
-                            <span className="w-3 h-3 rounded-full bg-emerald-400"></span> Emerald (Default)
+                            <span className="w-3 h-3 rounded-full bg-blue-400"></span> Sapphire Blue (Default)
                           </button>
                           <button
                             type="button"
                             onClick={() => {
-                              document.documentElement.style.setProperty('--brand-primary', '#06b6d4');
-                              document.documentElement.style.setProperty('--brand-accent', '#22d3ee');
+                              document.documentElement.style.setProperty('--brand-primary', '#0284c7');
+                              document.documentElement.style.setProperty('--brand-accent', '#38bdf8');
                               onSelectPreset('obsidian_frost');
+                            }}
+                            className="px-3.5 py-2 rounded-xl bg-sky-500/20 border border-sky-500/50 text-sky-400 text-xs font-semibold flex items-center gap-2 hover:scale-105 transition"
+                          >
+                            <span className="w-3 h-3 rounded-full bg-sky-400"></span> Ocean Azure
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              document.documentElement.style.setProperty('--brand-primary', '#6366f1');
+                              document.documentElement.style.setProperty('--brand-accent', '#818cf8');
+                              onNotify('Тема оформления обновлена (Indigo Soft)');
+                            }}
+                            className="px-3.5 py-2 rounded-xl bg-indigo-500/20 border border-indigo-500/50 text-indigo-400 text-xs font-semibold flex items-center gap-2 hover:scale-105 transition"
+                          >
+                            <span className="w-3 h-3 rounded-full bg-indigo-400"></span> Indigo Soft
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              document.documentElement.style.setProperty('--brand-primary', '#0ea5e9');
+                              document.documentElement.style.setProperty('--brand-accent', '#7dd3fc');
+                              onNotify('Тема оформления обновлена (Ice Glacier)');
                             }}
                             className="px-3.5 py-2 rounded-xl bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 text-xs font-semibold flex items-center gap-2 hover:scale-105 transition"
                           >
-                            <span className="w-3 h-3 rounded-full bg-cyan-400"></span> Neon Cyan
+                            <span className="w-3 h-3 rounded-full bg-cyan-400"></span> Ice Glacier
                           </button>
                           <button
                             type="button"
                             onClick={() => {
-                              document.documentElement.style.setProperty('--brand-primary', '#8b5cf6');
-                              document.documentElement.style.setProperty('--brand-accent', '#a78bfa');
-                              onNotify('Тема оформления обновлена (Moonlight Violet)');
-                            }}
-                            className="px-3.5 py-2 rounded-xl bg-violet-500/20 border border-violet-500/50 text-violet-400 text-xs font-semibold flex items-center gap-2 hover:scale-105 transition"
-                          >
-                            <span className="w-3 h-3 rounded-full bg-violet-400"></span> Moonlight Violet
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              document.documentElement.style.setProperty('--brand-primary', '#f43f5e');
-                              document.documentElement.style.setProperty('--brand-accent', '#fb7185');
-                              onNotify('Тема оформления обновлена (Crimson Rose)');
-                            }}
-                            className="px-3.5 py-2 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-400 text-xs font-semibold flex items-center gap-2 hover:scale-105 transition"
-                          >
-                            <span className="w-3 h-3 rounded-full bg-rose-400"></span> Crimson Rose
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              document.documentElement.style.setProperty('--brand-primary', '#f59e0b');
-                              document.documentElement.style.setProperty('--brand-accent', '#fbbf24');
+                              document.documentElement.style.setProperty('--brand-primary', '#1d4ed8');
+                              document.documentElement.style.setProperty('--brand-accent', '#93c5fd');
                               onSelectPreset('amber_gold');
                             }}
-                            className="px-3.5 py-2 rounded-xl bg-amber-500/20 border border-amber-500/50 text-amber-400 text-xs font-semibold flex items-center gap-2 hover:scale-105 transition"
+                            className="px-3.5 py-2 rounded-xl bg-blue-600/20 border border-blue-500/50 text-blue-300 text-xs font-semibold flex items-center gap-2 hover:scale-105 transition"
                           >
-                            <span className="w-3 h-3 rounded-full bg-amber-400"></span> Amber Gold
+                            <span className="w-3 h-3 rounded-full bg-blue-300"></span> Midnight Royal
                           </button>
                         </div>
                       </div>
@@ -1773,7 +1742,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                               setBlurVal(v);
                               document.documentElement.style.setProperty('--glass-blur', `${v}px`);
                             }}
-                            className="w-full accent-emerald-500 cursor-pointer"
+                            className="w-full accent-blue-500 cursor-pointer"
                           />
                         </div>
                         <div>
@@ -1791,7 +1760,7 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                               setSatVal(v);
                               document.documentElement.style.setProperty('--glass-saturate', `${v}%`);
                             }}
-                            className="w-full accent-emerald-500 cursor-pointer"
+                            className="w-full accent-blue-500 cursor-pointer"
                           />
                         </div>
                       </div>
@@ -1805,22 +1774,22 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
                     <div className="derbin-card p-5 sm:p-6 space-y-4">
                       <h4 className="text-sm font-bold text-white flex items-center gap-2 border-b border-white/[0.08] pb-3">
                         <i className="ph-bold ph-book-open text-[var(--brand-accent)] text-base"></i>
-                        <span>Инструкция по безопасности и обходу 4.3</span>
+                        <span>Инструкция по безопасности и обходу проверок</span>
                       </h4>
                       <div className="space-y-3.5 text-xs text-[#ededeb] leading-relaxed">
-                        <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
+                        <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-300">
                           <strong>Как работает схема двух ПК:</strong> Игровой клиент запускается на первом ПК
                           абсолютно «чистым» без внедрения читов в память процесса. Все манипуляции с пакетами и ботами
                           происходят на втором ПК через WFP-фильтр.
                         </div>
                         <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                          <strong>Почему 0 банов по 4.3:</strong> Любая проверка экрана (AnyDesk, Paladin, Process
+                          <strong>Почему 0 банов на проверках:</strong> Любая проверка экрана (чекер Error на FunTime, AnyDesk, Paladin, Process
                           Hacker, Everything) проверяет только игровой ПК, где нет ни одного файла софта, а сетевой
                           шлюз маскируется под домашний роутер.
                         </div>
                         <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                          <strong>Поддержка серверов:</strong> Полная совместимость с серверами FunTime, HolyWorld, SP
-                          Worlds, ReallyWorld и любыми проектами со строгой модерацией.
+                          <strong>Поддержка серверов:</strong> Полная совместимость с серверами FunTime (чекер Error ничего не находит), HolyWorld, SpookyTime
+                          (СП — spookytime.su), ReallyWorld и любыми проектами со строгой модерацией.
                         </div>
                       </div>
                     </div>
@@ -1830,76 +1799,6 @@ Dual-PC Anti-Cheat Rule 4.3 Evasion: FULLY COMPLIANT
             )}
           </motion.div>
         )}
-
-        {/* ================= 2. SCREENSHOTS GALLERY & LIGHTBOX (Original 4 Cards) ================= */}
-        <div ref={shotsBoxRef} id="derbin-screenshots-container" className="mt-14 space-y-6">
-          <div className="flex items-center justify-between px-1">
-            <div className="text-xs font-semibold text-[#adadad] uppercase tracking-wider flex items-center gap-2">
-              <i className="ph-bold ph-camera text-emerald-400 text-sm"></i>
-              <span>Галерея реальных скриншотов derbin</span>
-            </div>
-            <span className="text-[11px] text-[#79787b]">Кликните для полноэкранного просмотра</span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {[
-              {
-                src: '/assets/preview_routing.svg',
-                lightTitle: 'Маршрутизация и Сеть • derbin',
-                title: 'Маршрутизация и Сеть',
-                sub: 'Обход traceroute, режим роутера',
-              },
-              {
-                src: '/assets/preview_network.svg',
-                lightTitle: 'Конфигурация Сети и DHCP • derbin',
-                title: 'Параметры сети (DHCP)',
-                sub: 'IP, маска, Start/End IP, DNS',
-              },
-              {
-                src: '/assets/preview_interface.svg',
-                lightTitle: 'Сетевые адаптеры WFP • derbin',
-                title: 'WFP Драйвер Realtek',
-                sub: 'Аппаратная фильтрация MAC-слоя',
-              },
-              {
-                src: '/assets/preview_tooltip.svg',
-                lightTitle: 'Поддержка лицензии и Защищённый чат • derbin',
-                title: 'Прокси и Лицензия',
-                sub: 'Защищённый чат, скины, тултип',
-              },
-            ].map((shot, idx) => (
-              <motion.div
-                key={shot.title}
-                initial={{ opacity: 0, y: 28, scale: 0.96 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true, amount: 0.15 }}
-                transition={{ type: 'spring', stiffness: 250, damping: 22, delay: idx * 0.08 }}
-                whileHover={{ y: -6, scale: 1.015 }}
-                whileTap={{ scale: 0.94, y: 2 }}
-                onClick={() => onOpenLightbox(shot.src, shot.lightTitle)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && onOpenLightbox(shot.src, shot.lightTitle)}
-                className="sadnes-card p-3 rounded-2xl cursor-pointer hover:border-emerald-500/50 transition group"
-              >
-                <div className="h-44 rounded-xl overflow-hidden bg-black/50 border border-white/10 mb-3 relative flex items-center justify-center">
-                  <img
-                    src={shot.src}
-                    alt={shot.title}
-                    className="w-full h-full object-contain group-hover:scale-105 transition duration-300"
-                  />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                    <span className="px-3 py-1 rounded-full bg-emerald-500 text-black font-bold text-xs flex items-center gap-1 shadow-lg">
-                      <i className="ph-bold ph-arrows-out"></i> Увеличить
-                    </span>
-                  </div>
-                </div>
-                <div className="text-sm font-bold text-white truncate px-1">{shot.title}</div>
-                <div className="text-xs text-[#adadad] px-1 truncate">{shot.sub}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );

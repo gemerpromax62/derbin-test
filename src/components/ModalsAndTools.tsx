@@ -87,7 +87,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         </button>
 
         <div className="flex items-center gap-3 mb-6">
-          <div className="h-11 w-11 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300">
+          <div className="h-11 w-11 rounded-2xl bg-blue-500/20 border border-blue-400/40 flex items-center justify-center text-blue-300">
             <Lock className="w-5 h-5" />
           </div>
           <div>
@@ -177,14 +177,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
           </>
         ) : (
           <div className="text-center py-4 space-y-4">
-            <div className="w-14 h-14 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 flex items-center justify-center mx-auto">
+            <div className="w-14 h-14 rounded-full bg-blue-500/20 border border-blue-400/40 text-blue-300 flex items-center justify-center mx-auto">
               <Check className="w-7 h-7" />
             </div>
             <h4 className="text-lg font-bold text-white">Заказ успешно сформирован!</h4>
             <p className="text-xs text-[#b4b8c2] leading-relaxed">
               Ключ активации derbin привязан к вашему профилю и отправлен на <strong>{email}</strong>:
             </p>
-            <div className="p-3.5 rounded-xl bg-black/60 border border-emerald-400/40 font-mono text-sm font-bold text-emerald-300 select-all">
+            <div className="p-3.5 rounded-xl bg-black/60 border border-blue-400/40 font-mono text-sm font-bold text-blue-300 select-all">
               {generatedKey}
             </div>
             <button
@@ -265,7 +265,7 @@ export const CalculatorModal: React.FC<CalculatorModalProps> = ({
       <div className="ios26-glass-slab w-full max-w-[320px] p-5 relative border border-white/25">
         <div className="flex items-center justify-between mb-3.5">
           <div className="flex items-center gap-2 text-xs font-bold text-white">
-            <Calculator className="w-4 h-4 text-emerald-400" />
+            <Calculator className="w-4 h-4 text-blue-400" />
             <span>Калькулятор</span>
           </div>
           <button
@@ -309,14 +309,14 @@ export const CalculatorModal: React.FC<CalculatorModalProps> = ({
           <button
             type="button"
             onClick={() => handleInput('%')}
-            className="py-3 rounded-xl bg-white/10 hover:bg-white/15 text-emerald-300 transition"
+            className="py-3 rounded-xl bg-white/10 hover:bg-white/15 text-blue-300 transition"
           >
             %
           </button>
           <button
             type="button"
             onClick={() => handleInput('/')}
-            className="py-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 transition"
+            className="py-3 rounded-xl bg-blue-500/15 hover:bg-blue-500/25 text-blue-300 transition"
           >
             ÷
           </button>
@@ -334,7 +334,7 @@ export const CalculatorModal: React.FC<CalculatorModalProps> = ({
           <button
             type="button"
             onClick={() => handleInput('*')}
-            className="py-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 transition"
+            className="py-3 rounded-xl bg-blue-500/15 hover:bg-blue-500/25 text-blue-300 transition"
           >
             ×
           </button>
@@ -352,7 +352,7 @@ export const CalculatorModal: React.FC<CalculatorModalProps> = ({
           <button
             type="button"
             onClick={() => handleInput('-')}
-            className="py-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 transition"
+            className="py-3 rounded-xl bg-blue-500/15 hover:bg-blue-500/25 text-blue-300 transition"
           >
             −
           </button>
@@ -370,7 +370,7 @@ export const CalculatorModal: React.FC<CalculatorModalProps> = ({
           <button
             type="button"
             onClick={() => handleInput('+')}
-            className="py-3 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 transition"
+            className="py-3 rounded-xl bg-blue-500/15 hover:bg-blue-500/25 text-blue-300 transition"
           >
             +
           </button>
@@ -392,7 +392,7 @@ export const CalculatorModal: React.FC<CalculatorModalProps> = ({
           <button
             type="button"
             onClick={handleEquals}
-            className="py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold transition"
+            className="py-3 rounded-xl bg-blue-500 hover:bg-blue-400 text-white font-bold transition"
           >
             =
           </button>
@@ -412,7 +412,7 @@ export const EasterEggModal: React.FC<{ isOpen: boolean; onClose: () => void }> 
       aria-modal="true"
       aria-label="Секретная пасхалка"
     >
-      <div className="ios26-glass-slab w-full max-w-lg p-6 text-center relative border-2 border-emerald-400/60">
+      <div className="ios26-glass-slab w-full max-w-lg p-6 text-center relative border-2 border-blue-400/60">
         <button
           type="button"
           onClick={onClose}
@@ -422,7 +422,7 @@ export const EasterEggModal: React.FC<{ isOpen: boolean; onClose: () => void }> 
           <X className="w-4 h-4" />
         </button>
 
-        <div className="mb-4 inline-flex items-center gap-2 text-emerald-300 text-xs font-bold">
+        <div className="mb-4 inline-flex items-center gap-2 text-blue-300 text-xs font-bold">
           <Sparkles className="w-4 h-4" />
           <span>Секретная пасхалка (код 333) активирована!</span>
         </div>
@@ -437,11 +437,11 @@ export const EasterEggModal: React.FC<{ isOpen: boolean; onClose: () => void }> 
         </div>
 
         <div className="mt-4 flex items-center justify-between text-xs text-[#b4b8c2]">
-          <span className="text-emerald-400 font-mono">Easter Egg Unlocked · DRB-333-VIP</span>
+          <span className="text-blue-400 font-mono">Easter Egg Unlocked · DRB-333-VIP</span>
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold transition"
+            className="px-5 py-2 rounded-xl bg-blue-500 hover:bg-blue-400 text-white font-bold transition"
           >
             Закрыть
           </button>
@@ -468,7 +468,7 @@ export const LightboxModal: React.FC<{
       <div className="ios26-glass-slab max-w-4xl w-full p-5 sm:p-6 border border-white/25">
         <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
           <div className="flex items-center gap-2 text-sm font-bold text-white">
-            <ImageIcon className="w-4 h-4 text-emerald-400" />
+            <ImageIcon className="w-4 h-4 text-blue-400" />
             <span>{title}</span>
           </div>
           <button
@@ -491,12 +491,12 @@ export const LightboxModal: React.FC<{
         </div>
 
         <div className="mt-3 flex items-center justify-between text-xs text-[#9ca3af]">
-          <span className="text-emerald-400 font-mono">Full HD Resolution Available</span>
+          <span className="text-blue-400 font-mono">Full HD Resolution Available</span>
           <div className="flex items-center gap-2">
             <a
               href={src}
               download={src.split('/').pop() || 'derbin_image'}
-              className="px-4 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold flex items-center gap-1.5 transition shadow-md shadow-emerald-500/20"
+              className="px-4 py-1.5 rounded-xl bg-blue-500 hover:bg-blue-400 text-white font-bold flex items-center gap-1.5 transition shadow-md shadow-blue-500/20"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Скачать в Full HD</span>

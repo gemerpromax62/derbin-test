@@ -389,7 +389,7 @@ export function calculateStealthAuditScore(flags: {
   return {
     scorePct,
     statusLabel: 'Risk Detected • Shield Weak',
-    verdictTitle: 'РИСК ДЕТЕКТА 4.3',
+    verdictTitle: 'РИСК ДЕТЕКТА НА ПРОВЕРКЕ',
     verdictDesc: 'Сетевой мост открыт',
     tone: 'rose',
   };

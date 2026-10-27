@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'motion/react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import {
   auth,
   onAuthStateChanged,
@@ -23,7 +23,9 @@ import {
   CURRENCY_CONFIG,
 } from './utils/derbinLogic';
 import { Lang, translations, playGuiSound } from './utils/i18nAndAudio';
-import { DerbinInteractiveGui } from './components/DerbinInteractiveGui';
+import { WhyDerbinAlphaSection } from './components/WhyDerbinAlphaSection';
+import { ServerStatusMonitoringSection } from './components/ServerStatusMonitoringSection';
+import { UserReviewsSection } from './components/UserReviewsSection';
 import { AccountModal } from './components/AccountModal';
 import {
   CheckoutModal,
@@ -58,7 +60,7 @@ const DEFAULT_LOCAL_CONFIGS: ProxyConfigData[] = [
   {
     id: 'preset_ft',
     uid: 'local_preview_user',
-    name: 'FunTime Stealth 4.3',
+    name: 'FunTime Stealth WFP',
     serverAddress: 'funtime.su',
     accountName: 'nerfchik',
     dhcpSubnet: '192.168.144.1',
@@ -204,7 +206,7 @@ export default function App() {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(52, 211, 153, ${p.alpha})`;
+        ctx.fillStyle = `rgba(96, 165, 250, ${p.alpha})`;
         ctx.fill();
       });
       rafId = requestAnimationFrame(renderParticles);
@@ -401,8 +403,19 @@ export default function App() {
   const price90d = getPlanPrice('90d', currency);
   const priceLifetime = getPlanPrice('lifetime', currency);
 
+  // Framer Motion Scroll Parallax Transforms
+  const { scrollY } = useScroll();
+  const heroGlowY = useTransform(scrollY, [0, 1400], [0, 240]);
+  const heroGlowScale = useTransform(scrollY, [0, 1400], [1, 1.25]);
+  const blob1Y = useTransform(scrollY, [0, 3500], [0, -420]);
+  const blob1Rotate = useTransform(scrollY, [0, 3500], [0, 110]);
+  const blob2Y = useTransform(scrollY, [0, 3500], [0, 440]);
+  const blob2Rotate = useTransform(scrollY, [0, 3500], [0, -130]);
+  const blob3Y = useTransform(scrollY, [0, 3500], [140, -320]);
+  const heroParallaxY = useTransform(scrollY, [0, 800], [0, 60]);
+
   return (
-    <div className="min-h-full flex flex-col justify-between relative">
+    <div className="min-h-full flex flex-col justify-between relative overflow-x-hidden">
       {/* ================= PRELOADER ================= */}
       {!preloaderHidden && (
         <div
@@ -429,10 +442,24 @@ export default function App() {
         </div>
       )}
 
-      {/* Background Glow & Particle Canvas */}
-      <div className="hero-glow"></div>
-      <div className="liquid-blob-1"></div>
-      <div className="liquid-blob-2"></div>
+      {/* Background Glow & Particle Canvas with Motion Parallax */}
+      <motion.div
+        style={{ y: heroGlowY, scale: heroGlowScale }}
+        className="hero-glow pointer-events-none"
+      />
+      <motion.div
+        style={{ y: blob1Y, rotate: blob1Rotate }}
+        className="liquid-blob-1 pointer-events-none"
+      />
+      <motion.div
+        style={{ y: blob2Y, rotate: blob2Rotate }}
+        className="liquid-blob-2 pointer-events-none"
+      />
+      {/* Additional ambient parallax liquid prism */}
+      <motion.div
+        style={{ y: blob3Y }}
+        className="pointer-events-none fixed top-[38%] left-[8%] w-[420px] h-[420px] rounded-full bg-blue-600/[0.12] blur-[110px] z-0"
+      />
       <canvas
         ref={ambientCanvasRef}
         id="ambient-canvas"
@@ -447,7 +474,7 @@ export default function App() {
             <img
               src="/logo.svg"
               alt="derbin logo"
-              className="h-7 w-7 object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_0_10px_rgba(16,185,129,0.35)]"
+              className="h-7 w-7 object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-[0_0_10px_rgba(37,99,235,0.4)]"
             />
             <span
               className="text-[20px] font-bold leading-none tracking-tight text-white lg:text-[24px]"
@@ -455,46 +482,58 @@ export default function App() {
             >
               derbin
             </span>
-            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">
+            <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-blue-500/15 text-blue-300 border border-blue-500/30">
               alpha
             </span>
           </a>
 
-          {/* Desktop Nav (All 6 original links) */}
+          {/* Desktop Nav */}
           <div className="hidden lg:flex items-center gap-1 font-medium text-sm text-[#d4d4d6]">
             <a
               href="#hero"
-              className="rounded-full px-3.5 py-1.5 transition-colors hover:bg-white/10 hover:text-white whitespace-nowrap"
+              className="rounded-full px-3 py-1.5 transition-colors hover:bg-white/10 hover:text-white whitespace-nowrap"
             >
               {t('nav.home')}
             </a>
             <a
               href="#advantages"
-              className="rounded-full px-3.5 py-1.5 transition-colors hover:bg-white/10 hover:text-white whitespace-nowrap"
+              className="rounded-full px-3 py-1.5 transition-colors hover:bg-white/10 hover:text-white whitespace-nowrap"
             >
               {t('nav.advantages')}
             </a>
             <a
-              href="#preview"
-              className="rounded-full px-3.5 py-1.5 transition-colors hover:bg-white/10 hover:text-white whitespace-nowrap"
+              href="#why-derbin"
+              className="rounded-full px-3 py-1.5 transition-colors hover:bg-blue-500/20 hover:text-blue-300 whitespace-nowrap font-semibold"
             >
-              {t('nav.preview')}
+              {t('nav.why')}
+            </a>
+            <a
+              href="#status"
+              className="rounded-full px-3 py-1.5 transition-colors hover:bg-blue-500/20 hover:text-blue-300 whitespace-nowrap font-semibold"
+            >
+              {t('nav.status')}
+            </a>
+            <a
+              href="#reviews"
+              className="rounded-full px-3 py-1.5 transition-colors hover:bg-blue-500/20 hover:text-blue-300 whitespace-nowrap font-semibold"
+            >
+              {t('nav.reviews')}
             </a>
             <a
               href="#owners"
-              className="rounded-full px-3.5 py-1.5 transition-colors hover:bg-white/10 hover:text-white whitespace-nowrap"
+              className="rounded-full px-3 py-1.5 transition-colors hover:bg-white/10 hover:text-white whitespace-nowrap"
             >
               {t('nav.owners')}
             </a>
             <a
               href="#pricing"
-              className="rounded-full px-3.5 py-1.5 transition-colors hover:bg-white/10 hover:text-white whitespace-nowrap"
+              className="rounded-full px-3 py-1.5 transition-colors hover:bg-white/10 hover:text-white whitespace-nowrap"
             >
               {t('nav.pricing')}
             </a>
             <a
               href="#stats"
-              className="rounded-full px-3.5 py-1.5 transition-colors hover:bg-white/10 hover:text-white whitespace-nowrap"
+              className="rounded-full px-3 py-1.5 transition-colors hover:bg-white/10 hover:text-white whitespace-nowrap"
             >
               {t('nav.stats')}
             </a>
@@ -526,9 +565,9 @@ export default function App() {
               href="https://discord.gg/ehWheFqAu"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-full liquid-btn-glass px-3 py-1.5 text-xs font-semibold text-[#ededeb] transition hover:border-emerald-500/50 hover:text-emerald-400"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-full liquid-btn-glass px-3 py-1.5 text-xs font-semibold text-[#ededeb] transition hover:border-blue-500/50 hover:text-blue-400"
             >
-              <i className="ph-bold ph-discord-logo text-emerald-400 text-sm"></i>
+              <i className="ph-bold ph-discord-logo text-blue-400 text-sm"></i>
               <span>Discord</span>
             </a>
 
@@ -550,10 +589,10 @@ export default function App() {
                 playGuiSound('click', soundEnabled);
                 setAccountModalOpen(true);
               }}
-              className="inline-flex items-center gap-1.5 rounded-full liquid-btn-glass px-3 py-1.5 text-xs font-semibold text-white transition hover:border-emerald-500/50"
+              className="inline-flex items-center gap-1.5 rounded-full liquid-btn-glass px-3 py-1.5 text-xs font-semibold text-white transition hover:border-blue-500/50"
               title="Личный кабинет и регистрация"
             >
-              <i className="ph-bold ph-user-circle text-emerald-400 text-sm"></i>
+              <i className="ph-bold ph-user-circle text-blue-400 text-sm"></i>
               <span className="hidden md:inline">{profile.minecraftNick}</span>
             </button>
 
@@ -608,42 +647,56 @@ export default function App() {
               <a
                 href="#hero"
                 onClick={() => setMobileMenuOpen(false)}
-                className="hover:text-[var(--brand-accent)] transition"
+                className="hover:text-blue-400 transition"
               >
                 {t('nav.home')}
               </a>
               <a
                 href="#advantages"
                 onClick={() => setMobileMenuOpen(false)}
-                className="hover:text-[var(--brand-accent)] transition"
+                className="hover:text-blue-400 transition"
               >
                 {t('nav.advantages')}
               </a>
               <a
-                href="#preview"
+                href="#why-derbin"
                 onClick={() => setMobileMenuOpen(false)}
-                className="hover:text-[var(--brand-accent)] transition"
+                className="hover:text-blue-400 transition font-semibold"
               >
-                {t('nav.preview')}
+                {t('nav.why')}
+              </a>
+              <a
+                href="#status"
+                onClick={() => setMobileMenuOpen(false)}
+                className="hover:text-blue-400 transition font-semibold"
+              >
+                {t('nav.status')}
+              </a>
+              <a
+                href="#reviews"
+                onClick={() => setMobileMenuOpen(false)}
+                className="hover:text-blue-400 transition font-semibold"
+              >
+                {t('nav.reviews')}
               </a>
               <a
                 href="#owners"
                 onClick={() => setMobileMenuOpen(false)}
-                className="hover:text-[var(--brand-accent)] transition"
+                className="hover:text-blue-400 transition"
               >
                 {t('nav.owners')}
               </a>
               <a
                 href="#pricing"
                 onClick={() => setMobileMenuOpen(false)}
-                className="hover:text-[var(--brand-accent)] transition"
+                className="hover:text-blue-400 transition"
               >
                 {t('nav.pricing')}
               </a>
               <a
                 href="#stats"
                 onClick={() => setMobileMenuOpen(false)}
-                className="hover:text-[var(--brand-accent)] transition"
+                className="hover:text-blue-400 transition"
               >
                 {t('nav.stats')}
               </a>
@@ -653,9 +706,9 @@ export default function App() {
                   setMobileMenuOpen(false);
                   setAccountModalOpen(true);
                 }}
-                className="text-left hover:text-emerald-400 transition flex items-center gap-2"
+                className="text-left hover:text-blue-400 transition flex items-center gap-2"
               >
-                <i className="ph-bold ph-user-circle text-emerald-400"></i>
+                <i className="ph-bold ph-user-circle text-blue-400"></i>
                 <span>
                   {t('nav.account')}: {profile.minecraftNick}
                 </span>
@@ -664,9 +717,9 @@ export default function App() {
                 href="https://discord.gg/ehWheFqAu"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-emerald-400 transition flex items-center gap-2"
+                className="hover:text-blue-400 transition flex items-center gap-2"
               >
-                <i className="ph-bold ph-discord-logo text-emerald-400"></i> Discord сервер
+                <i className="ph-bold ph-discord-logo text-blue-400"></i> Discord сервер
               </a>
               <a
                 href="#pricing"
@@ -686,20 +739,25 @@ export default function App() {
         className="relative min-h-[85vh] flex flex-col justify-center items-center px-4 text-center z-10 pt-10 sm:pt-16 pb-20"
       >
         <motion.div
+          style={{ y: heroParallaxY }}
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: 'spring', stiffness: 220, damping: 24 }}
           className="max-w-4xl mx-auto"
         >
-          {/* Top Badges (Exact 2 badges from original HTML) */}
+          {/* Top Badges with Exact Real Date and Time */}
           <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
             <motion.div
               whileHover={{ y: -2, scale: 1.02 }}
               whileTap={{ scale: 0.94, y: 1.5 }}
               className="inline-flex items-center gap-2 rounded-full liquid-btn-glass px-4 py-1.5 text-xs text-[#adadad] backdrop-blur-xl cursor-default"
             >
-              <StarIcon className="h-3.5 w-3.5 text-[var(--brand-accent)]" />
-              <span>{t('hero.badge')}</span>
+              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+              <span className="font-mono text-white/90">
+                {lang === 'ru'
+                  ? 'Последний патч: 26.10.2026 в 16:48 (MSK) • 0 детектов'
+                  : 'Latest hotfix: Oct 26, 2026 16:48 (MSK) • 0 detects'}
+              </span>
             </motion.div>
             <motion.div
               whileHover={{ y: -2, scale: 1.02 }}
@@ -887,18 +945,21 @@ export default function App() {
         </div>
       </section>
 
-      {/* ================= PREVIEW / CLIENT SHOWCASE ================= */}
-      <DerbinInteractiveGui
+      {/* ================= WHY DERBIN ALPHA IS AWESOME ================= */}
+      <WhyDerbinAlphaSection lang={lang} soundEnabled={soundEnabled} />
+
+      {/* ================= LIVE SERVER BYPASS STATUS MONITORING ================= */}
+      <ServerStatusMonitoringSection
         lang={lang}
         soundEnabled={soundEnabled}
-        onToggleSound={() => setSoundEnabled(!soundEnabled)}
-        activePreset={profile.glassPreset}
-        onSelectPreset={handleSelectPreset}
-        cloudConfigs={cloudConfigs}
-        onSaveCloudConfig={handleSaveCloudConfig}
-        onDeleteCloudConfig={handleDeleteCloudConfig}
         onNotify={showNotice}
-        onOpenLightbox={(src, title) => setLightboxState({ src, title })}
+      />
+
+      {/* ================= USER REVIEWS & VERIFIED CHECKS ================= */}
+      <UserReviewsSection
+        lang={lang}
+        soundEnabled={soundEnabled}
+        onNotify={showNotice}
       />
 
       {/* ================= OWNERS / CREATORS ================= */}
@@ -946,8 +1007,8 @@ export default function App() {
                   </div>
                 </div>
                 <span className="absolute -bottom-1 -right-1 flex h-4 w-4">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-[#161618]"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-4 w-4 bg-blue-500 border-2 border-[#161618]"></span>
                 </span>
               </div>
 
@@ -1003,8 +1064,8 @@ export default function App() {
                   </div>
                 </div>
                 <span className="absolute -bottom-1 -right-1 flex h-4 w-4">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-[#161618]"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-4 w-4 bg-blue-500 border-2 border-[#161618]"></span>
                 </span>
               </div>
 
@@ -1069,7 +1130,7 @@ export default function App() {
           {/* DEDICATED CURRENCY SELECTOR (СВЕРХУ ОТДЕЛЬНО ВЫБРАТЬ ВАЛЮТУ) */}
           <div className="mb-12 flex flex-col items-center justify-center gap-2.5">
             <span className="text-xs font-semibold uppercase tracking-wider text-[#adadad] flex items-center gap-1.5">
-              <i className="ph-bold ph-currency-circle-dollar text-emerald-400 text-sm"></i>
+              <i className="ph-bold ph-currency-circle-dollar text-blue-400 text-sm"></i>
               <span>Выберите валюту оплаты:</span>
             </span>
             <div className="inline-flex flex-wrap items-center justify-center gap-1.5 p-1.5 rounded-2xl liquid-glass-nav border border-white/20">
@@ -1126,7 +1187,7 @@ export default function App() {
                     <i className="ph-bold ph-check text-[var(--brand-accent)]"></i> Полный доступ к клиенту derbin
                   </li>
                   <li className="flex items-center gap-2.5 text-white">
-                    <i className="ph-bold ph-check text-[var(--brand-accent)]"></i> Базовая защита от проверок (4.3)
+                    <i className="ph-bold ph-check text-[var(--brand-accent)]"></i> Защита от проверок (чекер Error / AnyDesk)
                   </li>
                   <li className="flex items-center gap-2.5 text-white">
                     <i className="ph-bold ph-check text-[var(--brand-accent)]"></i> Автоматические обновления
@@ -1163,9 +1224,9 @@ export default function App() {
               transition={{ type: 'spring', stiffness: 240, damping: 22, delay: 0.16 }}
               whileHover={{ y: -8, scale: 1.018 }}
               whileTap={{ scale: 0.965, y: 2.5 }}
-              className="sadnes-card !overflow-visible rounded-[26px] p-8 flex flex-col justify-between border-2 border-emerald-400/75 shadow-2xl shadow-emerald-500/25 relative"
+              className="sadnes-card !overflow-visible rounded-[26px] p-8 flex flex-col justify-between border-2 border-blue-400/75 shadow-2xl shadow-blue-500/25 relative"
             >
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10 px-4 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-gradient-to-r from-emerald-400 to-emerald-600 border border-white/50 text-white shadow-[inset_0_1.5px_1.5px_rgba(255,255,255,0.85),0_8px_20px_rgba(16,185,129,0.5)] whitespace-nowrap">
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10 px-4 py-0.5 rounded-full text-[11px] font-bold tracking-wider uppercase bg-gradient-to-r from-blue-400 to-blue-600 border border-white/50 text-white shadow-[inset_0_1.5px_1.5px_rgba(255,255,255,0.85),0_8px_20px_rgba(37,99,235,0.5)] whitespace-nowrap">
                 {t('plan2.hit')}
               </div>
 
@@ -1316,13 +1377,21 @@ export default function App() {
               transition={{ type: 'spring', stiffness: 240, damping: 22, delay: 0.15 }}
               whileHover={{ y: -5, scale: 1.02 }}
               whileTap={{ scale: 0.95, y: 2 }}
-              className="sadnes-card p-8 flex flex-col items-center cursor-pointer"
+              className="sadnes-card p-6 sm:p-8 flex flex-col items-center cursor-pointer"
             >
-              <span className="text-[clamp(2.8rem,5vw,4.2rem)] font-bold text-white tracking-tight">
-                Сегодня
-              </span>
+              <div className="flex flex-col items-center">
+                <span className="text-[clamp(1.5rem,2.8vw,2.4rem)] font-bold text-white tracking-tight font-mono">
+                  26.10.2026
+                </span>
+                <span className="text-sm font-mono text-blue-400 font-semibold mt-0.5">
+                  16:48 (MSK)
+                </span>
+              </div>
               <span className="mt-2 text-base font-semibold bg-gradient-to-b from-white to-[var(--brand-accent)] bg-clip-text text-transparent">
                 {t('stats.last')}
+              </span>
+              <span className="mt-1 text-[11px] font-mono text-emerald-400 font-medium">
+                v1.8.4 Alpha Hotfix (Active)
               </span>
             </motion.div>
 
@@ -1336,7 +1405,7 @@ export default function App() {
               className="sadnes-card p-8 flex flex-col items-center cursor-pointer"
             >
               <span className="text-[clamp(2.8rem,5vw,4.2rem)] font-bold text-white tracking-tight flex items-center justify-center gap-3">
-                <span className="h-3 w-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span className="h-3 w-3 rounded-full bg-blue-500 animate-pulse"></span>
                 <span>2</span>
               </span>
               <span className="mt-2 text-base font-semibold bg-gradient-to-b from-white to-[var(--brand-accent)] bg-clip-text text-transparent">
@@ -1344,6 +1413,38 @@ export default function App() {
               </span>
             </motion.div>
           </div>
+
+          {/* Detailed Verification Banner for Latest Update */}
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ type: 'spring', stiffness: 220, damping: 24 }}
+            className="mt-10 sadnes-card rounded-2xl p-5 sm:p-6 border border-blue-500/30 bg-blue-950/20 max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4"
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-blue-500/20 border border-blue-400/40 flex items-center justify-center text-blue-400 text-2xl shrink-0 shadow-[0_0_15px_rgba(37,99,235,0.3)]">
+                <i className="ph-bold ph-shield-check"></i>
+              </div>
+              <div className="text-left text-xs leading-relaxed">
+                <div className="font-bold text-white flex flex-wrap items-center gap-2 text-sm">
+                  <span>Релиз обновления: 26 октября 2026 года в 16:48 (MSK)</span>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-mono font-semibold border border-emerald-500/30">
+                    Undetected
+                  </span>
+                </div>
+                <div className="text-[#94a3b8] mt-1 font-mono text-[11px]">
+                  Патч v1.8.4 Alpha: Полная адаптация WFP-фильтра под AnyDesk 8.1, новая чистая DHCP подсеть 192.168.178.x и фикс детекта Echo.
+                </div>
+              </div>
+            </div>
+            <a
+              href="#pricing"
+              className="liquid-btn-primary px-5 py-2.5 rounded-xl text-xs font-semibold text-white whitespace-nowrap shrink-0 shadow-lg"
+            >
+              Получить v1.8.4
+            </a>
+          </motion.div>
         </div>
       </section>
 
@@ -1354,7 +1455,7 @@ export default function App() {
             <img
               src="/logo.svg"
               alt="derbin logo"
-              className="h-7 w-7 object-contain drop-shadow-[0_0_10px_rgba(16,185,129,0.35)]"
+              className="h-7 w-7 object-contain drop-shadow-[0_0_10px_rgba(37,99,235,0.4)]"
             />
             <span id="footer-brand">derbin</span>
           </div>
@@ -1369,9 +1470,9 @@ export default function App() {
               href="https://discord.gg/ehWheFqAu"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition hover:text-emerald-400 flex items-center gap-1"
+              className="transition hover:text-blue-400 flex items-center gap-1"
             >
-              <i className="ph-bold ph-discord-logo text-emerald-400"></i>
+              <i className="ph-bold ph-discord-logo text-blue-400"></i>
               <span>Discord</span>
             </a>
             <span className="text-white/10">•</span>
@@ -1428,7 +1529,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => setCalcModalOpen(true)}
-              className="text-[#303632] hover:text-emerald-400 transition-colors p-1 rounded opacity-50 hover:opacity-100"
+              className="text-[#303632] hover:text-blue-400 transition-colors p-1 rounded opacity-50 hover:opacity-100"
               title="Калькулятор"
               aria-label="Tool"
             >
@@ -1488,7 +1589,7 @@ export default function App() {
       {toastMsg && (
         <div
           id="notice-toast"
-          className="fixed bottom-6 right-6 z-50 rounded-2xl border border-white/20 bg-[#121a16]/80 px-5 py-3.5 text-xs text-white shadow-2xl backdrop-blur-2xl transition-opacity duration-300"
+          className="fixed bottom-6 right-6 z-50 rounded-2xl border border-white/20 bg-[#0c1427]/85 px-5 py-3.5 text-xs text-white shadow-2xl backdrop-blur-2xl transition-opacity duration-300"
         >
           <span id="toast-text">{toastMsg}</span>
         </div>

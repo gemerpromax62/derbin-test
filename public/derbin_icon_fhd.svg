@@ -1,65 +1,64 @@
-
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048" width="2048" height="2048">
   <defs>
     <!-- Background Ambient Glow -->
     <radialGradient id="ambientBg" cx="50%" cy="50%" r="75%">
-      <stop offset="0%" stop-color="#0e2319" stop-opacity="1" />
-      <stop offset="45%" stop-color="#08140f" stop-opacity="1" />
-      <stop offset="100%" stop-color="#040907" stop-opacity="1" />
+      <stop offset="0%" stop-color="#0f1d3a" stop-opacity="1" />
+      <stop offset="45%" stop-color="#091326" stop-opacity="1" />
+      <stop offset="100%" stop-color="#050a14" stop-opacity="1" />
     </radialGradient>
 
     <!-- Glass Tile Base Gradient -->
     <linearGradient id="tileGlassBody" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#144d34" stop-opacity="0.9" />
-      <stop offset="30%" stop-color="#0a2a1d" stop-opacity="0.85" />
-      <stop offset="70%" stop-color="#071b13" stop-opacity="0.9" />
-      <stop offset="100%" stop-color="#030d09" stop-opacity="0.95" />
+      <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.85" />
+      <stop offset="30%" stop-color="#172554" stop-opacity="0.85" />
+      <stop offset="70%" stop-color="#0f172a" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#090d16" stop-opacity="0.95" />
     </linearGradient>
 
     <!-- Glass Specular Rim Border -->
     <linearGradient id="specularRim" x1="0%" y1="0%" x2="70%" y2="100%">
       <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
-      <stop offset="20%" stop-color="#a7f3d0" stop-opacity="0.65" />
-      <stop offset="50%" stop-color="#34d399" stop-opacity="0.2" />
-      <stop offset="80%" stop-color="#064e3b" stop-opacity="0.4" />
-      <stop offset="100%" stop-color="#10b981" stop-opacity="0.75" />
+      <stop offset="20%" stop-color="#bfdbfe" stop-opacity="0.7" />
+      <stop offset="50%" stop-color="#60a5fa" stop-opacity="0.3" />
+      <stop offset="80%" stop-color="#1e3a8a" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.75" />
     </linearGradient>
 
     <!-- Internal Liquid Sheen -->
     <linearGradient id="innerSheen" x1="15%" y1="0%" x2="85%" y2="100%">
       <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45" />
-      <stop offset="35%" stop-color="#34d399" stop-opacity="0.12" />
-      <stop offset="65%" stop-color="#059669" stop-opacity="0.0" />
-      <stop offset="100%" stop-color="#10b981" stop-opacity="0.25" />
+      <stop offset="35%" stop-color="#60a5fa" stop-opacity="0.15" />
+      <stop offset="65%" stop-color="#2563eb" stop-opacity="0.0" />
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.25" />
     </linearGradient>
 
     <!-- Glowing D Neon Gradient -->
     <linearGradient id="letterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#a7f3d0" />
-      <stop offset="35%" stop-color="#34d399" />
-      <stop offset="80%" stop-color="#10b981" />
-      <stop offset="100%" stop-color="#059669" />
+      <stop offset="0%" stop-color="#bfdbfe" />
+      <stop offset="35%" stop-color="#60a5fa" />
+      <stop offset="80%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#1d4ed8" />
     </linearGradient>
 
     <!-- D Letter Rim Gloss Highlight -->
     <linearGradient id="letterHighlight" x1="0%" y1="0%" x2="100%" y2="50%">
       <stop offset="0%" stop-color="#ffffff" stop-opacity="0.85" />
-      <stop offset="45%" stop-color="#6ee7b7" stop-opacity="0.5" />
-      <stop offset="100%" stop-color="#10b981" stop-opacity="0.1" />
+      <stop offset="45%" stop-color="#93c5fd" stop-opacity="0.55" />
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.1" />
     </linearGradient>
 
     <!-- Dot Radial Glow -->
     <radialGradient id="dotRadial" cx="38%" cy="38%" r="65%">
-      <stop offset="0%" stop-color="#ecfdf5" />
-      <stop offset="40%" stop-color="#6ee7b7" />
-      <stop offset="75%" stop-color="#10b981" />
-      <stop offset="100%" stop-color="#047857" />
+      <stop offset="0%" stop-color="#eff6ff" />
+      <stop offset="40%" stop-color="#93c5fd" />
+      <stop offset="75%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#1d4ed8" />
     </radialGradient>
 
     <!-- Tile Drop Shadow Filter -->
     <filter id="tileShadow" x="-20%" y="-20%" width="150%" height="150%">
       <feDropShadow dx="0" dy="48" stdDeviation="64" flood-color="#000000" flood-opacity="0.85" />
-      <feDropShadow dx="0" dy="16" stdDeviation="28" flood-color="#10b981" flood-opacity="0.25" />
+      <feDropShadow dx="0" dy="16" stdDeviation="28" flood-color="#3b82f6" flood-opacity="0.25" />
     </filter>
 
     <!-- Neon Glow Filter for Glyph -->
@@ -83,8 +82,8 @@
   <rect width="2048" height="2048" fill="url(#ambientBg)" />
 
   <!-- Outer Atmospheric Diffuse Orbs -->
-  <circle cx="1024" cy="1024" r="680" fill="#10b981" opacity="0.16" filter="url(#neonGlow)" />
-  <circle cx="850" cy="850" r="420" fill="#34d399" opacity="0.12" filter="url(#neonGlow)" />
+  <circle cx="1024" cy="1024" r="680" fill="#3b82f6" opacity="0.16" filter="url(#neonGlow)" />
+  <circle cx="850" cy="850" r="420" fill="#60a5fa" opacity="0.12" filter="url(#neonGlow)" />
 
   <!-- MAIN SQUIRCLE TILE (Apple iOS Liquid Glass squircle) -->
   <g filter="url(#tileShadow)">
@@ -112,8 +111,8 @@
   </g>
 
   <!-- AMBIENT GLOW DIRECTLY BEHIND THE 'D' -->
-  <ellipse cx="1024" cy="1024" rx="420" ry="420" fill="#10b981" opacity="0.32" filter="url(#neonGlow)" />
-  <ellipse cx="1080" cy="1024" rx="260" ry="260" fill="#34d399" opacity="0.45" filter="url(#neonGlow)" />
+  <ellipse cx="1024" cy="1024" rx="420" ry="420" fill="#2563eb" opacity="0.32" filter="url(#neonGlow)" />
+  <ellipse cx="1080" cy="1024" rx="260" ry="260" fill="#60a5fa" opacity="0.45" filter="url(#neonGlow)" />
 
   <!-- THE ICONIC DERBIN 'D' GLYPH -->
   <!-- Layer 1: Ambient Drop Glow -->
@@ -125,14 +124,14 @@
              H 720 
              Z" 
           fill="none" 
-          stroke="#10b981" 
+          stroke="#2563eb" 
           stroke-width="170" 
           stroke-linejoin="round" 
           stroke-linecap="round" />
-    <circle cx="1024" cy="1024" r="130" fill="#34d399" />
+    <circle cx="1024" cy="1024" r="130" fill="#60a5fa" />
   </g>
 
-  <!-- Layer 2: Main Solid 'D' Body with Rich Emerald Gradient -->
+  <!-- Layer 2: Main Solid 'D' Body with Rich Sapphire Gradient -->
   <g>
     <!-- Outer D path stroke -->
     <path d="M 720 576 
@@ -179,7 +178,7 @@
 
   <!-- Bottom Rim Ambient Reflection -->
   <path d="M 600 1780 C 850 1810, 1198 1810, 1448 1780" 
-        stroke="rgba(52, 211, 153, 0.65)" 
+        stroke="rgba(96, 165, 250, 0.65)" 
         stroke-width="16" 
         fill="none" 
         stroke-linecap="round" 

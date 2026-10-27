@@ -301,17 +301,17 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                   onChange={(e) => setGlassPreset(e.target.value as GlassPresetId)}
                   className="ios26-input w-full px-3.5 py-2.5 text-sm cursor-pointer"
                 >
-                  <option value="prismatic_ios26">Emerald Crystal (По умолчанию)</option>
-                  <option value="amber_gold">Amber Gold (Тёплое золото)</option>
-                  <option value="emerald_liquid">Derbin Emerald (Классический неон)</option>
-                  <option value="obsidian_frost">Obsidian Frost (Холодный кварц)</option>
+                  <option value="prismatic_ios26">Sapphire Blue (Приятный синий, по умолчанию)</option>
+                  <option value="obsidian_frost">Ocean Azure (Лазурный)</option>
+                  <option value="amber_gold">Midnight Royal (Глубокий синий)</option>
+                  <option value="emerald_liquid">Cobalt Blue (Насыщенный)</option>
                 </select>
               </div>
             </div>
 
             <div className="pt-2 flex flex-wrap items-center justify-between gap-3">
               <span className="text-xs text-[#9ca3af]">
-                Данные валидируются по схеме <code className="text-emerald-400">firebase-blueprint.json</code>
+                Данные валидируются по схеме <code className="text-blue-400">firebase-blueprint.json</code>
               </span>
               <button
                 type="submit"
@@ -335,7 +335,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                 <div className="text-[#9ca3af]">Имя профиля</div>
                 <div className="text-base font-bold text-white">{profile.displayName}</div>
                 <div className="text-[#9ca3af] pt-1">Привязанный никнейм Minecraft</div>
-                <div className="text-sm font-mono text-emerald-400">{profile.minecraftNick}</div>
+                <div className="text-sm font-mono text-blue-400">{profile.minecraftNick}</div>
               </div>
 
               <div className="p-4 rounded-2xl bg-black/40 border border-white/10 space-y-2">
@@ -353,7 +353,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                 <div className="font-bold text-white">Статус аппаратной привязки HWID</div>
                 <div className="text-[#9ca3af] mt-0.5">
                   Текущий статус:{' '}
-                  <strong className="text-emerald-400 uppercase font-mono">{profile.hwidStatus}</strong> · Dual-PC
+                  <strong className="text-blue-400 uppercase font-mono">{profile.hwidStatus}</strong> · Dual-PC
                   Gateway Ready
                 </div>
               </div>
@@ -362,7 +362,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({
                 onClick={onResetHwid}
                 className="ios26-btn-secondary px-4 py-2 rounded-xl text-xs font-semibold text-white flex items-center gap-1.5"
               >
-                <RefreshCw className="w-3.5 h-3.5 text-emerald-400" />
+                <RefreshCw className="w-3.5 h-3.5 text-blue-400" />
                 <span>Сбросить HWID</span>
               </button>
             </div>
@@ -435,12 +435,12 @@ export const AccountModal: React.FC<AccountModalProps> = ({
         {tab === 'firebase-guide' && (
           <div className="p-4 rounded-2xl bg-black/45 border border-white/10 space-y-3 text-xs text-[#d1d5db] leading-relaxed">
             <div className="font-bold text-white flex items-center gap-2 text-sm">
-              <Info className="w-4 h-4 text-emerald-400" />
+              <Info className="w-4 h-4 text-blue-400" />
               <span>Архитектура Firebase Authentication &amp; Firestore</span>
             </div>
             <p>
               База данных <strong>Cloud Firestore</strong> и провайдер <strong>Google Sign-In</strong> автоматически
-              развёрнуты в проекте <code className="text-emerald-400">eternal-terminus-6n2tx</code> с защищёнными
+              развёрнуты в проекте <code className="text-blue-400">eternal-terminus-6n2tx</code> с защищёнными
               правилами нулевого доверия (<code className="text-amber-300">firestore.rules</code>).
             </p>
             <p>
